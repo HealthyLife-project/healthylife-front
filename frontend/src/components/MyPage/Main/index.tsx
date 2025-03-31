@@ -7,6 +7,7 @@ import { Tabs, ConfigProvider } from "antd";
 //Component
 import Userinfo from "../UserInfo";
 import ExerciseInfo from "../ExerciseInfo";
+import ExerciseAndMeal from "../ExerciseAndMeal";
 
 //마이 페이지 메인 컴포넌트
 const MyPageMain = () => {
@@ -33,7 +34,7 @@ const MyPageMain = () => {
     {
       key: "3",
       label: category_lst[2],
-      children: "Content of Tab Pane 3",
+      children: <ExerciseAndMeal />,
     },
     {
       key: "4",

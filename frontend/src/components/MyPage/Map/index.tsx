@@ -12,6 +12,7 @@ declare global {
 
 //마이페이지 > 운동정보 지도 컴포넌트
 const KAKAOMap = () => {
+  console.log("avigator.geolocation", navigator.geolocation);
   useEffect(() => {
     const kakaoMapScript = document.createElement("script");
     kakaoMapScript.async = false;
@@ -20,12 +21,14 @@ const KAKAOMap = () => {
 
     const onLoadKakaoAPI = () => {
       window.kakao.maps.load(() => {
+        var markers = []; //마커 배열
         var container = document.getElementById("map");
         var options = {
-          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+          center: new window.kakao.maps.LatLng(37.566826, 126.9786567),
           level: 3,
         };
 
+        //맵 생성
         var map = new window.kakao.maps.Map(container, options);
       });
     };
