@@ -27,7 +27,7 @@ const RegularSingle = ({ post }: RegularPostProps) => {
           <div className="single-dateCreated">{post.dateCreated}</div>
           <div className="single-views">{post.views}</div>
           <div className="single-comments"> {post.comments}</div>
-          <div className="single-profileImg">{post.profileImg}</div>
+          {/* <div className="single-profileImg">{post.profileImg}</div> */}
         </div>
       </RegularSingleStyled>
     </>

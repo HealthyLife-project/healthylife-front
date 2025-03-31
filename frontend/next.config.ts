@@ -6,3 +6,10 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+module.exports = {
+  compiler: {
+    // Enables the styled-components SWC transform
+    styledComponents: true,
+  },
+};
