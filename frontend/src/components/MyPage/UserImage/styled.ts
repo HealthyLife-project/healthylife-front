@@ -1,14 +1,21 @@
 import styled from "styled-components";
 
 export const UserImageStyle = styled.div`
-  &.main-image {
+  &.main-wrap {
     display: flex;
-    width: 500px;
-    height: 100px;
+    width: 50%;
+    height: 100%;
 
-    &.user-image-style {
+    .main-image {
+      display: flex;
       width: 100%;
-      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .user-image-style {
+      width: 90%;
+      height: 90%;
     }
   }
 `;

@@ -1,11 +1,12 @@
-import { MyMain } from "./styled"; //스타일
+import { MyMain, theme } from "./styled"; //스타일
 import clsx from "clsx";
 
 import { headerlst } from "./headerlist";
-import { Tabs } from "antd";
+import { Tabs, ConfigProvider } from "antd";
 
 //Component
 import Userinfo from "../UserInfo";
+import ExerciseInfo from "../ExerciseInfo";
 
 //마이 페이지 메인 컴포넌트
 const MyPageMain = () => {
@@ -27,7 +28,7 @@ const MyPageMain = () => {
     {
       key: "2",
       label: category_lst[1],
-      children: "Content of Tab Pane 2",
+      children: <ExerciseInfo />,
     },
     {
       key: "3",
@@ -43,7 +44,15 @@ const MyPageMain = () => {
 
   return (
     <MyMain className={clsx("main-wrap")}>
-      <Tabs defaultActiveKey="1" items={items} />
+      <ConfigProvider theme={theme}>
+        <Tabs
+          className={clsx("tabs-header")}
+          defaultActiveKey="1"
+          items={items}
+          type="card"
+          centered
+        />
+      </ConfigProvider>
     </MyMain>
   );
 };
