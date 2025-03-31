@@ -1,7 +1,11 @@
-import MyPageMain from "@/components/MyPage/Main";
 
-const MainPage = () => {
-  return <MyPageMain />;
-};
+import Main from "@/features/MainPage/Main";
 
-export default MainPage;
+export default function MainPage() {
+  return (
+    <>
+      <Main />
+    </>
+  );
+}
+
