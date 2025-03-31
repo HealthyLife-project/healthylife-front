@@ -1,3 +1,4 @@
+
 import Main from "@/features/MainPage/Main";
 
 export default function MainPage() {
@@ -7,3 +8,4 @@ export default function MainPage() {
     </>
   );
 }
+
