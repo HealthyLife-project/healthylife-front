@@ -36,7 +36,14 @@ export default function LoginPage() {
   return (
     <>
       <LoginPageStyled className={clsx("main-wrap")}>
-        <div className="main-logo">HEALTHY LIFE</div>
+        <div
+          className="main-logo"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          HEALTHY LIFE
+        </div>
         <div className="login-form">
           <div className="login-container">
             <div className="login-inputs">
@@ -62,7 +69,13 @@ export default function LoginPage() {
           <div className="login-sub-container">
             <div>아이디 찾기</div>
             <div>비밀번호 찾기</div>
-            <div>회원가입</div>
+            <div
+              onClick={() => {
+                router.push("/signup");
+              }}
+            >
+              회원가입
+            </div>
           </div>
         </div>
       </LoginPageStyled>

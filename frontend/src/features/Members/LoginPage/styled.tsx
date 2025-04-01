@@ -62,6 +62,8 @@ export const LoginPageStyled = styled.div`
     }
     .login-sub-container > div {
       cursor: pointer;
+      font-size: 14px;
+      color: gray;
     }
   }
 `;

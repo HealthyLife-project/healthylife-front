@@ -7,7 +7,14 @@ export default function Main() {
   return (
     <>
       <MainStyled className={clsx("main-wrap")}>
-        <div className="main-logo">HEALTHY LIFE</div>
+        <div
+          className="main-logo"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          HEALTHY LIFE
+        </div>
         <div className="loginandsignup">
           <button
             className={clsx("main-login")}
