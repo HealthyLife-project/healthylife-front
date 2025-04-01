@@ -5,13 +5,19 @@ import { headerlst } from "./headerlist";
 import { Tabs, ConfigProvider } from "antd";
 
 //Component
+import Header from "@/components/Header";
 import Userinfo from "../UserInfo";
 import ExerciseInfo from "../ExerciseInfo";
 import ExerciseAndMeal from "../ExerciseAndMeal";
+import { useState } from "react";
 
-//마이 페이지 메인 컴포넌트
+//마이페이지 메인 컴포넌트
 const MyPageMain = () => {
-  let category_lst: string[] = [];
+  //변수 선언
+  let category_lst: string[] = []; //카테고리 용 배열
+
+  //useState
+  const [defualtTap, setDefualtTab] = useState("1");
 
   headerlst.map((element: { id: number; category: string }, index: number) => {
     category_lst.push(element.category);
@@ -44,17 +50,20 @@ const MyPageMain = () => {
   ];
 
   return (
-    <MyMain className={clsx("main-wrap")}>
-      <ConfigProvider theme={theme}>
-        <Tabs
-          className={clsx("tabs-header")}
-          defaultActiveKey="1"
-          items={items}
-          type="card"
-          centered
-        />
-      </ConfigProvider>
-    </MyMain>
+    <>
+      <MyMain className={clsx("main-wrap")}>
+        <Header />
+        <ConfigProvider theme={theme}>
+          <Tabs
+            className={clsx("tabs-header")}
+            defaultActiveKey={defualtTap} //초기 탭
+            items={items}
+            type="card"
+            centered
+          />
+        </ConfigProvider>
+      </MyMain>
+    </>
   );
 };
 
