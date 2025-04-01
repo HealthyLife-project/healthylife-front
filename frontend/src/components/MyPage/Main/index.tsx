@@ -1,5 +1,6 @@
 import { MyMain, theme } from "./styled"; //스타일
 import clsx from "clsx";
+import axios from "axios";
 
 import { headerlst } from "./headerlist";
 import { Tabs, ConfigProvider } from "antd";
@@ -9,6 +10,7 @@ import Header from "@/components/Header";
 import Userinfo from "../UserInfo";
 import ExerciseInfo from "../ExerciseInfo";
 import ExerciseAndMeal from "../ExerciseAndMeal";
+import ModifyUserInfo from "../ModifyUserInfo";
 import { useState } from "react";
 
 //마이페이지 메인 컴포넌트
@@ -45,9 +47,22 @@ const MyPageMain = () => {
     {
       key: "4",
       label: category_lst[3],
-      children: "Content of Tab Pane 4",
+      children: <ModifyUserInfo />,
     },
   ];
+
+  //토큰
+  // axios({
+  //   method: "get",
+  //   url: "http://localhost:5001/auth/cookie",
+  //   withCredentials: true,
+  // })
+  //   .then((res) => {
+  //     console.log("토큰 정보:", res.data);
+  //   })
+  //   .catch((err) => {
+  //     console.error("토큰 확인 에러 발생:", err);
+  //   });
 
   return (
     <>
