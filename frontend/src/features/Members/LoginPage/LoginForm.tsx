@@ -5,6 +5,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import clsx from "clsx";
 
+//image
+import naver from "../../../assets/images/naverloginimg.png";
+
 //로그인 컴포넌트
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -31,6 +34,16 @@ export default function LoginPage() {
     } catch (error) {
       console.error("Login failed:", error);
     }
+  };
+  //네이버 로그인
+  const NAVER_CLIENT_ID = process.env.NAVER_KEY; // 발급받은 클라이언트 아이디
+  const REDIRECT_URI = "http://localhost:5001/auth/naver"; // Callback URL
+  const STATE = "flase";
+
+  //네이버 소셜 로그인
+  const NaverLogin = () => {
+    console.log("네이버 소셜 로그인");
+    window.location.href = REDIRECT_URI;
   };
 
   return (
@@ -75,6 +88,18 @@ export default function LoginPage() {
               }}
             >
               회원가입
+            </div>
+          </div>
+          <div className="login-sns">
+            <div>카카오</div>
+            <div>구글</div>
+            <div
+              className="naver-login"
+              onClick={() => {
+                NaverLogin();
+              }}
+            >
+              <img className="imgstyle" src={naver.src} alt="naver" />
             </div>
           </div>
         </div>

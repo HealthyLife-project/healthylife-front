@@ -53,17 +53,28 @@ export const LoginPageStyled = styled.div`
       }
     }
 
-    .login-sub-container {
+    .login-sub-container,
+    .login-sns {
       display: flex;
+      width: 100%;
       margin-top: 20px;
       gap: 30px;
       align-items: center;
       justify-content: center;
     }
-    .login-sub-container > div {
+    .login-sub-container > div,
+    .login-sns > div {
       cursor: pointer;
       font-size: 14px;
       color: gray;
+    }
+
+    .naver-login {
+      width: 15%;
+    }
+    .imgstyle {
+      width: 100%;
+      height: 100%;
     }
   }
 `;
