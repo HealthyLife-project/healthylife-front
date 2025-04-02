@@ -10,7 +10,7 @@ import { userdata } from "./datalist";
 //마이페이지 > 개인정보 메인 컴포넌트
 const UserContent = () => {
   return (
-    <UserContentStyle>
+    <UserContentStyle className={clsx("main-wrap")}>
       <ContentInfo info={userdata} />
     </UserContentStyle>
   );

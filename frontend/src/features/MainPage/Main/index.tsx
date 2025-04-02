@@ -2,38 +2,28 @@ import { MainStyled } from "./styled";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 
-export default function Main() {
+//Component
+import Header from "@/components/Header";
+
+//메인 페이지 컴포넌트
+const Main = () => {
   const router = useRouter();
+
   return (
     <>
       <MainStyled className={clsx("main-wrap")}>
-        <div
-          className="main-logo"
-          onClick={() => {
-            router.push("/");
-          }}
-        >
-          HEALTHY LIFE
-        </div>
-        <div className="loginandsignup">
-          <button
-            className={clsx("main-login")}
-            onClick={() => {
-              router.push("/login");
-            }}
-          >
-            로그인
-          </button>
-          <button
-            className={clsx("main-signup")}
-            onClick={() => {
-              router.push("/signup");
-            }}
-          >
-            회원가입
-          </button>
-        </div>
+        <Header />
       </MainStyled>
+      <button
+        className={clsx("main-signup")}
+        onClick={() => {
+          router.push("/mypage");
+        }}
+      >
+        마이페이지 이동
+      </button>
     </>
   );
-}
+};
+
+export default Main;
