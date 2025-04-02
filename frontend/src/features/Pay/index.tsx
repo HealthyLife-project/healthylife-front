@@ -4,12 +4,16 @@ import { PayStyle } from "./styled"; //스타일
 import clsx from "clsx";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { nanoid } from "nanoid";
+
 //Component
+
 //toss key
 const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENTKEY;
 const customerKey = process.env.NEXT_PUBLIC_TOSS_CUSTOMERKEY;
+
 //origin url
 const origin = "http://localhost:3000";
+
 //마이페이지 > 토스 결제 컴포넌트
 const Pay = () => {
   const [amount, setAmount] = useState({

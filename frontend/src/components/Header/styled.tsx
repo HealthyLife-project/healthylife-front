@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-//메인 페이지 css
+// 헤더 css
 export const HeaderStyled = styled.div`
   &.main-wrap {
     max-width: 1280px;
@@ -8,7 +8,7 @@ export const HeaderStyled = styled.div`
     height: 100%;
     display: flex;
     justify-content: space-between;
-    //padding: 0px 20px;
+    padding: 0px 20px;
     align-items: center;
     margin: 10px auto;
     //background-color: #d2e4f8;

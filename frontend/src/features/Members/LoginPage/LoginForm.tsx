@@ -2,7 +2,7 @@ import { LoginPageStyled } from "./styled";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import Cookies from "js-cookie";
+import { setCookie } from "cookies-next";
 import clsx from "clsx";
 
 //image
@@ -26,7 +26,12 @@ export default function LoginPage() {
       const token = response.data.token;
 
       // JWT 저장
-      Cookies.set("token", token);
+      //Cookies.set("token", token);
+      setCookie("healthy_token", token, {
+        path: "/",
+        maxAge: 60 * 60 * 2, // 2시간 유지
+      });
+
       // 로그인 후 필요한 동작 수행 (예: 페이지 이동 등)
       router.push("/");
 
@@ -107,14 +112,31 @@ export default function LoginPage() {
               회원가입
             </div>
           </div>
-          <div className="kakao-login" onClick={handleKakaoLogin}>
-            카카오 로그인
-          </div>
-          <div className="google-login" onClick={handleGoogleLogin}>
-            구글 로그인
+          <div className="login-sns">
+            <div className="kakao-login" onClick={handleKakaoLogin}>
+              카카오
+            </div>
+            <div className="google-login" onClick={handleGoogleLogin}>
+              구글
+            </div>
+            <div
+              className="naver-login"
+              onClick={() => {
+                NaverLogin();
+              }}
+            >
+              <img className="imgstyle" src={naver.src} alt="naver" />
+            </div>
           </div>
         </div>
       </LoginPageStyled>
     </>
   );
 }
+// function setCookie(
+//   arg0: string,
+//   token: any,
+//   arg2: { path: string; maxAge: number }
+// ) {
+//   throw new Error("Function not implemented.");
+// }
