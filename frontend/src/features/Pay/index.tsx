@@ -2,13 +2,13 @@
 import { useEffect, useRef, useState } from "react";
 import { PayStyle } from "./styled"; //스타일
 import clsx from "clsx";
-
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { nanoid } from "nanoid";
 //Component
-
+//toss key
 const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENTKEY;
 const customerKey = process.env.NEXT_PUBLIC_TOSS_CUSTOMERKEY;
+//origin url
 const origin = "http://localhost:3000";
 //마이페이지 > 토스 결제 컴포넌트
 const Pay = () => {
@@ -18,14 +18,12 @@ const Pay = () => {
   });
   const [ready, setReady] = useState(false);
   const [widgets, setWidgets] = useState(null);
-
   useEffect(() => {
     async function fetchPaymentWidgets() {
       try {
         // ------  SDK 초기화 ------
         // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
         const tossPayments = await loadTossPayments(clientKey);
-
         // 회원 결제
         // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentswidgets
         const widgets = tossPayments.widgets({
@@ -33,27 +31,22 @@ const Pay = () => {
         });
         // 비회원 결제
         // const widgets = tossPayments.widgets({ customerKey: ANONYMOUS });
-
         setWidgets(widgets);
       } catch (error) {
         console.error("Error fetching payment widget:", error);
       }
     }
-
     fetchPaymentWidgets();
   }, [clientKey, customerKey]);
-
   useEffect(() => {
     async function renderPaymentWidgets() {
       if (widgets == null) {
         return;
       }
-
       // ------  주문서의 결제 금액 설정 ------
       // TODO: 위젯의 결제금액을 결제하려는 금액으로 초기화하세요.
       // TODO: renderPaymentMethods, renderAgreement, requestPayment 보다 반드시 선행되어야 합니다.
       await widgets.setAmount(amount);
-
       // ------  결제 UI 렌더링 ------
       // @docs https://docs.tosspayments.com/sdk/v2/js#widgetsrenderpaymentmethods
       await widgets.renderPaymentMethods({
@@ -63,25 +56,20 @@ const Pay = () => {
         // @docs https://docs.tosspayments.com/guides/v2/payment-widget/admin#새로운-결제-ui-추가하기
         variantKey: "DEFAULT",
       });
-
       // ------  이용약관 UI 렌더링 ------
       // @docs https://docs.tosspayments.com/reference/widget-sdk#renderagreement선택자-옵션
       // await widgets.renderAgreement({
       //   selector: "#agreement",
       //   variantKey: "AGREEMENT",
       // });
-
       setReady(true);
     }
-
     renderPaymentWidgets();
   }, [widgets]);
-
   const updateAmount = async (amount) => {
     setAmount(amount);
     await widgets.setAmount(amount);
   };
-
   async function pay() {
     try {
       // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
@@ -100,7 +88,6 @@ const Pay = () => {
       console.error(error);
     }
   }
-
   return (
     <PayStyle>
       <div id="payment-method"></div>
@@ -122,5 +109,4 @@ const Pay = () => {
     </PayStyle>
   );
 };
-
 export default Pay;

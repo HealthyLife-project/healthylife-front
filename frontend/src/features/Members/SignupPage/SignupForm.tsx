@@ -34,16 +34,24 @@ const SignupPage: React.FC = () => {
     address: "",
   };
 
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
   const validationSchema = Yup.object().shape({
     userid: Yup.string()
       .min(4, "4자 이상 입력해주세요!")
       .matches(
         /^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/,
-        "닉네임에 특수문자가 포함되면 안되고 숫자로 시작하면 안됩니다!"
+        "아이디에 특수문자가 포함되면 안되고 숫자로 시작하면 안됩니다!"
       )
       .required("아이디는 필수입니다"),
     password: Yup.string()
-      .min(8, "비밀번호는 8자 이상이어야 합니다")
+      .min(8, "비밀번호는 최소 8자 이상이어야 합니다")
+      .max(16, "비밀번호는 최대 16자 이하이어야 합니다")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[a-zA-Z\d!@#$%^&*()]+$/,
+        "비밀번호는 영문 대소문자, 숫자, 특수 문자를 포함해야 합니다."
+      )
       .required("비밀번호는 필수입니다"),
 
     confirmPassword: Yup.string()
@@ -76,8 +84,8 @@ const SignupPage: React.FC = () => {
     //   })
     //   .required("전화번호를 입력해 주세요"),
     phone: Yup.string()
-      .matches(/^\d{11}$/, "전화번호는 11자리 숫자여야 합니다.")
-      .required("전화번호를 입력해 주세요."),
+      .required("휴대폰 번호를 입력해주세요.")
+      .matches(phoneRegExp, "휴대폰 번호를 입력해주세요."),
 
     address: Yup.string().required("주소를 입력해 주세요"),
   });
@@ -137,6 +145,7 @@ const SignupPage: React.FC = () => {
       );
       console.log("response.data", response.data); // Log response from backend
       setStatus({ success: true, message: "회원가입 성공!" }); // Set success message
+      // 이후 페이지 이동을 해시태그로 해서 해시태그 값들 받아오기
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("회원가입 실패:", error.response?.data || error.message);

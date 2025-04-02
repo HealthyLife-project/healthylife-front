@@ -30,9 +30,7 @@ export default function LoginPage() {
       // 로그인 후 필요한 동작 수행 (예: 페이지 이동 등)
       router.push("/");
 
-
       console.log("로그인 성공", userid);
-
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -54,6 +52,10 @@ export default function LoginPage() {
 
   function handleKakaoLogin() {
     window.location.href = "http://localhost:5001/auth/kakao";
+  }
+
+  function handleGoogleLogin() {
+    window.location.href = "http://localhost:5001/auth/google";
   }
   //
   //
@@ -104,6 +106,12 @@ export default function LoginPage() {
             >
               회원가입
             </div>
+          </div>
+          <div className="kakao-login" onClick={handleKakaoLogin}>
+            카카오 로그인
+          </div>
+          <div className="google-login" onClick={handleGoogleLogin}>
+            구글 로그인
           </div>
         </div>
       </LoginPageStyled>
