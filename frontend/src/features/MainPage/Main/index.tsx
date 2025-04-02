@@ -7,6 +7,7 @@ import Header from "@/components/Header"; //header
 import MainBanner from "../MainBanner"; //Banner
 import LCategory from "@/components/LCategory";
 import TopicMain from "@/components/Topic/Main";
+import Footer from "@/components/Footer";
 
 //메인 페이지 컴포넌트
 
@@ -23,12 +24,13 @@ const Main = () => {
 
   return (
     <>
+      <Header />
       <MainStyled className={clsx("main-wrap")}>
-        <Header />
         <LCategory />
         <MainBanner />
         <TopicMain />
       </MainStyled>
+      <Footer />
       <button
         className={clsx("main-signup")}
         onClick={() => {
