@@ -10,16 +10,16 @@ import naver from "../../../assets/images/naverloginimg.png";
 
 //로그인 컴포넌트
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
 
   const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:5001/signin", {
-        email,
-        password,
+      const response = await axios.post("http://localhost:5001/auth/login", {
+        userid: userid,
+        password: password,
       });
 
       console.log("response", response);
@@ -30,7 +30,7 @@ export default function LoginPage() {
       // 로그인 후 필요한 동작 수행 (예: 페이지 이동 등)
       router.push("/");
 
-      console.log("로그인 성공", email);
+      console.log("로그인 성공", userid);
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -46,6 +46,16 @@ export default function LoginPage() {
     window.location.href = REDIRECT_URI;
   };
 
+  // function handleLogout() {
+
+  // }
+
+  function handleKakaoLogin() {
+    window.location.href = "http://localhost:5001/auth/kakao";
+  }
+  //
+  //
+  //
   return (
     <>
       <LoginPageStyled className={clsx("main-wrap")}>
@@ -64,7 +74,7 @@ export default function LoginPage() {
                 type="text"
                 placeholder="ID"
                 className="id-input"
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => setUserid(event.target.value)}
               />
 
               <input
@@ -78,6 +88,9 @@ export default function LoginPage() {
             <button className="login-btn" onClick={handleLogin}>
               LOGIN
             </button>
+            {/* <button className="logout-btn" onClick={handleLogout}>
+              LOGOUT
+            </button> */}
           </div>
           <div className="login-sub-container">
             <div>아이디 찾기</div>
@@ -88,18 +101,6 @@ export default function LoginPage() {
               }}
             >
               회원가입
-            </div>
-          </div>
-          <div className="login-sns">
-            <div>카카오</div>
-            <div>구글</div>
-            <div
-              className="naver-login"
-              onClick={() => {
-                NaverLogin();
-              }}
-            >
-              <img className="imgstyle" src={naver.src} alt="naver" />
             </div>
           </div>
         </div>
