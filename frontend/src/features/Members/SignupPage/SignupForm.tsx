@@ -50,9 +50,7 @@ const SignupPage: React.FC = () => {
       .oneOf([Yup.ref("password")], "비밀번호가 일치하지 않습니다")
       .required("비밀번호 확인은 필수입니다"),
 
-    name: Yup.string()
-      .min(2, "이름은 2글자 이상이여야 합니다")
-      .matches(/^[a-zA-Z\s]+$/, "이름은 숫자를 포함할수 없습니다"),
+    name: Yup.string().min(2, "이름은 2글자 이상이여야 합니다"),
 
     email: Yup.string()
       .email("유효한 이메일 주소를 입력하세요")

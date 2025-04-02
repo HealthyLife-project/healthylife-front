@@ -1,11 +1,5 @@
 import SignupPage from "@/features/Members/SignupPage/SignupForm";
 
 export default function Signup() {
-  return (
-    <>
-      <div>
-        <SignupPage />
-      </div>
-    </>
-  );
+  return <SignupPage />;
 }

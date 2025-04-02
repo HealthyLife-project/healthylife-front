@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 //import type { NextConfig } from "next";
+=======
+// import { nextConfig } from "next";
+>>>>>>> Stashed changes
 
 const nextConfig = {
   /* config options here */
