@@ -23,16 +23,14 @@ export default function LoginPage() {
       });
 
       console.log("response", response);
-      const token = response.data.token;
+      //const token = response.data.token;
 
       // JWT 저장
-      Cookies.set("token", token);
+      //Cookies.set("token", token);
       // 로그인 후 필요한 동작 수행 (예: 페이지 이동 등)
       router.push("/");
 
-
       console.log("로그인 성공", userid);
-
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -103,6 +101,18 @@ export default function LoginPage() {
               }}
             >
               회원가입
+            </div>
+          </div>
+          <div className="login-sns">
+            <div>카카오</div>
+            <div>구글</div>
+            <div
+              className="naver-login"
+              onClick={() => {
+                NaverLogin();
+              }}
+            >
+              <img className="imgstyle" src={naver.src} alt="naver" />
             </div>
           </div>
         </div>

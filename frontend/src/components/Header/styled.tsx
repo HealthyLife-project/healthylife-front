@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-//메인 페이지 css
+// 헤더 css
 export const HeaderStyled = styled.div`
   &.main-wrap {
     max-width: 1280px;
