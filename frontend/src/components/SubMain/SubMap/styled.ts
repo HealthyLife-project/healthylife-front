@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const PersonMainStyled = styled.div`
+export const SubMapStyled = styled.div`
   &.main-wrap {
     max-width: 1280px;
     width: 100%;
@@ -12,9 +12,5 @@ export const PersonMainStyled = styled.div`
     align-items: center;
     margin: 0px auto;
     //background-color: #d2e4f8;
-
-    .main-left {
-      width: 50%;
-    }
   }
 `;

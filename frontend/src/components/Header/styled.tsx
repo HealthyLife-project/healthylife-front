@@ -25,7 +25,7 @@ export const HeaderStyled = styled.div`
     .main-login,
     .main-signup {
       background-color: white;
-      border: 2px solid #e6e6e6;
+      border: 1px solid #333;
       color: #333;
       font-size: 16px;
       font-weight: 700;

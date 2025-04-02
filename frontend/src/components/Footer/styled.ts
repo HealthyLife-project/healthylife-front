@@ -15,5 +15,33 @@ export const FooterStyled = styled.div`
       display: flex;
       flex-direction: column;
     }
+
+    .team {
+      justify-content: center;
+      gap: 10px;
+
+      .team-company {
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .team-content {
+        font-weight: 400;
+        font-size: 13px;
+        letter-spacing: -0.2px;
+        color: #777;
+      }
+    }
+    .submenu {
+      height: 100%;
+      align-items: center;
+      flex-direction: row;
+      gap: 30px;
+
+      .submenu > span {
+        cursor: pointer;
+      }
+    }
   }
 `;

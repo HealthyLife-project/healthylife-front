@@ -11,9 +11,13 @@ const Footer = () => {
   return (
     <FooterStyled className={clsx("main-wrap")}>
       <div className="team">
-        <span>HEALTHY LIFE</span>
-        <span>Contant team.healthy.official.gmail.com</span>
-        <span>Copyright Healthy. All rights reserved</span>
+        <span className="team-company">HEALTHY LIFE</span>
+        <span className="team-content">
+          Contant team.healthy.official.gmail.com
+        </span>
+        <span className="team-content">
+          Copyright Healthy. All rights reserved
+        </span>
       </div>
       <div className="submenu">
         <span>이용약관</span>

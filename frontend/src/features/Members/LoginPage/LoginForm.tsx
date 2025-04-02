@@ -62,9 +62,7 @@ export default function LoginPage() {
   function handleGoogleLogin() {
     window.location.href = "http://localhost:5001/auth/google";
   }
-  //
-  //
-  //
+
   return (
     <>
       <LoginPageStyled className={clsx("main-wrap")}>
