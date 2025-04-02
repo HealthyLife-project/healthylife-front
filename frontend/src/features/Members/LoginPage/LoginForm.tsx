@@ -10,16 +10,16 @@ import naver from "../../../assets/images/naverloginimg.png";
 
 //로그인 컴포넌트
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
 
   const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:5001/signin", {
-        email,
-        password,
+      const response = await axios.post("http://localhost:5001/auth/login", {
+        userid: userid,
+        password: password,
       });
 
       console.log("response", response);
@@ -30,7 +30,7 @@ export default function LoginPage() {
       // 로그인 후 필요한 동작 수행 (예: 페이지 이동 등)
       router.push("/");
 
-      console.log("로그인 성공", email);
+      //console.log("로그인 성공", email);
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -64,7 +64,7 @@ export default function LoginPage() {
                 type="text"
                 placeholder="ID"
                 className="id-input"
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => setUserid(event.target.value)}
               />
 
               <input
