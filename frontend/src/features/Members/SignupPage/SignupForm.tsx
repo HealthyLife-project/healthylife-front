@@ -2,8 +2,10 @@ import { SignupPageStyled } from "./styled";
 
 import React from "react";
 import { Formik, Form, Field, FormikHelpers, ErrorMessage } from "formik";
+import { Button } from "antd";
 import * as Yup from "yup";
 import axios from "axios";
+import { useState } from "react";
 
 interface SignupPageValues {
   userid: string;
@@ -82,6 +84,48 @@ const SignupPage: React.FC = () => {
     address: Yup.string().required("주소를 입력해 주세요"),
   });
 
+  // 아이디 중복확인
+  const [useridAvailability, setUseridAvailability] = useState<{
+    available: boolean;
+    message: string;
+  } | null>(null);
+
+  const [nicknameAvailability, setNicknameAvailability] = useState<{
+    available: boolean;
+    message: string;
+  } | null>(null);
+
+  const checkUseridAvailability = async (userid: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5001/user/finduser/${userid}`
+      );
+      console.log("response userid", response.data);
+      setUseridAvailability(response.data);
+    } catch (error) {
+      console.error("Error checking user ID:", error);
+      setUseridAvailability({
+        available: false,
+        message: "Error checking user ID.",
+      });
+    }
+  };
+
+  const checkNicknameAvailability = async (nickname: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5001/user/findnickname/${nickname}`
+      );
+      console.log("response nickname", response.data);
+    } catch (error) {
+      console.error("Error checking nickname:", error);
+      setNicknameAvailability({
+        available: false,
+        message: "Error checking nickname",
+      });
+    }
+  };
+
   const handleSubmit = async (
     values: SignupPageValues,
     { setSubmitting, setStatus }: FormikHelpers<SignupPageValues>
@@ -120,10 +164,22 @@ const SignupPage: React.FC = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, values }) => (
             <Form>
               <label htmlFor="userid">아이디</label>
               <Field type="text" id="userid" name="userid" />
+              <Button onClick={() => checkUseridAvailability(values.userid)}>
+                중복확인
+              </Button>
+              {useridAvailability && (
+                <div
+                  style={{
+                    color: useridAvailability.available ? "green" : "red",
+                  }}
+                >
+                  {useridAvailability.message}
+                </div>
+              )}
               <ErrorMessage
                 name="userid"
                 component="div"
@@ -168,6 +224,20 @@ const SignupPage: React.FC = () => {
               {/*  */}
               <label htmlFor="nickname">닉네임</label>
               <Field type="text" id="nickname" name="nickname" />
+              <Button
+                onClick={() => checkNicknameAvailability(values.nickname)}
+              >
+                중복확인
+              </Button>
+              {nicknameAvailability && (
+                <div
+                  style={{
+                    color: nicknameAvailability.available ? "green" : "red",
+                  }}
+                >
+                  {nicknameAvailability.message}
+                </div>
+              )}
               <ErrorMessage
                 name="nickname"
                 component="div"
