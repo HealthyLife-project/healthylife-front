@@ -27,5 +27,8 @@ export const SubMainStyled = styled.div`
       position: sticky;
       top: 0px;
     }
+    .main-right {
+      flex-direction: column;
+    }
   }
 `;
