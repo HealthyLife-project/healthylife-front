@@ -39,17 +39,7 @@ const KAKAOMap = () => {
   return (
     <>
       <MapStyle className={clsx("main-wrap")}>
-        <div
-          style={{
-            width: "50%",
-            height: "500px",
-            display: "inline-block",
-            marginLeft: "5px",
-            marginRight: "5px",
-          }}
-        >
-          <div id="map" className={clsx("main-map")}></div>
-        </div>
+        <div id="map" className="main-map"></div>
       </MapStyle>
     </>
   );

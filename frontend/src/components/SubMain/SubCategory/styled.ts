@@ -5,10 +5,9 @@ export const SubCategoryStyled = styled.div`
     max-width: 1280px;
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 0px 20px;
+    //display: grid;
+    //grid-template-columns: repeat(2, 1fr);
+    //gap: 20px;
     align-items: center;
     margin: 0px auto;
 

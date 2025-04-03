@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
 export const MapStyle = styled.div`
-  .main-map {
+  &.main-wrap {
     width: 100%;
-    height: 500px;
+    height: 100%;
+
+    .main-map {
+      width: 100%;
+      height: 500px;
+    }
   }
 `;
