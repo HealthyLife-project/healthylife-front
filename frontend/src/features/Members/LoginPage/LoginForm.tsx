@@ -7,6 +7,7 @@ import clsx from "clsx";
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
+import Header from "@/components/Header";
 
 //로그인 컴포넌트
 export default function LoginPage() {
@@ -30,9 +31,7 @@ export default function LoginPage() {
       // 로그인 후 필요한 동작 수행 (예: 페이지 이동 등)
       router.push("/");
 
-
       console.log("로그인 성공", userid);
-
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -90,9 +89,6 @@ export default function LoginPage() {
             <button className="login-btn" onClick={handleLogin}>
               LOGIN
             </button>
-            {/* <button className="logout-btn" onClick={handleLogout}>
-              LOGOUT
-            </button> */}
           </div>
           <div className="login-sub-container">
             <div>아이디 찾기</div>
@@ -106,6 +102,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
+        <Header />
       </LoginPageStyled>
     </>
   );
