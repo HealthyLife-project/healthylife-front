@@ -42,6 +42,76 @@ const data: DataType[] = [
     title: "현대 백화점",
     cnt: 12,
   },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
+  {
+    key: "3",
+    title: "현대 백화점",
+    cnt: 12,
+  },
 ];
 //Chatting 컴포넌트
 const Chatting: React.FC = () => {

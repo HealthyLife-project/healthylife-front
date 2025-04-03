@@ -12,13 +12,20 @@ export const SubMainStyled = styled.div`
     align-items: center;
     margin: 0px auto;
     gap: 10px;
+    align-items: flex-start;
 
     .main-left,
     .main-right {
       display: flex;
       width: 50%;
       height: 100%;
-      border: 1px solid black;
+      //border: 1px solid black;
+    }
+
+    .main-left {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0px;
     }
   }
 `;
