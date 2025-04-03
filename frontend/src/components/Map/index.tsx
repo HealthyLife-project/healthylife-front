@@ -41,7 +41,8 @@ const KAKAOMap = () => {
       <MapStyle className={clsx("main-wrap")}>
         <div
           style={{
-            width: "100%",
+            width: "50%",
+            height: "500px",
             display: "inline-block",
             marginLeft: "5px",
             marginRight: "5px",

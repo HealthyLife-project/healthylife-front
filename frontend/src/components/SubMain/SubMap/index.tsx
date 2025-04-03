@@ -1,6 +1,7 @@
 import { SubMapStyled } from "./styled";
 import { useRouter } from "next/router";
 import clsx from "clsx";
+import KAKAOMap from "@/components/Map";
 
 //Coponent
 
@@ -8,6 +9,10 @@ import clsx from "clsx";
 const SubMap = () => {
   const router = useRouter();
 
-  return <SubMapStyled className={clsx("main-wrap")}>sub map</SubMapStyled>;
+  return (
+    <SubMapStyled className={clsx("main-wrap")}>
+      <KAKAOMap />
+    </SubMapStyled>
+  );
 };
 export default SubMap;

@@ -12,6 +12,8 @@ import ExerciseInfo from "../ExerciseInfo";
 import ExerciseAndMeal from "../ExerciseAndMeal";
 import ModifyUserInfo from "../ModifyUserInfo";
 import { useState } from "react";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 //마이페이지 메인 컴포넌트
 const MyPageMain = () => {
@@ -20,6 +22,9 @@ const MyPageMain = () => {
 
   //useState
   const [defualtTap, setDefualtTab] = useState("1");
+
+  const token = useSelector((state: RootState) => state.token.tokenList);
+  //console.log("store token", token);
 
   headerlst.map((element: { id: number; category: string }, index: number) => {
     category_lst.push(element.category);

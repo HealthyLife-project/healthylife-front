@@ -19,7 +19,7 @@ export const SubMainStyled = styled.div`
       display: flex;
       width: 50%;
       height: 100%;
-      background-color: #d2e4f8;
+      border: 1px solid black;
     }
   }
 `;
