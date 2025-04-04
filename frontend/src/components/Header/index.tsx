@@ -7,7 +7,7 @@ import { getCookie } from "cookies-next";
 //헤더 컴포넌트
 const Header = () => {
   const router = useRouter();
-  const token = getCookie("token");
+  const token = getCookie("healthy_token");
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
 
   console.log("header token", token);
