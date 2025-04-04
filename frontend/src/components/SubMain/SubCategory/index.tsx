@@ -7,29 +7,20 @@ import { useState, useEffect } from "react";
 //Coponent
 
 //submain > main > 단체 채팅방 전체 컴포넌트
-const SubCategory = () => {
+const SubCategory = (props: { urlstr: string }) => {
+  //props
+  const { urlstr } = props;
+
   //useState
-  const [category, setCategory] = useState("");
+  //const [category, setCategory] = useState("");
 
   const router = useRouter();
 
   //변수 선언
 
-  useEffect(() => {
-    //console.log(window.location.pathname);
-    let pathname = window.location.pathname; //pathName person인지 pet인지 확인용
-    if (pathname.includes("person")) {
-      setCategory("person");
-    } else if (pathname.includes("pet")) {
-      setCategory("pet");
-    } else {
-      setCategory("");
-    }
-  }, []);
-
   return (
     <SubCategoryStyled className={clsx("main-wrap")}>
-      <Chatting category={category} />
+      <Chatting urlstr={urlstr} />
     </SubCategoryStyled>
   );
 };

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { setCookie } from "cookies-next";
 import clsx from "clsx";
+import api from "@/util/chek";
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
@@ -16,14 +17,29 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleLogin = async () => {
-    console.log("로그인버튼");
+    //console.log("로그인버튼");
     try {
-      const response = await axios.post("http://localhost:5001/auth/login", {
+      const response = await api.post("/auth/login", {
         userid: userid,
         password: password,
       });
 
+      // axios({
+      //   method: "post",
+      //   url: "http://localhost:5001/auth/login",
+      //   data: { userid: userid, password: password },
+      //   withCredentials: true,
+      // })
+      //   .then((res) => {
+      //     console.log("res", res.data);
+      //   })
+      //   .catch((error: string) => {
+      //     console.log("로그인 에러", error);
+      //   });
+
       console.log("response", response);
+
+      return;
       const token = response.data.token;
 
       // JWT 저장
@@ -64,6 +80,13 @@ export default function LoginPage() {
     window.location.href = "http://localhost:5001/auth/google";
   }
 
+  //enter 시 로그인 실행
+  const activeEnter = (e: any) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <>
       <LoginPageStyled className={clsx("main-wrap")}>
@@ -89,6 +112,7 @@ export default function LoginPage() {
                 type="text"
                 placeholder="PASSWORD"
                 className="password-input"
+                onKeyDown={(e) => activeEnter(e)}
                 onChange={(event) => setPassword(event.target.value)}
               />
             </div>

@@ -32,3 +32,13 @@ export const SubMainStyled = styled.div`
     }
   }
 `;
+
+export const theme = {
+  token: {
+    // global token
+  },
+  components: {
+    // component token
+    Button: { defaultHoverBorderColor: "#000", defaultHoverColor: "#000" },
+  },
+};

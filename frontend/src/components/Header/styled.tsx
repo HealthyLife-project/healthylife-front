@@ -18,20 +18,20 @@ export const HeaderStyled = styled.div`
       font-weight: bold;
       cursor: pointer;
     }
-    .loginandsignup {
+    .login-and-signup {
       display: flex;
-      gap: 15px;
+      gap: 10px;
     }
     .main-login,
     .main-signup {
       background-color: white;
       border: 1px solid #333;
       color: #333;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       padding: 8px 22px;
-      border-radius: 36px;
-      height: 42px;
+      border-radius: 34px;
+      height: 38px;
       display: flex;
       justify-content: center;
       align-items: center;

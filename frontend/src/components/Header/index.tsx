@@ -8,28 +8,28 @@ import { getCookie } from "cookies-next";
 const Header = () => {
   const router = useRouter();
   const token = getCookie("healthy_token");
-  const [isLoggedIn, setIsLoggedIn] = useState(!!token);
+  const [isLogIn, setIsLogIn] = useState(!!token); //로그인 상태 확인
 
-  console.log("header token", token);
+  //console.log("header token", token);
 
-  // 로그인 로직
+  // 로그인 버튼 클릭
   function handleLogin() {
-    console.log("Login button clicked!");
-    setIsLoggedIn(true); // 페이지 이동 전에 상태 업데이트
+    //console.log("Login button clicked!");
+    setIsLogIn(true); // 페이지 이동 전에 상태 업데이트
     router.push("/login");
   }
 
   // 로그아웃 로직
   function handleLogout() {
-    console.log("Logout button clicked!");
-    setIsLoggedIn(false); // 페이지 이동 전에 상태 업데이트
+    //console.log("Logout button clicked!");
+    setIsLogIn(false); // 페이지 이동 전에 상태 업데이트
     router.push("/logout");
   }
 
   // 로그인 상태에 따른 버튼 렌더링
   useEffect(() => {
-    setIsLoggedIn(!!token);
-    console.log("로그인 상태", isLoggedIn);
+    setIsLogIn(!!token);
+    //console.log("로그인 상태", isLogIn);
   }, [token]);
 
   return (
@@ -45,7 +45,7 @@ const Header = () => {
         </div>
         <div className="login-and-signup">
           <div>
-            {isLoggedIn ? (
+            {/* {isLoggedIn ? (
               <button className={clsx("main-login")} onClick={handleLogout}>
                 로그아웃
               </button>
@@ -53,16 +53,16 @@ const Header = () => {
               <button className={clsx("main-login")} onClick={handleLogin}>
                 로그인
               </button>
-            )}
+            )} */}
           </div>
-          {/* <button
+          <button
             className={clsx("main-login")}
             onClick={() => {
-              router.push("/login");
+              handleLogin();
             }}
           >
             로그인
-          </button> */}
+          </button>
           <button
             className={clsx("main-signup")}
             onClick={() => {
