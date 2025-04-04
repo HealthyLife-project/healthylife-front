@@ -3,34 +3,33 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { getCookie } from "cookies-next";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 //헤더 컴포넌트
 const Header = () => {
-  const router = useRouter();
-  const token = getCookie("healthy_token");
-  const [isLogIn, setIsLogIn] = useState(!!token); //로그인 상태 확인
+  //useState
+  const [isLogin, setIsLogin] = useState("");
 
-  //console.log("header token", token);
+  //변수 선언
+  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+  const router = useRouter();
+
+  //로그인 정보 확인 - store용
+  useEffect(() => {
+    console.log("tokenList 업데이트됨:", tokenList);
+    setIsLogin(tokenList.token);
+  }, [tokenList]);
 
   // 로그인 버튼 클릭
   function handleLogin() {
-    //console.log("Login button clicked!");
-    setIsLogIn(true); // 페이지 이동 전에 상태 업데이트
     router.push("/login");
   }
 
-  // 로그아웃 로직
+  // 로그아웃 버튼
   function handleLogout() {
-    //console.log("Logout button clicked!");
-    setIsLogIn(false); // 페이지 이동 전에 상태 업데이트
     router.push("/logout");
   }
-
-  // 로그인 상태에 따른 버튼 렌더링
-  useEffect(() => {
-    setIsLogIn(!!token);
-    //console.log("로그인 상태", isLogIn);
-  }, [token]);
 
   return (
     <>
@@ -45,7 +44,7 @@ const Header = () => {
         </div>
         <div className="login-and-signup">
           <div>
-            {/* {isLoggedIn ? (
+            {isLogin ? (
               <button className={clsx("main-login")} onClick={handleLogout}>
                 로그아웃
               </button>
@@ -53,16 +52,16 @@ const Header = () => {
               <button className={clsx("main-login")} onClick={handleLogin}>
                 로그인
               </button>
-            )} */}
+            )}
           </div>
-          <button
+          {/* <button
             className={clsx("main-login")}
             onClick={() => {
               handleLogin();
             }}
           >
             로그인
-          </button>
+          </button> */}
           <button
             className={clsx("main-signup")}
             onClick={() => {

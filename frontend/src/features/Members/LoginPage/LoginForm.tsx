@@ -1,81 +1,63 @@
 import { LoginPageStyled } from "./styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { setTokenList } from "@/redux/redux";
 import axios from "axios";
-import { setCookie } from "cookies-next";
 import clsx from "clsx";
 import api from "@/util/chek";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+
+import { useDispatch } from "react-redux";
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
 
 //로그인 컴포넌트
 export default function LoginPage() {
+  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+
+  //useState
   const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
 
+  //변수 선언
+  const dispatch = useDispatch();
   const router = useRouter();
 
+  // tokenList 변경될 때마다 리스트 출력
+  // useEffect(() => {
+  //   console.log("tokenList 업데이트됨:", tokenList);
+  // }, [tokenList]);
+
+  //login btn
   const handleLogin = async () => {
-    //console.log("로그인버튼");
     try {
       const response = await api.post("/auth/login", {
         userid: userid,
         password: password,
       });
 
-      // axios({
-      //   method: "post",
-      //   url: "http://localhost:5001/auth/login",
-      //   data: { userid: userid, password: password },
-      //   withCredentials: true,
-      // })
-      //   .then((res) => {
-      //     console.log("res", res.data);
-      //   })
-      //   .catch((error: string) => {
-      //     console.log("로그인 에러", error);
-      //   });
-
-      console.log("response", response);
-
-      return;
-      const token = response.data.token;
-
-      // JWT 저장
-      //Cookies.set("token", token);
-      setCookie("healthy_token", token, {
-        path: "/",
-        maxAge: 60 * 60 * 2, // 2시간 유지
-      });
-
-      // 로그인 후 필요한 동작 수행 (예: 페이지 이동 등)
+      //로그인 정보 - store 저장
+      dispatch(setTokenList({ token: response.data.user }));
       router.push("/");
-
-      console.log("로그인 성공", userid);
     } catch (error) {
       console.error("Login failed:", error);
+      //로그인 정보가 맞지 않음 - notification 설정
     }
   };
-  //네이버 로그인
-  const NAVER_CLIENT_ID = process.env.NAVER_KEY; // 발급받은 클라이언트 아이디
-  const REDIRECT_URI = "http://localhost:5001/auth/naver"; // Callback URL
-  const STATE = "flase";
 
   //네이버 소셜 로그인
   const NaverLogin = () => {
-    console.log("네이버 소셜 로그인");
-    window.location.href = REDIRECT_URI;
+    window.location.href = "http://localhost:5001/auth/naver";
   };
 
-  // function handleLogout() {
-
-  // }
-
+  //카카오 소셜 로그인
   function handleKakaoLogin() {
     window.location.href = "http://localhost:5001/auth/kakao";
   }
 
+  //구글 소셜 로그인
   function handleGoogleLogin() {
     window.location.href = "http://localhost:5001/auth/google";
   }
