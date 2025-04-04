@@ -3,8 +3,13 @@ import { LogoutPageStyled } from "./styled";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 
-export default function LogoutPage() {
+import axios from "axios";
+
+export default async function LogoutPage() {
   const router = useRouter();
-  Cookies.remove("healthy_token"); // Delete the cookie using cookies-next
-  router.push("/");
+  const response = await axios.get("http://localhost:5001/auth/logout");
+
+  response.data.result ? router.push("/") : "";
+
+  return <div>Logging out...</div>;
 }

@@ -16,6 +16,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleLogin = async () => {
+    console.log("로그인버튼");
     try {
       const response = await axios.post("http://localhost:5001/auth/login", {
         userid: userid,
