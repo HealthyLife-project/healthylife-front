@@ -10,6 +10,11 @@ import SubCategory from "../SubCategory";
 const SubMain = () => {
   const router = useRouter();
 
+  //NewChat 클릭 함수
+  const NewChat = () => {
+    router.push("/createchat?categot");
+  };
+
   //변수 선언
 
   return (
@@ -20,6 +25,7 @@ const SubMain = () => {
 
       <div className="main-right">
         <SubCategory />
+        <button onClick={NewChat}>방 생성하기</button>
       </div>
     </SubMainStyled>
   );

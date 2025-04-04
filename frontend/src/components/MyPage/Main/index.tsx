@@ -10,8 +10,10 @@ import Header from "@/components/Header";
 import Userinfo from "../UserInfo";
 import ExerciseInfo from "../ExerciseInfo";
 import ExerciseAndMeal from "../ExerciseAndMeal";
-import ModifyUserInfo from "../ModifyUserInfo";
+import ModifyUserInfo from "../ModifyUserInfo/Main";
 import { useState } from "react";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 //마이페이지 메인 컴포넌트
 const MyPageMain = () => {
@@ -20,6 +22,9 @@ const MyPageMain = () => {
 
   //useState
   const [defualtTap, setDefualtTab] = useState("1");
+
+  const token = useSelector((state: RootState) => state.token.tokenList);
+  //console.log("store token", token);
 
   headerlst.map((element: { id: number; category: string }, index: number) => {
     category_lst.push(element.category);
@@ -50,19 +55,6 @@ const MyPageMain = () => {
       children: <ModifyUserInfo />,
     },
   ];
-
-  //토큰
-  // axios({
-  //   method: "get",
-  //   url: "http://localhost:5001/auth/cookie",
-  //   withCredentials: true,
-  // })
-  //   .then((res) => {
-  //     console.log("토큰 정보:", res.data);
-  //   })
-  //   .catch((err) => {
-  //     console.error("토큰 확인 에러 발생:", err);
-  //   });
 
   return (
     <>

@@ -6,6 +6,7 @@ import { Button, Modal } from "antd";
 
 //Component
 import Pay from "@/features/Pay";
+import ModifyInput from "../ModifyInput";
 
 //마이페이지 > 개인정보 수정 컴포넌트
 const ModifyUserInfo = () => {
@@ -19,6 +20,7 @@ const ModifyUserInfo = () => {
     setOpen(true);
   };
 
+  //모달 OK 버튼
   const handleOk = () => {
     setModalText("The modal will be closed after two seconds");
     setConfirmLoading(true);
@@ -28,6 +30,7 @@ const ModifyUserInfo = () => {
     }, 2000);
   };
 
+  //모달 취소 버튼
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setOpen(false);
@@ -46,6 +49,7 @@ const ModifyUserInfo = () => {
       >
         <Pay />
       </Modal>
+      <ModifyInput />
     </ModifyUserInfoStyle>
   );
 };

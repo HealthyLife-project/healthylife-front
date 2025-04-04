@@ -7,7 +7,6 @@ import clsx from "clsx";
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
-import Header from "@/components/Header";
 
 //로그인 컴포넌트
 export default function LoginPage() {
@@ -126,7 +125,6 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-        <Header />
       </LoginPageStyled>
     </>
   );
