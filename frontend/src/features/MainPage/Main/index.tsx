@@ -24,6 +24,13 @@ const Main = () => {
 
   return (
     <>
+      <button
+        onClick={() => {
+          router.push("/hashtag");
+        }}
+      >
+        hashtags
+      </button>
       <Header />
       <MainStyled className={clsx("main-wrap")}>
         <LCategory />
