@@ -25,11 +25,6 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // tokenList 변경될 때마다 리스트 출력
-  // useEffect(() => {
-  //   console.log("tokenList 업데이트됨:", tokenList);
-  // }, [tokenList]);
-
   //login btn
   const handleLogin = async () => {
     try {

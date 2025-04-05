@@ -1,15 +1,28 @@
 import { deleteCookie } from "cookies-next";
-import { LogoutPageStyled } from "./styled";
 import { useRouter } from "next/router";
-import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { setTokenList } from "@/redux/redux";
+import { useEffect } from "react";
+import api from "@/util/chek";
 
-import axios from "axios";
-
-export default async function LogoutPage() {
+const LogoutPage = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
-  const response = await axios.get("http://localhost:5001/auth/logout");
 
-  response.data.result ? router.push("/") : "";
+  useEffect(() => {
+    const logout = async () => {
+      try {
+        await api.get("/auth/logout");
+        dispatch(setTokenList({ token: { name: "" } })); // redux 초기화
+        router.push("/");
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
+    };
 
-  return <div>Logging out...</div>;
-}
+    logout();
+  }, []);
+
+  return <div>로그아웃 중입니다</div>;
+};
+export default LogoutPage;
