@@ -14,7 +14,7 @@ import { RootState } from "@/redux/store";
 const ModifyInput = () => {
   const router = useRouter();
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
-  const [id, setId] = useState(tokenList.token.id);
+  const [id, setId] = useState(tokenList.id);
 
   const modifyFormik = useFormik({
     initialValues: {

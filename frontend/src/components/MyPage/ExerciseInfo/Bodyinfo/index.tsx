@@ -14,6 +14,8 @@ import { RootState } from "@/redux/store";
 
 //바디 인폼 컴포넌트
 const Bodyinfo = () => {
+  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+
   //useState
   const [height, setHeight] = useState(""); //키
   const [weight, setWeight] = useState(""); //몸무게
@@ -22,9 +24,7 @@ const Bodyinfo = () => {
   const [bmi, setBmi] = useState(""); //bmi
   const [fatper, setFatper] = useState(""); //체지방률
   const [exercise, setExercise] = useState([""]); //백엔드 전송 용 배열
-
-  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
-  const [id, setId] = useState(tokenList.token.id);
+  const [id, setId] = useState(tokenList.id);
 
   //변수 선언
 

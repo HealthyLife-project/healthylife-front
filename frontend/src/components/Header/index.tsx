@@ -31,12 +31,14 @@ const Header = () => {
 
   //로그인 정보 확인 - store용
   useEffect(() => {
-    //console.log("tokenList 업데이트됨:", tokenList.token);
-    const username = tokenList?.token?.name;
+    console.log("tokenList 업데이트됨:", tokenList);
+    const username = tokenList?.name;
     if (tokenList && username) {
+      //console.log("if문 실행 중");
       setIsLogin(true);
       Setname(username);
     } else {
+      //console.log("else문 실행 중");
       setIsLogin(false);
       Setname("");
     }

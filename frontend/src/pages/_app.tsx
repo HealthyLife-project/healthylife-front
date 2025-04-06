@@ -20,35 +20,21 @@ export default function App({ Component, pageProps }: AppProps) {
 // Redux에서 dispatch를 사용하기 위한 내부 컴포넌트
 const InitToken = () => {
   const dispatch = useDispatch();
-  //const [token, setToken] = useState([""]);
 
-  // useEffect(() => {
-  //   api
-  //     .get("/auth/cookie")
-  //     .then((res) => {
-  //       const user = res.data.user;
-
-  //       console.log("app user", user);
-  //       setToken(user);
-  //       dispatch(setTokenList(user));
-  //     })
-  //     .catch((err) => {
-  //       console.log("쿠키 인증 실패", err);
-  //     });
-  // }, []);
+  //새로고침 시 헤더 유지
   useEffect(() => {
     api
       .get("/auth/cookie")
       .then((res) => {
-        const user = res.data.user; // user가 null일 수도 있음
-        console.log("받은 유저:", res.data);
-        dispatch(setTokenList(user)); // null이면 null 그대로 넣음
+        const user = res.data.user;
+        //console.log("받은 유저:", res.data);
+        dispatch(setTokenList(user));
       })
       .catch((err) => {
-        console.log("쿠키 인증 실패:", err);
-        dispatch(setTokenList(null)); // 오류 시에도 null로 설정
+        //console.log("쿠키 인증 실패:", err);
+        dispatch(setTokenList(null));
       });
-  }, [dispatch]);
+  }, []);
 
   return null;
 };

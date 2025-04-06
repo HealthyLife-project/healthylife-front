@@ -38,7 +38,7 @@ export default function LoginPage() {
       //console.log("response.data.user", response.data.user); user데이터
 
       //로그인 정보 - store 저장
-      dispatch(setTokenList({ token: response.data.user }));
+      dispatch(setTokenList(response.data.user));
       router.push("/");
     } catch (error) {
       console.error("Login failed:", error);

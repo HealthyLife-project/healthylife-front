@@ -11,6 +11,7 @@ interface UserType {
 // 타입 정의
 interface TokenState {
   tokenList: {
+    [x: string]: any;
     token: UserType;
   };
   tokenSet: Record<string, string>; // key-value 형태의 객체
