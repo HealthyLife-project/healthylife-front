@@ -175,12 +175,16 @@ const Bodyinfo = () => {
               onChange={(e) => setFatper(e.target.value)}
             />
           </div>
-          <Button htmlType="submit">저장</Button>
+          <div className="btn-group">
+            <Upload {...props} showUploadList={false}>
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+            <Button htmlType="submit" className="save-btn">
+              저장
+            </Button>
+          </div>
         </form>
       </div>
-      <Upload {...props} showUploadList={false}>
-        <Button icon={<UploadOutlined />}>Click to Upload</Button>
-      </Upload>
     </BodyInfoStyle>
   );
 };
