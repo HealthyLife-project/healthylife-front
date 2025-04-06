@@ -6,7 +6,7 @@ export const SubMainStyled = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     //justify-content: space-between;
     //padding: 0px 20px;
     align-items: center;
@@ -14,6 +14,10 @@ export const SubMainStyled = styled.div`
     gap: 10px;
     align-items: flex-start;
 
+    .main-content {
+      display: flex;
+      width: 100%;
+    }
     .main-left,
     .main-right {
       display: flex;
@@ -23,12 +27,24 @@ export const SubMainStyled = styled.div`
     }
 
     .main-left {
-      position: -webkit-sticky;
+      height: 500px;
+      /* position: -webkit-sticky;
       position: sticky;
-      top: 0px;
+      top: 0px; */
     }
     .main-right {
       flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  .search {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+
+    .search-antd {
+      width: 300px;
     }
   }
 `;

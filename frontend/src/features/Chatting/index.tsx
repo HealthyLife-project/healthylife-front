@@ -81,13 +81,13 @@ const Chatting = (props: { urlstr: string }) => {
   //채팅 목록 리스트 조회
   axios({
     method: "get",
-    url: `http://localhost:3000/chatlist/${urlstr}`,
+    url: `http://localhost:5001/chatlist/${urlstr}`,
   })
     .then((res) => {
       console.log("res", res.data);
     })
     .catch((error: string) => {
-      console.log("error", error);
+      console.log("채팅 목록 리스트 조회 error", error);
     });
 
   return (
@@ -95,9 +95,13 @@ const Chatting = (props: { urlstr: string }) => {
       <Table<DataType>
         columns={columns}
         dataSource={data}
-        // onRow={(record, rowIndex) => {
-        //   return;
-        // }}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: () => {
+              console.log("클릭된 행:", record);
+            },
+          };
+        }}
       />
     </ChattingStyled>
   );

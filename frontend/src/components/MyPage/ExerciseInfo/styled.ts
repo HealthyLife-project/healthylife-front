@@ -8,7 +8,6 @@ export const ExerciseInfoStyle = styled.div`
     .main-map {
       width: 40%;
       height: 500px;
-      background-color: red;
     }
   }
 `;

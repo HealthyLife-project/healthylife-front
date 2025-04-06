@@ -4,8 +4,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { Button, Drawer } from "antd";
-
+import { Button, Drawer, Input } from "antd";
 //Component
 import DrawerContainer from "@/features/MainPage/Drawer";
 
@@ -32,7 +31,7 @@ const Header = () => {
 
   //로그인 정보 확인 - store용
   useEffect(() => {
-    console.log("tokenList 업데이트됨:", tokenList.token);
+    //console.log("tokenList 업데이트됨:", tokenList.token);
     const username = tokenList?.token?.name;
     if (tokenList && username) {
       setIsLogin(true);

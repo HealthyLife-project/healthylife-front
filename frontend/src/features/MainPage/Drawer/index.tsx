@@ -1,5 +1,7 @@
+import clsx from "clsx";
 import { DrawerStyled } from "./styled";
 import { useRouter } from "next/router";
+import { Button } from "antd";
 
 //Drawer 컴포넌트
 const DrawerContainer = () => {
@@ -15,15 +17,15 @@ const DrawerContainer = () => {
   }
 
   return (
-    <>
+    <DrawerStyled className={clsx("main-wrap")}>
       <div onClick={openMyPage} className="mypage-router">
         마이페이지
       </div>
-      <button className="main-logout" onClick={handleLogout}>
+      <Button className="main-logout" onClick={handleLogout}>
         로그아웃
-      </button>
+      </Button>
       <div>다크모드</div>
-    </>
+    </DrawerStyled>
   );
 };
 

@@ -20,8 +20,8 @@ const UserContent = () => {
   const [email, SetEmail] = useState(""); //이메일
   const [gender, SetGender] = useState(""); //성별
   const [phone, SetPhone] = useState(""); //전화번호
-  const [userid, SetUserid] = useState(tokenList.token.userid); //유저 아이디
-  const [id, setId] = useState(tokenList.token.id);
+  const [userid, SetUserid] = useState(""); //유저 아이디
+  const [id, setId] = useState(7);
 
   //useState - uesrhashtag
   const [hashTag, setHashTag] = useState([""]);

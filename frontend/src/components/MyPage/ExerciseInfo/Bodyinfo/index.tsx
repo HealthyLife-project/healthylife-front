@@ -5,6 +5,10 @@ import type { UploadProps } from "antd";
 import { Button, message, Upload, Input } from "antd";
 import { createWorker } from "tesseract.js";
 import { useState } from "react";
+import { Formik, useFormik } from "formik";
+import api from "@/util/chek";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 //Component
 
@@ -17,6 +21,10 @@ const Bodyinfo = () => {
   const [fatmass, setFatmass] = useState(""); //체지방량
   const [bmi, setBmi] = useState(""); //bmi
   const [fatper, setFatper] = useState(""); //체지방률
+  const [exercise, setExercise] = useState([""]); //백엔드 전송 용 배열
+
+  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+  const [id, setId] = useState(tokenList.token.id);
 
   //변수 선언
 
@@ -68,6 +76,14 @@ const Bodyinfo = () => {
             setBmi(extractedData.BMI ?? "");
             setFatper(extractedData.체지방률 ?? "");
 
+            setExercise([
+              extractedData.체중 ?? "",
+              extractedData.골격근량 ?? "",
+              extractedData.체지방량 ?? "",
+              extractedData.BMI ?? "",
+              extractedData.체지방률 ?? "",
+            ]);
+
             console.log("추출된 데이터:", extractedData);
             await worker.terminate();
 
@@ -83,58 +99,84 @@ const Bodyinfo = () => {
       }
     },
   };
+
+  const SubmitFormik = useFormik({
+    initialValues: {
+      height: "",
+      weight: "",
+      musclemass: "",
+      fatmass: "",
+      bmi: "",
+      fatper: "",
+    },
+    onSubmit: (values) => {
+      //폼 안에 버튼을 눌렀을 때 생기는 것
+      //console.log("values", values);
+      api
+        .post(`/exerciseinfo/${id}`, exercise)
+        .then((res) => {
+          console.log("전송 성공했습니다.");
+        })
+        .catch((error: string) => {
+          console.log("전송 실패 에러: ", error);
+        });
+    },
+  });
   return (
     <BodyInfoStyle>
       <div>
         <h1>인바디 정보</h1>
-        <div>
-          키
-          <Input
-            placeholder="키를 입력해 주세요"
-            value={height}
-            onChange={(e) => setHeight(e.target.value)}
-          />
-        </div>
-        <div>
-          몸무게
-          <Input
-            placeholder="몸무게를 입력해 주세요"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-          />
-        </div>
-        <div>
-          골격근량
-          <Input
-            placeholder="골격근량를 입력해 주세요"
-            value={musclemass}
-            onChange={(e) => setMusclemass(e.target.value)}
-          />
-        </div>
-        <div>
-          체지방량
-          <Input
-            placeholder="체지방량를 입력해 주세요"
-            value={fatmass}
-            onChange={(e) => setFatmass(e.target.value)}
-          />
-        </div>
-        <div>
-          BMI
-          <Input
-            placeholder="BMI를 입력해 주세요"
-            value={bmi}
-            onChange={(e) => setBmi(e.target.value)}
-          />
-        </div>
-        <div>
-          체지방률
-          <Input
-            placeholder="체지방률을 입력해 주세요"
-            value={fatper}
-            onChange={(e) => setFatper(e.target.value)}
-          />
-        </div>
+        <form onSubmit={SubmitFormik.handleSubmit}>
+          <div>
+            키
+            <Input
+              placeholder="키를 입력해 주세요"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+            />
+          </div>
+          <div>
+            몸무게
+            <Input
+              placeholder="몸무게를 입력해 주세요"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+            />
+          </div>
+          <div>
+            골격근량
+            <Input
+              placeholder="골격근량를 입력해 주세요"
+              value={musclemass}
+              onChange={(e) => setMusclemass(e.target.value)}
+            />
+          </div>
+          <div>
+            체지방량
+            <Input
+              placeholder="체지방량를 입력해 주세요"
+              value={fatmass}
+              onChange={(e) => setFatmass(e.target.value)}
+            />
+          </div>
+          <div>
+            BMI
+            <Input
+              placeholder="BMI를 입력해 주세요"
+              value={bmi}
+              onChange={(e) => setBmi(e.target.value)}
+            />
+          </div>
+          <div>
+            체지방률
+            <Input
+              placeholder="체지방률을 입력해 주세요"
+              value={fatper}
+              onChange={(e) => setFatper(e.target.value)}
+            />
+          </div>
+          <Button htmlType="submit">저장</Button>
+        </form>
       </div>
       <Upload {...props} showUploadList={false}>
         <Button icon={<UploadOutlined />}>Click to Upload</Button>

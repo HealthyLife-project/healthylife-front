@@ -7,7 +7,8 @@ import clsx from "clsx";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-
+import { Button, Drawer, Input } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 
 //image
@@ -20,6 +21,7 @@ export default function LoginPage() {
   //useState
   const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false); //input 비밀번호 공개유무
 
   //변수 선언
   const dispatch = useDispatch();
@@ -80,15 +82,14 @@ export default function LoginPage() {
         <div className="login-form">
           <div className="login-container">
             <div className="login-inputs">
-              <input
+              <Input
                 type="text"
                 placeholder="ID"
                 className="id-input"
                 onChange={(event) => setUserid(event.target.value)}
               />
 
-              <input
-                type="text"
+              <Input.Password
                 placeholder="PASSWORD"
                 className="password-input"
                 onKeyDown={(e) => activeEnter(e)}
