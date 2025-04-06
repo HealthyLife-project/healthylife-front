@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { setTokenList } from "@/redux/redux";
+import api from "@/util/chek";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -22,6 +23,9 @@ const InitToken = () => {
 
   useEffect(() => {
     const storedToken = Cookies.get("healthy_token");
+    const tokened = api.get("/auth/cookie").then((res) => {
+      console.log("res", res.data);
+    });
     console.log("app cookie ", storedToken);
     if (storedToken) {
       dispatch(setTokenList(storedToken));

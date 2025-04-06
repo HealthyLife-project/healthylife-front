@@ -3,12 +3,16 @@ import clsx from "clsx";
 
 //Component
 import KAKAOMap from "../../Map";
+import Bodyinfo from "./Bodyinfo";
 
 //마이페이지 > 운동정보 메인 컴포넌트
 const ExerciseInfo = () => {
   return (
     <ExerciseInfoStyle className={clsx("main-wrap")}>
-      <KAKAOMap />
+      <div className="main-map">
+        <KAKAOMap />
+      </div>
+      <Bodyinfo />
     </ExerciseInfoStyle>
   );
 };

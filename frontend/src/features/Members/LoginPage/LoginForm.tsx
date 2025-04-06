@@ -132,10 +132,3 @@ export default function LoginPage() {
     </>
   );
 }
-// function setCookie(
-//   arg0: string,
-//   token: any,
-//   arg2: { path: string; maxAge: number }
-// ) {
-//   throw new Error("Function not implemented.");
-// }

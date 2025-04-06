@@ -13,6 +13,7 @@ declare global {
 //마이페이지 > 운동정보 지도 컴포넌트
 const KAKAOMap = () => {
   console.log("avigator.geolocation", navigator.geolocation);
+
   useEffect(() => {
     const kakaoMapScript = document.createElement("script");
     kakaoMapScript.async = false;
