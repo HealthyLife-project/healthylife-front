@@ -15,11 +15,6 @@ const UserImage = () => {
           alt="user"
           className={clsx("user-image-style")}
         />
-        {/* <img
-          src={userimage.src}
-          alt="user"
-          className={clsx("user-image-style")}
-        /> */}
       </div>
     </UserImageStyle>
   );

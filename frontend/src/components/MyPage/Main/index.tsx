@@ -26,11 +26,10 @@ const MyPageMain = () => {
   const token = useSelector((state: RootState) => state.token.tokenList);
   //console.log("store token", token);
 
+  //category만 추출
   headerlst.map((element: { id: number; category: string }, index: number) => {
     category_lst.push(element.category);
   });
-
-  //console.log("cate", category_lst);
 
   //카테고리 헤더 이동 배열
   const items = [

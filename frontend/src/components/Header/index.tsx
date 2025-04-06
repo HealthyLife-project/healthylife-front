@@ -2,10 +2,12 @@ import { HeaderStyled } from "./styled";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { getCookie } from "cookies-next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Button, Drawer } from "antd";
+
+//Component
+import DrawerContainer from "@/features/MainPage/Drawer";
 
 interface UserType {
   name: string;
@@ -30,7 +32,7 @@ const Header = () => {
 
   //로그인 정보 확인 - store용
   useEffect(() => {
-    console.log("tokenList 업데이트됨:", tokenList.token.name);
+    console.log("tokenList 업데이트됨:", tokenList.token);
     const username = tokenList?.token?.name;
     if (tokenList && username) {
       setIsLogin(true);
@@ -44,11 +46,6 @@ const Header = () => {
   // 로그인 버튼 클릭
   function handleLogin() {
     router.push("/login");
-  }
-
-  // 로그아웃 버튼
-  function handleLogout() {
-    router.push("/logout");
   }
 
   //Drawer 열기
@@ -73,39 +70,33 @@ const Header = () => {
           HEALTHY LIFE
         </div>
         <div className="login-and-signup">
-          <>
-            {isLogin ? (
-              <>
-                <div>
-                  <span className="user-name" onClick={showDrawer}>
-                    {name}
-                  </span>
-                  님 환영합니다
-                </div>
-                <Drawer title={name} onClose={onClose} open={open}>
-                  <div>마이페이지</div>
-                  <button className={clsx("main-login")} onClick={handleLogout}>
-                    로그아웃
-                  </button>
-                  <div>다크모드</div>
-                </Drawer>
-              </>
-            ) : (
-              <>
-                <button className={clsx("main-login")} onClick={handleLogin}>
-                  로그인
-                </button>
-                <button
-                  className={clsx("main-signup")}
-                  onClick={() => {
-                    router.push("/signup");
-                  }}
-                >
-                  회원가입
-                </button>
-              </>
-            )}
-          </>
+          {isLogin ? (
+            <>
+              <div>
+                <span className="user-name" onClick={showDrawer}>
+                  {name}
+                </span>
+                님 환영합니다
+              </div>
+              <Drawer title={name} onClose={onClose} open={open}>
+                <DrawerContainer />
+              </Drawer>
+            </>
+          ) : (
+            <>
+              <button className={clsx("main-login")} onClick={handleLogin}>
+                로그인
+              </button>
+              <button
+                className={clsx("main-signup")}
+                onClick={() => {
+                  router.push("/signup");
+                }}
+              >
+                회원가입
+              </button>
+            </>
+          )}
         </div>
       </HeaderStyled>
     </>

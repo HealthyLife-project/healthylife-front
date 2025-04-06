@@ -37,7 +37,6 @@ export const HeaderStyled = styled.div`
       align-items: center;
       cursor: pointer;
     }
-
     .user-name {
       cursor: pointer;
     }

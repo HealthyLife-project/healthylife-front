@@ -2,8 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // 유저 타입 정의
 interface UserType {
+  [x: string]: any;
   name: string;
-  // 필요 시 여기에 userid, email 등 추가 가능
+  userid: string;
+  id: string;
 }
 
 // 타입 정의
@@ -19,6 +21,8 @@ const initialState: TokenState = {
   tokenList: {
     token: {
       name: "", // 초기값을 설정
+      userid: "",
+      id: "",
     },
   },
   tokenSet: {},

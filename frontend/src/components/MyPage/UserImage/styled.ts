@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const UserImageStyle = styled.div`
   &.main-wrap {
     display: flex;
-    width: 30%;
+    width: 40%;
     height: 100%;
 
     .main-image {

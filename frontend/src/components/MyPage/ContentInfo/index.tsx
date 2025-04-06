@@ -1,14 +1,5 @@
-import { userinfo } from "../UserContent/model"; //interface model
 import { ContentInfoStyle } from "./styled"; //스타일
 import clsx from "clsx";
-
-//Component
-
-//list
-
-// interface User {
-//   info: userinfo;
-// }
 
 //마이페이지 > 개인정보 > 내용 컴포넌트
 const ContentInfo = (props: {
@@ -23,20 +14,42 @@ const ContentInfo = (props: {
 }) => {
   const { name, nickname, address, email, gender, phone, userid, hashtag } =
     props;
+
   return (
-    <ContentInfoStyle>
-      <div>
-        <div>이름 : {name}</div>
-        <div>닉네임 : {nickname}</div>
-        <div>ID : {userid}</div>
-        <div>address : {address} </div>
-        <div>email : {email}</div>
-        <div>gender :{gender} </div>
-        <div>phone : {phone}</div>
-      </div>
-      <div>
-        <div>선호하는 HASHTAG</div>
-        <div>dfs</div>
+    <ContentInfoStyle className={clsx("main-wrap")}>
+      <div className="user-info">
+        <div className="info-row">
+          <div className="info-label">이름</div>
+          <div className="info-value">{name}</div>
+        </div>
+        <div className="info-row">
+          <div className="info-label">닉네임</div>
+          <div className="info-value">{nickname}</div>
+        </div>
+        <div className="info-row">
+          <div className="info-label">ID</div>
+          <div className="info-value">{userid}</div>
+        </div>
+        <div className="info-row">
+          <div className="info-label">주소</div>
+          <div className="info-value">{address}</div>
+        </div>
+        <div className="info-row">
+          <div className="info-label">이메일</div>
+          <div className="info-value">{email}</div>
+        </div>
+        <div className="info-row">
+          <div className="info-label">성별</div>
+          <div className="info-value">{gender}</div>
+        </div>
+        <div className="info-row">
+          <div className="info-label">전화번호</div>
+          <div className="info-value">{phone}</div>
+        </div>
+        <div className="info-row">
+          <div className="info-label">선호하는 해시태그</div>
+          <div className="info-value">좋음</div>
+        </div>
       </div>
     </ContentInfoStyle>
   );
