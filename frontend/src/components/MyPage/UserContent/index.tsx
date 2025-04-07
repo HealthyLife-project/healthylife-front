@@ -2,7 +2,7 @@ import { UserContentStyle } from "./styled"; //스타일
 import clsx from "clsx";
 import api from "@/util/chek";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
@@ -26,15 +26,17 @@ const UserContent = () => {
   //useState - uesrhashtag
   const [hashTag, setHashTag] = useState([""]);
   //현재 로그인한 유저 정보 가져오기
-  api.get(`/user/${id}`).then((res) => {
-    setName(res.data.name);
-    SetNickName(res.data.nickname);
-    SetAddress(res.data.address);
-    SetEmail(res.data.email);
-    SetGender(res.data.gender);
-    SetPhone(res.data.phone);
-    SetUserid(res.data.userid);
-  });
+  useEffect(() => {
+    api.get(`/user/${id}`).then((res) => {
+      setName(res.data.name);
+      SetNickName(res.data.nickname);
+      SetAddress(res.data.address);
+      SetEmail(res.data.email);
+      SetGender(res.data.gender);
+      SetPhone(res.data.phone);
+      SetUserid(res.data.userid);
+    });
+  }, []);
 
   //해당 유저에 해당하는 해시태그
   axios({
