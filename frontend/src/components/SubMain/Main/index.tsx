@@ -35,7 +35,7 @@ const SubMain = () => {
   const router = useRouter();
 
   //useState
-  const [urlstr, setUrlStr] = useState("");
+  const [urlstr, setUrlStr] = useState(""); //person or pet
 
   useEffect(() => {
     //console.log(window.location.pathname);

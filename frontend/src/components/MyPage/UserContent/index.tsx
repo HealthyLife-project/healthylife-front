@@ -21,7 +21,7 @@ const UserContent = () => {
   const [gender, SetGender] = useState(""); //성별
   const [phone, SetPhone] = useState(""); //전화번호
   const [userid, SetUserid] = useState(""); //유저 아이디
-  const [id, setId] = useState(7);
+  const [id, setId] = useState(Number(tokenList.id));
 
   //useState - uesrhashtag
   const [hashTag, setHashTag] = useState([""]);

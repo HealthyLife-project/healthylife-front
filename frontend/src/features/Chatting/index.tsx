@@ -1,10 +1,9 @@
 import { ChattingStyled } from "./styled";
 import { useRouter } from "next/router";
 import clsx from "clsx";
-
 import { Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
-import axios from "axios";
+import api from "@/util/chek";
 
 //Coponent
 
@@ -79,10 +78,8 @@ const Chatting = (props: { urlstr: string }) => {
   ];
 
   //채팅 목록 리스트 조회
-  axios({
-    method: "get",
-    url: `http://localhost:5001/chatlist/${urlstr}`,
-  })
+  api
+    .get(`chatlist/${urlstr}`)
     .then((res) => {
       console.log("res", res.data);
     })
@@ -99,6 +96,7 @@ const Chatting = (props: { urlstr: string }) => {
           return {
             onClick: () => {
               console.log("클릭된 행:", record);
+              router.push(`/chat/${urlstr}/${record.key}`);
             },
           };
         }}

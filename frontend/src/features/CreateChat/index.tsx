@@ -24,10 +24,8 @@ const CreateChat = () => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
       console.log("values", values);
       router.push("/");
-      // axios({
-      //   method: "post",
-      //   url : `http://localhost:3000/chat/${}`
-      // });
+
+      //api.post(`chat/`)
     },
   });
 
