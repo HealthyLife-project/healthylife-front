@@ -19,9 +19,10 @@ interface TokenState {
 
 // 초기 상태
 const initialState: TokenState = {
+  // 초기값을 설정
   tokenList: {
     token: {
-      name: "", // 초기값을 설정
+      name: "",
       userid: "",
       id: "",
     },

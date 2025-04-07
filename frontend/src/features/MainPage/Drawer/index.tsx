@@ -2,9 +2,14 @@ import clsx from "clsx";
 import { DrawerStyled } from "./styled";
 import { useRouter } from "next/router";
 import { Button } from "antd";
+import api from "@/util/chek";
+import { useDispatch } from "react-redux";
+import { setTokenList } from "@/redux/redux";
 
 //Drawer 컴포넌트
 const DrawerContainer = () => {
+  //변수 선언
+  const dispatch = useDispatch();
   const router = useRouter();
 
   //마이페이지 이동
@@ -13,7 +18,21 @@ const DrawerContainer = () => {
   };
   // 로그아웃 버튼
   function handleLogout() {
-    router.push("/logout");
+    try {
+      api.get("/auth/logout");
+      dispatch(
+        setTokenList({
+          token: {
+            name: "",
+            userid: "",
+            id: "",
+          },
+        })
+      ); // redux 초기화
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   }
 
   return (

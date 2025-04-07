@@ -48,7 +48,7 @@ export default function LoginPage() {
 
   //네이버 소셜 로그인
   const NaverLogin = () => {
-    window.location.href = "http://localhost:5001/auth/naver";
+    window.location.href = "http://localhost:5001/auth/naver/cb";
   };
 
   //카카오 소셜 로그인
