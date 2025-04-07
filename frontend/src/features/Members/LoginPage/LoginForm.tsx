@@ -7,6 +7,9 @@ import clsx from "clsx";
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
+import google_login from "../../../assets/images/google_logo.png";
+import kakao_login from "../../../assets/images/kakao_login.png";
+import HashtagForm from "../Hashtags/HashtagForm";
 
 //로그인 컴포넌트
 export default function LoginPage() {
@@ -64,6 +67,9 @@ export default function LoginPage() {
     window.location.href = "http://localhost:5001/auth/google";
   }
 
+  function handleForgotPW() {
+    router.push("/forgotpw");
+  }
   return (
     <>
       <LoginPageStyled className={clsx("main-wrap")}>
@@ -99,7 +105,7 @@ export default function LoginPage() {
           </div>
           <div className="login-sub-container">
             <div>아이디 찾기</div>
-            <div>비밀번호 찾기</div>
+            <div onClick={handleForgotPW}>비밀번호 찾기</div>
             <div
               onClick={() => {
                 router.push("/signup");
@@ -110,10 +116,18 @@ export default function LoginPage() {
           </div>
           <div className="login-sns">
             <div className="kakao-login" onClick={handleKakaoLogin}>
-              카카오
+              <img
+                className="imgstyle"
+                src={kakao_login.src}
+                alt="kakao_login"
+              />
             </div>
             <div className="google-login" onClick={handleGoogleLogin}>
-              구글
+              <img
+                className="imgstyle"
+                src={google_login.src}
+                alt="google_login"
+              />
             </div>
             <div
               className="naver-login"
@@ -125,6 +139,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
+        {/* <HashtagForm person={{ userid: userid }} /> */}
       </LoginPageStyled>
     </>
   );

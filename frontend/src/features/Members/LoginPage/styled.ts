@@ -69,12 +69,22 @@ export const LoginPageStyled = styled.div`
       color: gray;
     }
 
+    .kakao-login {
+      width: 15%;
+    }
+
+    .google-login {
+      width: 15%;
+    }
+
     .naver-login {
       width: 15%;
     }
+
     .imgstyle {
       width: 100%;
       height: 100%;
+      border-radius: 50%;
     }
   }
 `;
