@@ -14,7 +14,7 @@ interface SignupPageValues {
   name: string;
   email: string;
   nickname: string;
-  age: number;
+  age: number | undefined;
   gender: "남성" | "여성";
   phone: string;
   address: string;
@@ -28,7 +28,7 @@ const SignupPage: React.FC = () => {
     name: "",
     email: "",
     nickname: "",
-    age: 0,
+    age: undefined,
     gender: "남성",
     phone: "000-0000-0000",
     address: "",
