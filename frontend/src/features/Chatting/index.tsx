@@ -28,11 +28,13 @@ const columns: TableProps<DataType>["columns"] = [
 ];
 
 //Chatting 컴포넌트
-const Chatting = (props: { category: string }) => {
+const Chatting = (props: { urlstr: string }) => {
   //props
-  const { category } = props;
+  const { urlstr } = props;
 
   const router = useRouter();
+
+  //채팅방 임시 목록 리스트
   const data: DataType[] = [
     {
       key: "1",
@@ -79,18 +81,28 @@ const Chatting = (props: { category: string }) => {
   //채팅 목록 리스트 조회
   axios({
     method: "get",
-    url: `http://localhost:3000/chatlist/${category}`,
+    url: `http://localhost:5001/chatlist/${urlstr}`,
   })
     .then((res) => {
       console.log("res", res.data);
     })
     .catch((error: string) => {
-      console.log("error", error);
+      console.log("채팅 목록 리스트 조회 error", error);
     });
 
   return (
     <ChattingStyled className={clsx("main-wrap")}>
-      <Table<DataType> columns={columns} dataSource={data} />
+      <Table<DataType>
+        columns={columns}
+        dataSource={data}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: () => {
+              console.log("클릭된 행:", record);
+            },
+          };
+        }}
+      />
     </ChattingStyled>
   );
 };

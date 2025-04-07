@@ -12,5 +12,9 @@ export const ChattingStyled = styled.div`
     align-items: center;
     margin: 0px auto;
     // background-color: #d2e4f8;
+
+    .ant-table-cell {
+      cursor: pointer;
+    }
   }
 `;

@@ -5,13 +5,16 @@ import axios from "axios";
 import { Input, Button } from "antd";
 import { Formik, useFormik } from "formik";
 import { useState } from "react";
+import api from "@/util/chek";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 //Component
 
 //개인정보 컴포넌트
 const ModifyInput = () => {
   const router = useRouter();
-
-  const [userid, setUserid] = useState("");
+  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+  const [id, setId] = useState(tokenList.id);
 
   const modifyFormik = useFormik({
     initialValues: {
@@ -22,13 +25,23 @@ const ModifyInput = () => {
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
       console.log("values", values);
-      axios({
-        method: "put",
-        url: `http://localhost:5001/mypage/modify`,
-        data: { id: userid, userifo: values },
-      })
+      // axios({
+      //   method: "put",
+      //   url: `http://localhost:5001/mypage/modify`,
+      //   // data: { id: userid, userifo: values },
+      // })
+      //   .then((res) => {
+      //     console.log("res", res.data);
+      //   })
+      //   .catch((error: string) => {
+      //     console.log("error", error);
+      //   });
+
+      api
+        .put(`mypage/modify/${id}`)
         .then((res) => {
           console.log("res", res.data);
+          //notification("수정완료 되었습니다");
         })
         .catch((error: string) => {
           console.log("error", error);

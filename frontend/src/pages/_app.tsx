@@ -2,10 +2,11 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { setTokenList } from "@/redux/redux";
+import api from "@/util/chek";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -20,13 +21,20 @@ export default function App({ Component, pageProps }: AppProps) {
 const InitToken = () => {
   const dispatch = useDispatch();
 
+  //새로고침 시 헤더 유지
   useEffect(() => {
-    const storedToken = Cookies.get("healthy_token");
-    console.log("app cookie ", storedToken);
-    if (storedToken) {
-      dispatch(setTokenList(storedToken));
-    }
-  }, [dispatch]);
+    api
+      .get("/auth/cookie")
+      .then((res) => {
+        const user = res.data.user;
+        //console.log("받은 유저:", res.data);
+        dispatch(setTokenList(user));
+      })
+      .catch((err) => {
+        //console.log("쿠키 인증 실패:", err);
+        dispatch(setTokenList(null));
+      });
+  }, []);
 
   return null;
 };

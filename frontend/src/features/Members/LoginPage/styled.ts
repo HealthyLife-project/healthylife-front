@@ -69,6 +69,7 @@ export const LoginPageStyled = styled.div`
       color: gray;
     }
 
+
     .kakao-login {
       width: 15%;
     }
@@ -85,6 +86,7 @@ export const LoginPageStyled = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 50%;
-    }
+
+
   }
 `;

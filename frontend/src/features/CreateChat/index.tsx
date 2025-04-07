@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Formik, useFormik } from "formik";
 import { Input, Button } from "antd";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 //Coponent
 
@@ -32,18 +34,28 @@ const CreateChat = () => {
   console.log("createFormik", createFormik.values);
 
   return (
-    <CreateChatStyle className={clsx("main-wrap")}>
-      <h1>방 생성하기</h1>
-      <form onSubmit={createFormik.handleSubmit}>
-        <Input
-          name="title"
-          placeholder="이름"
-          onChange={createFormik.handleChange}
-        />
-        {/* antd쓸때만 submit지정해주기 */}
-        <Button htmlType="submit">생성하기</Button>
-      </form>
-    </CreateChatStyle>
+    <>
+      <Header />
+      <CreateChatStyle className={clsx("main-wrap")}>
+        <div className="chat-box">
+          <h1>채팅방 생성하기</h1>
+          <div className="chat-title">방 제목 입력</div>
+          <form onSubmit={createFormik.handleSubmit}>
+            <Input
+              name="title"
+              placeholder="채팅방 이름을 입력하세요"
+              onChange={createFormik.handleChange}
+              className="chat-input"
+            />
+
+            <Button htmlType="submit" type="primary" className="chat-button">
+              생성하기
+            </Button>
+          </form>
+        </div>
+      </CreateChatStyle>
+      <Footer />
+    </>
   );
 };
 export default CreateChat;

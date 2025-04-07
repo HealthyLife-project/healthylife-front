@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const UserContentStyle = styled.div`
   &.main-wrap {
     display: flex;
-    width: 70%;
+    width: 60%;
     height: 100%;
   }
 `;

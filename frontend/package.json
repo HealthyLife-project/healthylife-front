@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/genai": "^0.7.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@tosspayments/tosspayments-sdk": "^2.3.4",
     "@types/js-cookie": "^3.0.6",
@@ -30,6 +31,7 @@
     "redux": "^5.0.1",
     "styled-components": "^6.1.16",
     "swiper": "^11.2.6",
+    "tesseract.js": "^6.0.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {

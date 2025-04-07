@@ -24,13 +24,6 @@ const Main = () => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          router.push("/hashtag");
-        }}
-      >
-        hashtags
-      </button>
       <Header />
       <MainStyled className={clsx("main-wrap")}>
         <LCategory />
@@ -38,14 +31,6 @@ const Main = () => {
         <TopicMain />
       </MainStyled>
       <Footer />
-      <button
-        className={clsx("main-signup")}
-        onClick={() => {
-          router.push("/mypage");
-        }}
-      >
-        마이페이지 이동
-      </button>
     </>
   );
 };
