@@ -6,6 +6,7 @@ import axios from "axios";
 import { Formik, useFormik } from "formik";
 import { Input, Button } from "antd";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 //Coponent
 
@@ -53,6 +54,7 @@ const CreateChat = () => {
           </form>
         </div>
       </CreateChatStyle>
+      <Footer />
     </>
   );
 };

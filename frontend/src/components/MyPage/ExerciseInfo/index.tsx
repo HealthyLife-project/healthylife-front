@@ -12,7 +12,9 @@ const ExerciseInfo = () => {
       <div className="main-map">
         <KAKAOMap />
       </div>
-      <Bodyinfo />
+      <div className="main-info">
+        <Bodyinfo />
+      </div>
     </ExerciseInfoStyle>
   );
 };

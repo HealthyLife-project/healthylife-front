@@ -30,7 +30,7 @@ export const BodyInfoStyle = styled.div`
         margin-top: 5px;
         padding: 10px;
         font-size: 13px;
-        width: 40%;
+        width: 80%;
       }
     }
     .btn-group {

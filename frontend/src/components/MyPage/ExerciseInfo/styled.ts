@@ -6,8 +6,12 @@ export const ExerciseInfoStyle = styled.div`
     width: 100%;
 
     .main-map {
-      width: 40%;
+      width: 50%;
       height: 500px;
+    }
+    .main-info {
+      width: 50%;
+      height: 100%;
     }
   }
 `;
