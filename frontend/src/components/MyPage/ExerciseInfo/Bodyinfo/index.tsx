@@ -24,7 +24,7 @@ const Bodyinfo = () => {
   const [bmi, setBmi] = useState(""); //bmi
   const [fatper, setFatper] = useState(""); //체지방률
   const [exercise, setExercise] = useState([""]); //백엔드 전송 용 배열
-  const [id, setId] = useState(tokenList.id);
+  const [id, setId] = useState(Number(tokenList.id));
 
   //변수 선언
 
@@ -111,9 +111,9 @@ const Bodyinfo = () => {
     },
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
-      //console.log("values", values);
+      console.log("values", values);
       api
-        .post(`/exerciseinfo/${id}`, exercise)
+        .post(`inbody/exerciseinfo/${id}`, values)
         .then((res) => {
           console.log("전송 성공했습니다.");
         })
@@ -128,51 +128,41 @@ const Bodyinfo = () => {
         <h1>인바디 정보</h1>
         <form onSubmit={SubmitFormik.handleSubmit}>
           <div>
-            키
             <Input
+              name="height"
               placeholder="키를 입력해 주세요"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
+              value={SubmitFormik.values.height}
+              onChange={SubmitFormik.handleChange}
             />
-          </div>
-          <div>
-            몸무게
             <Input
+              name="weight"
               placeholder="몸무게를 입력해 주세요"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
+              value={SubmitFormik.values.weight}
+              onChange={SubmitFormik.handleChange}
             />
-          </div>
-          <div>
-            골격근량
             <Input
-              placeholder="골격근량를 입력해 주세요"
-              value={musclemass}
-              onChange={(e) => setMusclemass(e.target.value)}
+              name="musclemass"
+              placeholder="골격근량을 입력해 주세요"
+              value={SubmitFormik.values.musclemass}
+              onChange={SubmitFormik.handleChange}
             />
-          </div>
-          <div>
-            체지방량
             <Input
-              placeholder="체지방량를 입력해 주세요"
-              value={fatmass}
-              onChange={(e) => setFatmass(e.target.value)}
+              name="fatmass"
+              placeholder="체지방량을 입력해 주세요"
+              value={SubmitFormik.values.fatmass}
+              onChange={SubmitFormik.handleChange}
             />
-          </div>
-          <div>
-            BMI
             <Input
+              name="bmi"
               placeholder="BMI를 입력해 주세요"
-              value={bmi}
-              onChange={(e) => setBmi(e.target.value)}
+              value={SubmitFormik.values.bmi}
+              onChange={SubmitFormik.handleChange}
             />
-          </div>
-          <div>
-            체지방률
             <Input
+              name="fatper"
               placeholder="체지방률을 입력해 주세요"
-              value={fatper}
-              onChange={(e) => setFatper(e.target.value)}
+              value={SubmitFormik.values.fatper}
+              onChange={SubmitFormik.handleChange}
             />
           </div>
           <div className="btn-group">

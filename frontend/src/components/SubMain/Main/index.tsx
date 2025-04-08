@@ -21,7 +21,7 @@ const { Search } = Input;
 const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
   //console.log(info?.source, value);
   api
-    .post("/search", value)
+    .post("chat/search", value)
     .then((res) => {
       console.log("res", res);
     })

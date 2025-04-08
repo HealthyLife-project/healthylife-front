@@ -14,7 +14,7 @@ const ChatRoom = (props: { id: string; urlstr: string }) => {
   const [title, setTitle] = useState("");
 
   api
-    .get(`/chat/${urlstr}/${id}`)
+    .get(`/chat/${urlstr}/${Number(id)}`)
     .then((res) => {
       console.log("res", res.data);
     })

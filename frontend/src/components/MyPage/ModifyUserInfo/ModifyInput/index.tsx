@@ -9,32 +9,28 @@ import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 //Component
-
 //개인정보 컴포넌트
 const ModifyInput = () => {
   const router = useRouter();
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
-
   //useState
   const [id, setId] = useState(tokenList.id);
   //const [name, setName] = useState(""); //수정 이름
-
   const modifyFormik = useFormik({
     initialValues: {
       name: "",
       age: "",
-      nickName: "",
+      nickname: "",
       address: "",
       email: "",
       phone: "",
-      hashtag: "",
+      // hashtag: "",
     },
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
       console.log("values", values);
-
       api
-        .post(`mypage/modify/${id}`, { id: id, userifo: values })
+        .post(`user/mypage/modify/${id}`, values)
         .then((res) => {
           console.log("res", res.data);
           //notification("수정완료 되었습니다");
@@ -44,7 +40,6 @@ const ModifyInput = () => {
         });
     },
   });
-
   return (
     <ModifyInputStyle className={clsx("main-wrap")}>
       <form onSubmit={modifyFormik.handleSubmit}>
@@ -55,10 +50,10 @@ const ModifyInput = () => {
           value={modifyFormik.values.name}
         />
         <Input
-          name="nickName"
+          name="nickname"
           placeholder="닉네임"
           onChange={modifyFormik.handleChange}
-          value={modifyFormik.values.nickName}
+          value={modifyFormik.values.nickname}
         />
         <Input
           name="age"
@@ -83,12 +78,6 @@ const ModifyInput = () => {
           placeholder="전화번호"
           onChange={modifyFormik.handleChange}
           value={modifyFormik.values.phone}
-        />
-        <Input
-          name="hashtag"
-          placeholder="해시태그"
-          onChange={modifyFormik.handleChange}
-          value={modifyFormik.values.hashtag}
         />
 
         <Button htmlType="submit">저장</Button>

@@ -41,9 +41,13 @@ const CreateChat = () => {
       //router.push("/");
 
       api
-        .post(`chat/${category}/create`, { id: id, title: values })
+        .post(`/chat/${category}/create`, {
+          id: Number(id),
+          title: values.title,
+        })
         .then((res) => {
-          console.log("res", res.data);
+          //console.log("res", res.data);
+          alert("채팅방 생성 성공!");
           router.push(`/${category}`);
         })
         .catch((error) => {

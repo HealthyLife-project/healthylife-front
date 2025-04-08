@@ -80,24 +80,13 @@ const Chatting = (props: { urlstr: string }) => {
 
   //채팅 목록 리스트 조회
   api
-    .get(`/chatlist/${urlstr}`)
+    .get(`/chat/chatlist/${urlstr}`)
     .then((res) => {
       console.log("res", res.data);
     })
     .catch((error: string) => {
       console.log("채팅 목록 리스트 조회 error", error);
     });
-
-  // axios({
-  //   method: "get",
-  //   url: "http://localhost:5001/chatlist/pet",
-  // })
-  //   .then((res) => {
-  //     console.log("res.data", res.data);
-  //   })
-  //   .catch((error) => {
-  //     console.log("axios 에러", error);
-  //   });
 
   return (
     <ChattingStyled className={clsx("main-wrap")}>
