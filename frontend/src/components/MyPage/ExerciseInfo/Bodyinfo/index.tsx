@@ -23,7 +23,7 @@ const Bodyinfo = () => {
   const [fatmass, setFatmass] = useState(""); //체지방량
   const [bmi, setBmi] = useState(""); //bmi
   const [fatper, setFatper] = useState(""); //체지방률
-  const [exercise, setExercise] = useState([""]); //백엔드 전송 용 배열
+  //const [exercise, setExercise] = useState([""]); //백엔드 전송 용 배열
   const [id, setId] = useState(Number(tokenList.id));
 
   //변수 선언
@@ -70,19 +70,18 @@ const Bodyinfo = () => {
               체지방률: bodyFatMatch?.[1] || null,
             };
 
-            setWeight(extractedData.체중 ?? "");
-            setMusclemass(extractedData.골격근량 ?? "");
-            setFatmass(extractedData.체지방량 ?? "");
-            setBmi(extractedData.BMI ?? "");
-            setFatper(extractedData.체지방률 ?? "");
-
-            setExercise([
-              extractedData.체중 ?? "",
-              extractedData.골격근량 ?? "",
-              extractedData.체지방량 ?? "",
-              extractedData.BMI ?? "",
-              extractedData.체지방률 ?? "",
-            ]);
+            setFieldValue("weight", extractedData.체중);
+            setFieldValue("musclemass", extractedData.골격근량);
+            setFieldValue("fatmass", extractedData.체지방량);
+            setFieldValue("bmi", extractedData.BMI);
+            setFieldValue("fatper", extractedData.체지방률);
+            // setExercise([
+            //   extractedData.체중 ?? "",
+            //   extractedData.골격근량 ?? "",
+            //   extractedData.체지방량 ?? "",
+            //   extractedData.BMI ?? "",
+            //   extractedData.체지방률 ?? "",
+            // ]);
 
             console.log("추출된 데이터:", extractedData);
             await worker.terminate();
@@ -122,6 +121,8 @@ const Bodyinfo = () => {
         });
     },
   });
+
+  const { setFieldValue } = SubmitFormik;
   return (
     <BodyInfoStyle>
       <div>
