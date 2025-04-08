@@ -1,6 +1,5 @@
 import { MyMain, theme } from "./styled"; //스타일
 import clsx from "clsx";
-import axios from "axios";
 
 import { headerlst } from "./headerlist";
 import { Tabs, ConfigProvider } from "antd";
@@ -11,7 +10,7 @@ import Userinfo from "../UserInfo";
 import ExerciseInfo from "../ExerciseInfo";
 import ExerciseAndMeal from "../ExerciseAndMeal";
 import ModifyUserInfo from "../ModifyUserInfo/Main";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 
@@ -30,6 +29,17 @@ const MyPageMain = () => {
   headerlst.map((element: { id: number; category: string }, index: number) => {
     category_lst.push(element.category);
   });
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const signup = searchParams.get("signup");
+
+    if (signup) {
+      setDefualtTab("4");
+    }
+
+    //console.log("signup", signup);
+  }, []);
 
   //카테고리 헤더 이동 배열
   const items = [
@@ -62,7 +72,7 @@ const MyPageMain = () => {
         <ConfigProvider theme={theme}>
           <Tabs
             className={clsx("tabs-header")}
-            defaultActiveKey={defualtTap} //초기 탭
+            activeKey={defualtTap} //초기 탭
             items={items}
             type="card"
             centered
