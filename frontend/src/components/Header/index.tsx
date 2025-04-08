@@ -22,7 +22,8 @@ interface TokenState {
 const Header = () => {
   //useState
   const [isLogin, setIsLogin] = useState(false); //로그인 상태 확인
-  const [name, Setname] = useState(""); //로그인한 유저 이름 저장
+  const [name, setname] = useState(""); //로그인한 유저 이름 저장
+  const [userid, setUserid] = useState(""); //소셜 로그인을 한 유저 아이디
   const [open, setOpen] = useState(false); //drawer 여부 확인
 
   //변수 선언
@@ -33,14 +34,16 @@ const Header = () => {
   useEffect(() => {
     console.log("tokenList 업데이트됨:", tokenList);
     const username = tokenList?.name;
-    if (tokenList && username) {
-      //console.log("if문 실행 중");
+    const userid = tokenList?.userid;
+
+    if (tokenList && (username || userid)) {
       setIsLogin(true);
-      Setname(username);
+      setname(username || "");
+      setUserid(userid || "");
     } else {
-      //console.log("else문 실행 중");
       setIsLogin(false);
-      Setname("");
+      setname("");
+      setUserid("");
     }
   }, [tokenList]);
 
@@ -75,7 +78,7 @@ const Header = () => {
             <>
               <div>
                 <span className="user-name" onClick={showDrawer}>
-                  {name}
+                  {userid ? userid : name}
                 </span>
                 님 환영합니다
               </div>

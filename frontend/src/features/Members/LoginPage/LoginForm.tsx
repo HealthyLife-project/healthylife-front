@@ -2,19 +2,17 @@ import { LoginPageStyled } from "./styled";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { setTokenList } from "@/redux/redux";
-import axios from "axios";
 import clsx from "clsx";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Button, Drawer, Input } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
 import google_login from "../../../assets/images/google_logo.png";
-import kakao_login from "../../../assets/images/kakao_login.png";
+import kakao from "@/assets/images/kakaotalk_sharing_btn_small.png";
 import HashtagForm from "../Hashtags/HashtagForm";
 
 //로그인 컴포넌트
@@ -51,7 +49,7 @@ export default function LoginPage() {
 
   //네이버 소셜 로그인
   const NaverLogin = () => {
-    window.location.href = "http://localhost:5001/auth/naver/cb";
+    window.location.href = "http://localhost:5001/auth/naver";
   };
 
   //카카오 소셜 로그인
@@ -121,11 +119,7 @@ export default function LoginPage() {
           </div>
           <div className="login-sns">
             <div className="kakao-login" onClick={handleKakaoLogin}>
-              <img
-                className="imgstyle"
-                src={kakao_login.src}
-                alt="kakao_login"
-              />
+              <img className="imgstyle" src={kakao.src} alt="kakao_login" />
             </div>
             <div className="google-login" onClick={handleGoogleLogin}>
               <img

@@ -4,15 +4,44 @@ import { Provider } from "react-redux";
 import store from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import Cookies from "js-cookie";
 import { setTokenList } from "@/redux/redux";
 import api from "@/util/chek";
+import ChatBox from "@/features/ChatBox/Main";
+
+function ChatBoxWrapper() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [chatTitle, setChatTitle] = useState("");
+
+  useEffect(() => {
+    const localChat = localStorage.getItem("ChatBox");
+    console.log("local 실행중 ");
+    if (localChat) {
+      try {
+        const parsed = JSON.parse(localChat);
+        setChatTitle(parsed.title);
+        setIsOpen(parsed.isOpen);
+      } catch (err) {
+        console.error("localStorage JSON 파싱 에러:", err);
+      }
+    }
+  }, [isOpen]);
+
+  const handleClose = () => {
+    localStorage.removeItem("ChatBox");
+    setIsOpen(false);
+  };
+
+  if (!isOpen) return null;
+
+  return <ChatBox title={chatTitle} onClose={handleClose} />;
+}
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <InitToken /> {/* Redux에 토큰 저장 */}
+      <InitToken />
       <Component {...pageProps} />
+      <ChatBoxWrapper />
     </Provider>
   );
 }

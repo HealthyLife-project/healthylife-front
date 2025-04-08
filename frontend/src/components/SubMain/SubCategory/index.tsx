@@ -3,16 +3,19 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import Chatting from "@/features/Chatting";
 import { useState, useEffect } from "react";
+import { ConvertedChatData } from "@/util/chek";
 
 //Coponent
 
 //submain > main > 단체 채팅방 전체 컴포넌트
-const SubCategory = (props: { urlstr: string }) => {
+const SubCategory = (props: {
+  urlstr: string;
+  search: ConvertedChatData[];
+}) => {
   //props
-  const { urlstr } = props;
+  const { urlstr, search } = props;
 
   //useState
-  //const [category, setCategory] = useState("");
 
   const router = useRouter();
 
@@ -20,7 +23,7 @@ const SubCategory = (props: { urlstr: string }) => {
 
   return (
     <SubCategoryStyled className={clsx("main-wrap")}>
-      <Chatting urlstr={urlstr} />
+      <Chatting urlstr={urlstr} search={search} />
     </SubCategoryStyled>
   );
 };

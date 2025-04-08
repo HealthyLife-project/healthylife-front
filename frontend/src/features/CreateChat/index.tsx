@@ -20,6 +20,8 @@ const CreateChat = () => {
   //useState
   const [category, setCategory] = useState("");
   const [id, setId] = useState(tokenList.id);
+  const [isModalOpen, setIsModalOpen] = useState(false); //모달 생성 여부
+  const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
 
   //useEffect
   useEffect(() => {
@@ -48,6 +50,19 @@ const CreateChat = () => {
         .then((res) => {
           //console.log("res", res.data);
           alert("채팅방 생성 성공!");
+
+          localStorage.setItem(
+            "ChatBox",
+            JSON.stringify({
+              title: values.title,
+              category: category,
+              isOpen: true,
+            })
+          );
+
+          setChatTitle(values.title);
+          setIsModalOpen(true);
+
           router.push(`/${category}`);
         })
         .catch((error) => {
