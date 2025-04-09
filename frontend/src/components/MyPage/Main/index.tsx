@@ -72,7 +72,8 @@ const MyPageMain = () => {
         <ConfigProvider theme={theme}>
           <Tabs
             className={clsx("tabs-header")}
-            activeKey={defualtTap} //초기 탭
+            activeKey={defualtTap}
+            onChange={(key) => setDefualtTab(key)}
             items={items}
             type="card"
             centered

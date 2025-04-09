@@ -10,9 +10,10 @@ import ChatBox from "@/features/ChatBox/Main";
 
 //채팅방 모달 컴포넌트
 const ChatBoxWrapper = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [chatTitle, setChatTitle] = useState("");
+  const [isOpen, setIsOpen] = useState(false); //채팅방 클릭 유무
+  const [chatTitle, setChatTitle] = useState(""); //채탕방 이름
 
+  //새로 고침 시 모달 컴포넌트 유지 확인용
   useEffect(() => {
     const localChat = localStorage.getItem("ChatBox");
     //console.log("local 실행중 ");

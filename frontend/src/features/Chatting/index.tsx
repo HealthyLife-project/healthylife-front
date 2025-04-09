@@ -69,7 +69,8 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         onRow={(record, rowIndex) => {
           return {
             onClick: () => {
-              console.log("클릭된 행:", record);
+              //console.log("클릭된 행:", record);
+
               const title = record.title;
               setChatTitle(title);
 
@@ -82,6 +83,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
                 })
               );
 
+              //사용자 정의 이벤트 실행 - _app.tsx에서 실행
               const event = new CustomEvent("openChat", {
                 detail: { title },
               });
