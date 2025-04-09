@@ -6,7 +6,14 @@ import type { TableProps } from "antd";
 import api, { ConvertedChatData } from "@/util/chek";
 import { useEffect, useState } from "react";
 import { convertChatList } from "@/util/chek";
-//Coponent
+import { io, Socket } from "socket.io-client";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+
+//웹 소켓 연결
+const socket: Socket = io("http://localhost:5001", {
+  transports: ["websocket"],
+});
 
 interface DataType {
   key: string;
@@ -32,12 +39,15 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
   //props
   const { urlstr, search } = props;
 
+  //변수 선언
+  const router = useRouter();
+  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+
   //useState
   const [isModalOpen, setIsModalOpen] = useState(false); //모달 생성 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
-
-  //변수 선언
-  const router = useRouter();
+  const [username, setUserName] = useState(tokenList.name);
+  const [joined, setJoined] = useState(false); // 실제 입장 여부
 
   //채팅방 목록 리스트
   const [data, setData] = useState<DataType[]>([]);
@@ -60,6 +70,14 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         console.log("채팅 목록 리스트 조회 error", error);
       });
   }, [urlstr]);
+
+  //채팅방 입장
+  const joinRoom = () => {
+    if (username.trim() && chatTitle.trim()) {
+      socket.emit("joinRoom", { chatTitle });
+      setJoined(true); // 채팅방 생성
+    }
+  };
 
   return (
     <ChattingStyled className={clsx("main-wrap")}>
@@ -89,6 +107,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
               });
               window.dispatchEvent(event);
 
+              joinRoom();
               setIsModalOpen(true);
             },
           };

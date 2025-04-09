@@ -1,17 +1,72 @@
 import clsx from "clsx";
-import { ChatBoxStyled } from "./styled";
-import { Button } from "antd";
+import { ChatBoxStyled, theme } from "./styled";
+import { Button, Input, ConfigProvider } from "antd";
+import { useState, useEffect } from "react";
+import { SearchProps } from "antd/es/input";
+import { io, Socket } from "socket.io-client";
 
+//웹 소켓 연결
+const socket: Socket = io("http://localhost:5001", {
+  transports: ["websocket"],
+});
+
+//title 기본 채팅방 interface
 interface ChatBoxProps {
   title: string;
   onClose: () => void;
 }
 
+//전역 변수 설정
+const { Search } = Input;
+
+//채팅방 > 메인 컴포넌트
 const ChatBox = ({ title, onClose }: ChatBoxProps) => {
+  //useState
+  const [username, setUsername] = useState("1"); //유저 이름
+
+  const [message, setMessage] = useState(""); //보낸 메시지
+  const [messages, setMessages] = useState<
+    { username: string; message: string }[]
+  >([]); //메시지 전체
+  const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
+  const [room, setRoom] = useState(title); //방 이름
+
+  //useEffect
+  useEffect(() => {
+    console.log("입장여부 확인", socket.connected);
+
+    socket.on("receiveMessage", (data) => {
+      console.log("받은메세지", data);
+      setMessages((prev) => [...prev, data]);
+    });
+
+    socket.on("userList", (userList) => {
+      setUsers(userList);
+    });
+
+    return () => {
+      socket.off("receiveMessage");
+      socket.off("userList");
+    };
+  }, []);
+
+  //메시지 보내기
+  const sendMessage = () => {
+    console.log("chat  :", room, username, message);
+    if (message.trim()) {
+      socket.emit("sendMessage", { room, username, message });
+      setMessage("");
+    }
+  };
+
+  //전송 버튼 클릭 함수(추후 변수명 변경)
+  // const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
+  //   console.log(info?.source, value);
+
   return (
     <ChatBoxStyled className={clsx("main-wrap")}>
       <div className="title">
-        {title}
+        <span>{title}</span>
         <Button
           onClick={onClose}
           size="small"
@@ -21,7 +76,30 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           ✕
         </Button>
       </div>
-      <div className="content">여기에 채팅 내용이 표시됩니다.</div>
+      <div>
+        <span>접속 중인 사용자</span>
+        <ul>
+          {users.map((user, index) => (
+            <li key={index}>{user}</li>
+          ))}
+        </ul>
+      </div>
+      <div className="content">
+        {messages.map((msg, index) => (
+          <p key={index}>
+            <strong>{msg.username}: </strong> {msg.message}
+          </p>
+        ))}
+      </div>
+      <div>
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+        />
+        <button onClick={sendMessage}>전송</button>
+      </div>
     </ChatBoxStyled>
   );
 };

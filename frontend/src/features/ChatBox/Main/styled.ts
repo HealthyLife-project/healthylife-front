@@ -9,8 +9,8 @@ export const ChatBoxStyled = styled.div`
     height: 500px;
     background-color: #ffffff;
     border-radius: 16px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); // 더 진한 입체감
-    z-index: 9999; // 모달 느낌
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -61,3 +61,10 @@ export const ChatBoxStyled = styled.div`
     }
   }
 `;
+
+export const theme = {
+  token: {
+    // Seed Token
+    // Alias Token
+  },
+};
