@@ -82,6 +82,11 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
                 })
               );
 
+              const event = new CustomEvent("openChat", {
+                detail: { title },
+              });
+              window.dispatchEvent(event);
+
               setIsModalOpen(true);
             },
           };

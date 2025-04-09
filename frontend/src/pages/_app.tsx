@@ -8,13 +8,15 @@ import { setTokenList } from "@/redux/redux";
 import api from "@/util/chek";
 import ChatBox from "@/features/ChatBox/Main";
 
-function ChatBoxWrapper() {
+//채팅방 모달 컴포넌트
+const ChatBoxWrapper = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [chatTitle, setChatTitle] = useState("");
 
   useEffect(() => {
     const localChat = localStorage.getItem("ChatBox");
-    console.log("local 실행중 ");
+    //console.log("local 실행중 ");
+
     if (localChat) {
       try {
         const parsed = JSON.parse(localChat);
@@ -26,15 +28,38 @@ function ChatBoxWrapper() {
     }
   }, [isOpen]);
 
+  //모달 컴포넌트 닫기 클릭
   const handleClose = () => {
     localStorage.removeItem("ChatBox");
     setIsOpen(false);
   };
 
+  // 외부에서 ChatBox 열기 위한 이벤트 리스너
+  useEffect(() => {
+    const handleOpenChat = (e: CustomEvent) => {
+      //사용자 정의 이벤트
+      const { title } = e.detail;
+
+      //타이틀 및 open 여부 확인
+      setChatTitle(title);
+      setIsOpen(true);
+
+      //로컬 스토리지 저장
+      localStorage.setItem("ChatBox", JSON.stringify({ isOpen: true, title }));
+    };
+
+    //해당 이벤트리스너가 실행시 함수 실행
+    window.addEventListener("openChat", handleOpenChat as EventListener);
+
+    return () => {
+      window.removeEventListener("openChat", handleOpenChat as EventListener);
+    };
+  }, []);
+
   if (!isOpen) return null;
 
   return <ChatBox title={chatTitle} onClose={handleClose} />;
-}
+};
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
