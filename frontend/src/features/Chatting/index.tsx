@@ -42,8 +42,12 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
   //useState
   const [isModalOpen, setIsModalOpen] = useState(false); //모달 생성 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
-  const [username, setUserName] = useState(tokenList.name);
+  const [username, setUserName] = useState("");
   const [joined, setJoined] = useState(false); // 실제 입장 여부
+
+  useEffect(() => {
+    setUserName(tokenList.name);
+  }, []);
 
   //채팅방 목록 리스트
   const [data, setData] = useState<DataType[]>([]);
@@ -69,7 +73,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
 
   //채팅방 입장
   const joinRoom = () => {
-    if (username.trim() && chatTitle.trim()) {
+    if (username?.trim() && chatTitle?.trim()) {
       socket.emit("joinRoom", { room: chatTitle });
 
       setJoined(true); // 채팅방 생성
@@ -84,19 +88,19 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         onRow={(record, rowIndex) => {
           return {
             onClick: () => {
-              //console.log("클릭된 행:", record);
+              console.log("클릭된 행:", record);
 
               const title = record.title;
               setChatTitle(title);
+              let arr = {
+                title: title,
+                category: urlstr,
+                isOpen: true,
+                roomid: Number(record.key),
+              };
 
-              localStorage.setItem(
-                "ChatBox",
-                JSON.stringify({
-                  title: title,
-                  category: urlstr,
-                  isOpen: true,
-                })
-              );
+              console.log("arr", arr);
+              localStorage.setItem("ChatBox", JSON.stringify(arr));
 
               //사용자 정의 이벤트 실행 - _app.tsx에서 실행
               const event = new CustomEvent("openChat", {

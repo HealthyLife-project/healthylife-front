@@ -33,6 +33,10 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   useEffect(() => {
     console.log("입장여부 확인", socket.connected);
 
+    if (username && room) {
+      console.log("joinRoom 보냄:", username, room);
+    }
+
     socket.on("receiveMessage", (data) => {
       console.log("받은메세지", data);
       setMessages((prev) => [...prev, data]);

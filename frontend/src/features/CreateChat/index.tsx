@@ -48,7 +48,7 @@ const CreateChat = () => {
           title: values.title,
         })
         .then((res) => {
-          //console.log("res", res.data);
+          console.log("res", res.data);
           alert("채팅방 생성 성공!");
 
           localStorage.setItem(

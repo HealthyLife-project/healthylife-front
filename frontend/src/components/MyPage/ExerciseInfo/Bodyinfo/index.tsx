@@ -4,7 +4,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload, Input } from "antd";
 import { createWorker } from "tesseract.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, useFormik } from "formik";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
@@ -24,10 +24,14 @@ const Bodyinfo = () => {
   const [bmi, setBmi] = useState(""); //bmi
   const [fatper, setFatper] = useState(""); //체지방률
   //const [exercise, setExercise] = useState([""]); //백엔드 전송 용 배열
-  const [id, setId] = useState(Number(tokenList.id));
+  const [id, setId] = useState();
 
   //변수 선언
 
+  //useEffect
+  useEffect(() => {
+    setId(tokenList.id);
+  }, []);
   //파일 업로드
   const props: UploadProps = {
     onChange(info) {

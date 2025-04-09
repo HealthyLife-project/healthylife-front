@@ -12,6 +12,8 @@ import ChatBox from "@/features/ChatBox/Main";
 const ChatBoxWrapper = () => {
   const [isOpen, setIsOpen] = useState(false); //채팅방 클릭 유무
   const [chatTitle, setChatTitle] = useState(""); //채탕방 이름
+  const [roomid, setRoomid] = useState();
+  const [category, setCategory] = useState("");
 
   //새로 고침 시 모달 컴포넌트 유지 확인용
   useEffect(() => {
@@ -22,7 +24,9 @@ const ChatBoxWrapper = () => {
       try {
         const parsed = JSON.parse(localChat);
         setChatTitle(parsed.title);
+        setRoomid(parsed.roomid);
         setIsOpen(parsed.isOpen);
+        setCategory(parsed.category);
       } catch (err) {
         console.error("localStorage JSON 파싱 에러:", err);
       }
@@ -39,14 +43,23 @@ const ChatBoxWrapper = () => {
   useEffect(() => {
     const handleOpenChat = (e: CustomEvent) => {
       //사용자 정의 이벤트
-      const { title } = e.detail;
+      const { title, roomid, category } = e.detail;
 
       //타이틀 및 open 여부 확인
       setChatTitle(title);
       setIsOpen(true);
-
+      setRoomid(roomid);
+      setCategory(category);
       //로컬 스토리지 저장
-      localStorage.setItem("ChatBox", JSON.stringify({ isOpen: true, title }));
+      localStorage.setItem(
+        "ChatBox",
+        JSON.stringify({
+          isOpen: true,
+          title: title,
+          roomid: roomid,
+          category: category,
+        })
+      );
     };
 
     //해당 이벤트리스너가 실행시 함수 실행
