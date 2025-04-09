@@ -9,11 +9,7 @@ import { convertChatList } from "@/util/chek";
 import { io, Socket } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-
-//웹 소켓 연결
-const socket: Socket = io("http://localhost:5001", {
-  transports: ["websocket"],
-});
+import socket from "@/util/socket"; //웹 소켓 연결
 
 interface DataType {
   key: string;
@@ -74,7 +70,8 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
   //채팅방 입장
   const joinRoom = () => {
     if (username.trim() && chatTitle.trim()) {
-      socket.emit("joinRoom", { chatTitle });
+      socket.emit("joinRoom", { room: chatTitle });
+
       setJoined(true); // 채팅방 생성
     }
   };

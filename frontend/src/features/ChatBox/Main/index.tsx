@@ -3,12 +3,9 @@ import { ChatBoxStyled, theme } from "./styled";
 import { Button, Input, ConfigProvider } from "antd";
 import { useState, useEffect } from "react";
 import { SearchProps } from "antd/es/input";
-import { io, Socket } from "socket.io-client";
+import socket from "@/util/socket";
 
 //웹 소켓 연결
-const socket: Socket = io("http://localhost:5001", {
-  transports: ["websocket"],
-});
 
 //title 기본 채팅방 interface
 interface ChatBoxProps {
@@ -30,6 +27,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   >([]); //메시지 전체
   const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
   const [room, setRoom] = useState(title); //방 이름
+  const [joined, setJoined] = useState(false);
 
   //useEffect
   useEffect(() => {
@@ -56,6 +54,13 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     if (message.trim()) {
       socket.emit("sendMessage", { room, username, message });
       setMessage("");
+    }
+  };
+
+  const joinRoom = () => {
+    if (username.trim() && room.trim()) {
+      socket.emit("joinRoom", { room });
+      setJoined(true); // 채팅방 생성
     }
   };
 
