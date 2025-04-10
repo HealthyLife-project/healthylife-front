@@ -2,20 +2,24 @@ import { LoginPageStyled } from "./styled";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { setTokenList } from "@/redux/redux";
-import axios from "axios";
 import clsx from "clsx";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Button, Drawer, Input } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
+
 import Link from "next/link";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
 import google_login from "../../../assets/images/google_logo.png";
-import kakao_login from "../../../assets/images/kakao_login.png";
+import kakao from "@/assets/images/kakaotalk_sharing_btn_small.png";
+import HashtagForm from "../Hashtags/HashtagForm";
+
 
 //로그인 컴포넌트
 export default function LoginPage() {
@@ -29,7 +33,7 @@ export default function LoginPage() {
   //변수 선언
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const MySwal = withReactContent(Swal);
   //login btn
   const handleLogin = async () => {
     try {
@@ -46,12 +50,16 @@ export default function LoginPage() {
     } catch (error) {
       console.error("Login failed:", error);
       //로그인 정보가 맞지 않음 - notification 설정
+      MySwal.fire({
+        icon: "error",
+        title: "다시 시도해 주세요.",
+      });
     }
   };
 
   //네이버 소셜 로그인
   const NaverLogin = () => {
-    window.location.href = "http://localhost:5001/auth/naver/cb";
+    window.location.href = "http://localhost:5001/auth/naver";
   };
 
   //카카오 소셜 로그인
@@ -130,11 +138,7 @@ export default function LoginPage() {
           </div>
           <div className="login-sns">
             <div className="kakao-login" onClick={handleKakaoLogin}>
-              <img
-                className="imgstyle"
-                src={kakao_login.src}
-                alt="kakao_login"
-              />
+              <img className="imgstyle" src={kakao.src} alt="kakao_login" />
             </div>
             <div className="google-login" onClick={handleGoogleLogin}>
               <img

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { Button, ConfigProvider } from "antd";
+import { convertChatList, ConvertedChatData } from "@/util/chek";
 
 //antd
 import { Input, Space } from "antd";
@@ -17,25 +18,13 @@ import api from "@/util/chek";
 type SearchProps = GetProps<typeof Input.Search>;
 const { Search } = Input;
 
-//serach 클릭 함수
-const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
-  //console.log(info?.source, value);
-  api
-    .post("/search", value)
-    .then((res) => {
-      console.log("res", res);
-    })
-    .catch((error: string) => {
-      console.log("search error", error);
-    });
-};
-
 //submain > main 컴포넌트
 const SubMain = () => {
   const router = useRouter();
 
   //useState
-  const [urlstr, setUrlStr] = useState("");
+  const [urlstr, setUrlStr] = useState(""); //person or pet
+  const [search, setSearch] = useState<ConvertedChatData[]>([]); //search 변수
 
   useEffect(() => {
     //console.log(window.location.pathname);
@@ -56,6 +45,23 @@ const SubMain = () => {
     router.push(`/createchat?category=${urlstr}`);
   };
 
+  //serach 클릭 함수
+  const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+    console.log(info, value);
+    api
+      .post("/chat/search", { value: value })
+      .then((res) => {
+        //console.log("res", res.data);
+
+        //배열 가공
+        const converedData = convertChatList(res.data);
+        setSearch(converedData);
+      })
+      .catch((error: string) => {
+        console.log("search error", error);
+      });
+  };
+
   //변수 선언
 
   return (
@@ -74,7 +80,7 @@ const SubMain = () => {
 
         <div className="main-right">
           <ConfigProvider theme={theme}></ConfigProvider>
-          <SubCategory urlstr={urlstr} />
+          <SubCategory urlstr={urlstr} search={search} />
           <ConfigProvider theme={theme}>
             <Button onClick={NewChat}>방 생성하기</Button>
           </ConfigProvider>

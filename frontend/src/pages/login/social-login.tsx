@@ -1,8 +1,8 @@
 import { setTokenList } from "@/redux/redux";
-import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+
 export default function SocialLogin() {
   //변수 선언
   const router = useRouter();
@@ -21,12 +21,9 @@ export default function SocialLogin() {
 
   useEffect(() => {
     if (signup === "false") {
-      //
-      //console.log("social-signup", userid, token, signup);
-      router.push("/");
-      // 회원가입이 아니라면 userid만 처리
-      //console.log("회원가입이 아니므로 userid:", userid);
-    } else if (signup === "true" && token) {
+      //처음 소셜 로그인 한 경우
+      router.push("/mypage?signup=false");
+    } else if (signup === "true") {
       router.push("/");
     }
   }, [signup, userid, token]);

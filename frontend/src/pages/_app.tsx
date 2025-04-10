@@ -4,15 +4,83 @@ import { Provider } from "react-redux";
 import store from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import Cookies from "js-cookie";
 import { setTokenList } from "@/redux/redux";
 import api from "@/util/chek";
+import ChatBox from "@/features/ChatBox/Main";
+
+//채팅방 모달 컴포넌트
+const ChatBoxWrapper = () => {
+  const [isOpen, setIsOpen] = useState(false); //채팅방 클릭 유무
+  const [chatTitle, setChatTitle] = useState(""); //채탕방 이름
+  const [roomid, setRoomid] = useState();
+  const [category, setCategory] = useState("");
+
+  //새로 고침 시 모달 컴포넌트 유지 확인용
+  useEffect(() => {
+    const localChat = localStorage.getItem("ChatBox");
+    //console.log("local 실행중 ");
+
+    if (localChat) {
+      try {
+        const parsed = JSON.parse(localChat);
+        setChatTitle(parsed.title);
+        setRoomid(parsed.roomid);
+        setIsOpen(parsed.isOpen);
+        setCategory(parsed.category);
+      } catch (err) {
+        console.error("localStorage JSON 파싱 에러:", err);
+      }
+    }
+  }, [isOpen]);
+
+  //모달 컴포넌트 닫기 클릭
+  const handleClose = () => {
+    localStorage.removeItem("ChatBox");
+    setIsOpen(false);
+  };
+
+  // 외부에서 ChatBox 열기 위한 이벤트 리스너
+  useEffect(() => {
+    const handleOpenChat = (e: CustomEvent) => {
+      //사용자 정의 이벤트
+      const { title, roomid, category } = e.detail;
+
+      //타이틀 및 open 여부 확인
+      setChatTitle(title);
+      setIsOpen(true);
+      setRoomid(roomid);
+      setCategory(category);
+      //로컬 스토리지 저장
+      localStorage.setItem(
+        "ChatBox",
+        JSON.stringify({
+          isOpen: true,
+          title: title,
+          roomid: roomid,
+          category: category,
+        })
+      );
+    };
+
+    //해당 이벤트리스너가 실행시 함수 실행
+    window.addEventListener("openChat", handleOpenChat as EventListener);
+
+    return () => {
+      window.removeEventListener("openChat", handleOpenChat as EventListener);
+    };
+  }, []);
+
+  if (!isOpen) return null;
+
+  return <ChatBox title={chatTitle} onClose={handleClose} />;
+};
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <InitToken /> {/* Redux에 토큰 저장 */}
+      <InitToken />
       <Component {...pageProps} />
+      <ChatBoxWrapper />
     </Provider>
   );
 }

@@ -70,15 +70,15 @@ export const LoginPageStyled = styled.div`
     }
 
     .kakao-login {
-      width: 15%;
+      width: 40px;
     }
 
     .google-login {
-      width: 15%;
+      width: 40px;
     }
 
     .naver-login {
-      width: 15%;
+      width: 40px;
     }
 
     .imgstyle {
