@@ -4,23 +4,25 @@ import { Button, Input, ConfigProvider } from "antd";
 import { useState, useEffect } from "react";
 import { SearchProps } from "antd/es/input";
 import socket from "@/util/socket";
-
-//웹 소켓 연결
+import { join } from "path";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 //title 기본 채팅방 interface
 interface ChatBoxProps {
   title: string;
   onClose: () => void;
 }
-
 //전역 변수 설정
-const { Search } = Input;
+//const { Search } = Input;
 
 //채팅방 > 메인 컴포넌트
 const ChatBox = ({ title, onClose }: ChatBoxProps) => {
-  //useState
-  const [username, setUsername] = useState("1"); //유저 이름
+  //변수 선언
+  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
 
+  //useState
+  const [username, setUsername] = useState(tokenList.name); //유저 이름
   const [message, setMessage] = useState(""); //보낸 메시지
   const [messages, setMessages] = useState<
     { username: string; message: string }[]
@@ -31,43 +33,40 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
   //useEffect
   useEffect(() => {
-    console.log("입장여부 확인", socket.connected);
-
-    if (username && room) {
-      console.log("joinRoom 보냄:", username, room);
+    const chatBox = localStorage.getItem("ChatBox");
+    const chatData = chatBox ? JSON.parse(chatBox) : null;
+    if (chatData) {
+      joinRoom();
+      console.log(chatData.message ? "메세지 있음" : "메세지 없음");
     }
+    console.log("입장여부 확인", socket.connected);
 
     socket.on("receiveMessage", (data) => {
       console.log("받은메세지", data);
       setMessages((prev) => [...prev, data]);
     });
-
     socket.on("userList", (userList) => {
       setUsers(userList);
     });
-
     return () => {
       socket.off("receiveMessage");
       socket.off("userList");
     };
   }, []);
-
   //메시지 보내기
   const sendMessage = () => {
-    console.log("chat  :", room, username, message);
+    //console.log("chat  :", room, username, message);
     if (message.trim()) {
       socket.emit("sendMessage", { room, username, message });
       setMessage("");
     }
   };
-
   const joinRoom = () => {
     if (username.trim() && room.trim()) {
       socket.emit("joinRoom", { room });
       setJoined(true); // 채팅방 생성
     }
   };
-
   //전송 버튼 클릭 함수(추후 변수명 변경)
   // const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
   //   console.log(info?.source, value);
@@ -112,5 +111,4 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     </ChatBoxStyled>
   );
 };
-
 export default ChatBox;

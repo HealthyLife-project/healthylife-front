@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Button, Drawer, Input } from "antd";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
@@ -27,7 +29,7 @@ export default function LoginPage() {
   //변수 선언
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const MySwal = withReactContent(Swal);
   //login btn
   const handleLogin = async () => {
     try {
@@ -44,6 +46,10 @@ export default function LoginPage() {
     } catch (error) {
       console.error("Login failed:", error);
       //로그인 정보가 맞지 않음 - notification 설정
+      MySwal.fire({
+        icon: "error",
+        title: "다시 시도해 주세요.",
+      });
     }
   };
 
