@@ -6,6 +6,8 @@ import { Button } from "antd";
 import * as Yup from "yup";
 import axios from "axios";
 import { useState } from "react";
+import api from "@/util/chek";
+import { useRouter } from "next/router";
 
 interface SignupPageValues {
   userid: string;
@@ -21,6 +23,8 @@ interface SignupPageValues {
 }
 
 const SignupPage: React.FC = () => {
+  const router = useRouter();
+
   const initialValues: SignupPageValues = {
     userid: "",
     password: "",
@@ -45,6 +49,7 @@ const SignupPage: React.FC = () => {
         "아이디에 특수문자가 포함되면 안되고 숫자로 시작하면 안됩니다!"
       )
       .required("아이디는 필수입니다"),
+
     password: Yup.string()
       .min(8, "비밀번호는 최소 8자 이상이어야 합니다")
       .max(16, "비밀번호는 최대 16자 이하이어야 합니다")
@@ -75,14 +80,7 @@ const SignupPage: React.FC = () => {
       ["male", "female"],
       "성별은 남성 혹은 여성이여야 합니다"
     ),
-    // phone: Yup.string()
-    //   .matches(/^\d{3}-\d{4}-\d{4}$/, "전화번호 형식 000-0000-0000")
-    //   .transform((value) => value.replace(/-/g, ""))
-    //   .test("전화번호 형식이 맞습니다", "전화번호 형식이 틀립니다", (value) => {
-    //     if (!value) return false; // Changed to false to disallow empty values
-    //     return /^\d{11}$/.test(value); // removed replace from here, as it is already being done in the transform.
-    //   })
-    //   .required("전화번호를 입력해 주세요"),
+
     phone: Yup.string()
       .required("휴대폰 번호를 입력해주세요.")
       .matches(phoneRegExp, "휴대폰 번호를 입력해주세요."),
@@ -92,26 +90,25 @@ const SignupPage: React.FC = () => {
 
   // 아이디 중복확인
   const [useridAvailability, setUseridAvailability] = useState<{
-    available: boolean;
+    result: boolean;
     message: string;
   } | null>(null);
 
+  // 닉네임 중복확인
   const [nicknameAvailability, setNicknameAvailability] = useState<{
-    available: boolean;
+    result: boolean;
     message: string;
   } | null>(null);
 
   const checkUseridAvailability = async (userid: string) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5001/user/finduser/${userid}`
-      );
-      console.log("response userid", response.data);
+      const response = await api.get(`/user/finduser/${userid}`);
+
       setUseridAvailability(response.data);
     } catch (error) {
       console.error("Error checking user ID:", error);
       setUseridAvailability({
-        available: false,
+        result: false,
         message: "Error checking user ID.",
       });
     }
@@ -119,14 +116,14 @@ const SignupPage: React.FC = () => {
 
   const checkNicknameAvailability = async (nickname: string) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5001/user/findnickname/${nickname}`
-      );
+      const response = await api.get(`/user/findnickname/${nickname}`);
+
       console.log("response nickname", response.data);
+      setNicknameAvailability(response.data);
     } catch (error) {
       console.error("Error checking nickname:", error);
       setNicknameAvailability({
-        available: false,
+        result: false,
         message: "Error checking nickname",
       });
     }
@@ -138,14 +135,12 @@ const SignupPage: React.FC = () => {
   ) => {
     try {
       console.log("values prior to axios request", values);
-
-      const response = await axios.post(
-        "http://localhost:5001/user/signup",
-        values
-      );
+      const response = await api.post("/user/signup", values);
       console.log("response.data", response.data); // Log response from backend
       setStatus({ success: true, message: "회원가입 성공!" }); // Set success message
-      // 이후 페이지 이동을 해시태그로 해서 해시태그 값들 받아오기
+      alert("회원가입 성공");
+
+      router.push("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("회원가입 실패:", error.response?.data || error.message);
@@ -163,150 +158,165 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <SignupPageStyled>
-      <div className="signup-page-container">
-        회원가입 페이지
-        <Formik<SignupPageValues>
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isSubmitting, values }) => (
-            <Form>
-              <label htmlFor="userid">아이디</label>
-              <Field type="text" id="userid" name="userid" />
-              <Button onClick={() => checkUseridAvailability(values.userid)}>
-                중복확인
-              </Button>
-              {useridAvailability && (
-                <div
-                  style={{
-                    color: useridAvailability.available ? "green" : "red",
+    <>
+      <SignupPageStyled>
+        <div className="signup-page-container">
+          회원가입 페이지
+          <Formik<SignupPageValues>
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting, values }) => (
+              <Form>
+                <label htmlFor="userid">아이디</label>
+                <Field type="text" id="userid" name="userid" />
+                <Button onClick={() => checkUseridAvailability(values.userid)}>
+                  중복확인
+                </Button>
+                {/* <ErrorMessage
+                  name="userid"
+                  component="div"
+                  render={(msg) => {
+                    console.log(
+                      "useridAvailability in render:",
+                      useridAvailability
+                    );
+                    console.log("Validation message (msg) in render:", msg);
+                    return (
+                      <div style={{ color: "red" }}>
+                        {useridAvailability &&
+                          !useridAvailability.result &&
+                          !msg && <div>{useridAvailability.message}</div>}
+                        {msg}
+                      </div>
+                    );
                   }}
+                /> */}
+                {useridAvailability && (
+                  <div
+                    style={{
+                      color: useridAvailability.result ? "green" : "red",
+                    }}
+                  >
+                    {useridAvailability.message}
+                  </div>
+                )}
+                <ErrorMessage
+                  name="userid"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <label htmlFor="password">비밀번호</label>
+                <Field type="password" id="password" name="password" />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <label htmlFor="confirmPassword">비밀번호 확인</label>
+                <Field
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                />
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <label htmlFor="name">이름</label>
+                <Field type="text" id="name" name="name" />
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <label htmlFor="email">이메일</label>
+                <Field type="email" id="email" name="email" />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <label htmlFor="nickname">닉네임</label>
+                <Field type="text" id="nickname" name="nickname" />
+                <Button
+                  onClick={() => checkNicknameAvailability(values.nickname)}
                 >
-                  {useridAvailability.message}
-                </div>
-              )}
-              <ErrorMessage
-                name="userid"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <label htmlFor="password">비밀번호</label>
-              <Field type="password" id="password" name="password" />
-              <ErrorMessage
-                name="password"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <label htmlFor="confirmPassword">비밀번호 확인</label>
-              <Field
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-              />
-              <ErrorMessage
-                name="confirmPassword"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <label htmlFor="name">이름</label>
-              <Field type="text" id="name" name="name" />
-              <ErrorMessage
-                name="name"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <label htmlFor="email">이메일</label>
-              <Field type="email" id="email" name="email" />
-              <ErrorMessage
-                name="email"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <label htmlFor="nickname">닉네임</label>
-              <Field type="text" id="nickname" name="nickname" />
-              <Button
-                onClick={() => checkNicknameAvailability(values.nickname)}
-              >
-                중복확인
-              </Button>
-              {nicknameAvailability && (
-                <div
-                  style={{
-                    color: nicknameAvailability.available ? "green" : "red",
-                  }}
-                >
-                  {nicknameAvailability.message}
-                </div>
-              )}
-              <ErrorMessage
-                name="nickname"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <label htmlFor="age">나이</label>
-              <Field type="number" id="age" name="age" />
-              <ErrorMessage
-                name="age"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
+                  중복확인
+                </Button>
+                {nicknameAvailability && (
+                  <div
+                    style={{
+                      color: nicknameAvailability.result ? "green" : "red",
+                    }}
+                  >
+                    {nicknameAvailability.message}
+                  </div>
+                )}
+                <ErrorMessage
+                  name="nickname"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <label htmlFor="age">나이</label>
+                <Field type="number" id="age" name="age" />
+                <ErrorMessage
+                  name="age"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
 
-              <div className="gender">
-                <label>성별</label>
-                <label>
-                  <Field type="radio" name="gender" value="male" />
-                  남성
-                </label>
-                <label>
-                  <Field type="radio" name="gender" value="female" />
-                  여성
-                </label>
-              </div>
-              <ErrorMessage
-                name="gender"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <label htmlFor="phone">휴대전화 번호</label>
-              <Field type="text" id="phone" name="phone" />
-              <ErrorMessage
-                name="phone"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <label htmlFor="address">주소</label>
-              <Field type="text" id="address" name="address" />
-              <ErrorMessage
-                name="address"
-                component="div"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-              {/*  */}
-              <button type="submit" disabled={isSubmitting}>
-                회원가입
-              </button>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    </SignupPageStyled>
+                <div className="gender">
+                  <label>성별</label>
+                  <label>
+                    <Field type="radio" name="gender" value="male" />
+                    남성
+                  </label>
+                  <label>
+                    <Field type="radio" name="gender" value="female" />
+                    여성
+                  </label>
+                </div>
+                <ErrorMessage
+                  name="gender"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <label htmlFor="phone">휴대전화 번호</label>
+                <Field type="text" id="phone" name="phone" />
+                <ErrorMessage
+                  name="phone"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <label htmlFor="address">주소</label>
+                <Field type="text" id="address" name="address" />
+                <ErrorMessage
+                  name="address"
+                  component="div"
+                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                />
+                {/*  */}
+                <Button htmlType="submit" disabled={isSubmitting}>
+                  회원가입
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </SignupPageStyled>
+    </>
   );
 };
-
 export default SignupPage;
-
-// 회원가입 아이디 중복확인 요청
-// 이메일 중복확인 요청
-// 카테고리 hashtag 추가
-//
