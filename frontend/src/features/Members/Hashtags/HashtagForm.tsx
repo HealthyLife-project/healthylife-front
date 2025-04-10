@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "antd";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import api from "@/util/chek";
+import { useRouter } from "next/router";
 
 // 백엔드 응답 데이터의 각 항목 구조 정의
 interface Hashtags {
@@ -8,7 +12,12 @@ interface Hashtags {
   hash: string;
 }
 
-const HashtagForm: React.FC = () => {
+interface HashtagFormProps {
+  currentID: number;
+}
+
+const HashtagForm: React.FC<HashtagFormProps> = ({ currentID }) => {
+  const router = useRouter();
   // 백엔드에서 가져온 데이터 배열을 저장하는 상태, 초기값은 빈 배열
   const [tags, setTags] = useState<Hashtags[]>([]);
   // 각 버튼의 토글 상태 (참/거짓), 초기값은 빈 객체 (키:버튼ID)
@@ -17,13 +26,16 @@ const HashtagForm: React.FC = () => {
   }>({});
   // 선택된 해시값들 저장
   const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
+  // const currentUserId = useSelector(
+  //   (state: RootState) => state.token?.tokenList?.userid
+  // );
+
+  console.log("inside hashtag form");
 
   useEffect(() => {
     const hashtagRequest = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5001/hashtag/allhash"
-        );
+        const response = await api.get("/hashtag/allhash");
         setTags(response.data);
       } catch (error: any) {
         console.error(error);
@@ -54,11 +66,13 @@ const HashtagForm: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5001/hashtag/selectedTags",
-        { hashtags: selectedHashtags }
-      );
+      const response = await api.post("/hashtag/selectedTags", {
+        userid: currentID,
+        hashtags: selectedHashtags,
+      });
+
       console.log("해시태그 제출 성공", response.data);
+      router.push("/");
     } catch (error) {
       console.error("해시태그 오류", error);
     }

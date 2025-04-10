@@ -1,6 +1,8 @@
 import { MainStyled } from "./styled";
-import { useRouter } from "next/router";
 import clsx from "clsx";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "@/redux/redux";
+import { RootState } from "../../../redux/store";
 
 //Component
 import Header from "@/components/Header"; //header
@@ -8,6 +10,7 @@ import MainBanner from "../MainBanner"; //Banner
 import LCategory from "@/components/LCategory";
 import TopicMain from "@/components/Topic/Main";
 import Footer from "@/components/Footer";
+import HashtagsModal from "@/components/HashtagModal/HashtagModal";
 
 //메인 페이지 컴포넌트
 
@@ -19,8 +22,11 @@ import Footer from "@/components/Footer";
 4-2.뉴스 - pet
 5.footer
 */
+
 const Main = () => {
-  const router = useRouter();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
+  console.log("is authenticated", isAuthenticated);
 
   return (
     <>
@@ -30,6 +36,11 @@ const Main = () => {
         <MainBanner />
         <TopicMain />
       </MainStyled>
+      {isAuthenticated ? (
+        <HashtagsModal />
+      ) : (
+        <div>로그인을 하세요</div> // Or your login component/redirect logic
+      )}
       <Footer />
     </>
   );

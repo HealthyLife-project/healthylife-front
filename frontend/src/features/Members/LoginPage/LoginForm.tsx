@@ -10,12 +10,12 @@ import { RootState } from "@/redux/store";
 import { Button, Drawer, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
+import Link from "next/link";
 
 //image
 import naver from "../../../assets/images/naverloginimg.png";
 import google_login from "../../../assets/images/google_logo.png";
 import kakao_login from "../../../assets/images/kakao_login.png";
-import HashtagForm from "../Hashtags/HashtagForm";
 
 //로그인 컴포넌트
 export default function LoginPage() {
@@ -64,8 +64,8 @@ export default function LoginPage() {
     window.location.href = "http://localhost:5001/auth/google";
   }
 
-  function handleForgotPW() {
-    router.push("/forgotpw");
+  function handleResetPassword() {
+    router.push("/forgot-password/reset-password");
   }
 
   //enter 시 로그인 실행
@@ -110,7 +110,16 @@ export default function LoginPage() {
           </div>
           <div className="login-sub-container">
             <div>아이디 찾기</div>
-            <div onClick={handleForgotPW}>비밀번호 찾기</div>
+            {/*  */}
+            {/*  */}
+            <div className="recover-password">
+              <Link href="/forgot-password/recover-password">
+                비밀번호 찾기
+              </Link>
+            </div>
+            {/* <div onClick={handleResetPassword}>비밀번호 재설정</div> */}
+            {/*  */}
+            {/*  */}
             <div
               onClick={() => {
                 router.push("/signup");
@@ -144,7 +153,6 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-        {/* <HashtagForm person={{ userid: userid }} /> */}
       </LoginPageStyled>
     </>
   );
