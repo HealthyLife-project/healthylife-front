@@ -99,14 +99,15 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           </p>
         ))}
       </div>
-      <div>
-        <input
+      <div className="chat-input-div">
+        <Input
           type="text"
+          className="chat-input"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
-        <button onClick={sendMessage}>전송</button>
+        <Button onClick={sendMessage}>전송</Button>
       </div>
     </ChatBoxStyled>
   );

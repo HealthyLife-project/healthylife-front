@@ -59,6 +59,16 @@ export const ChatBoxStyled = styled.div`
       overflow-y: auto;
       font-size: 14px;
     }
+    .chat-input-div {
+      display: flex;
+      justify-content: space-around;
+      background-color: #f7f9fb;
+      padding: 3px 2px;
+
+      .chat-input {
+        width: 85%;
+      }
+    }
   }
 `;
 
