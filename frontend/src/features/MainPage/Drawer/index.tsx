@@ -43,7 +43,7 @@ const DrawerContainer = () => {
       <Button className="main-logout" onClick={handleLogout}>
         로그아웃
       </Button>
-      <div>다크모드</div>
+      <div className="dark-mode">다크모드</div>
     </DrawerStyled>
   );
 };

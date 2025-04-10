@@ -6,7 +6,12 @@ export const DrawerStyled = styled.div`
     width: 100%;
     height: 100%;
     flex-direction: column;
-    cursor: pointer;
     gap: 10px;
+
+    .mypage-router,
+    .main-logout,
+    .dark-mode {
+      cursor: pointer;
+    }
   }
 `;
