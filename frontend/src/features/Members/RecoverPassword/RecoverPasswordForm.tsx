@@ -20,12 +20,12 @@ export default function RecoverPasswordPage() {
 
     // 비밀번호 재설정 요청 이메일로
     try {
-      const response = await api.post("/auth/forgot-password", {
+      const response = await api.post("/user/findUserEmail", {
         email: email,
       });
       // if successful result: true else result: false
       console.log("이메일로 링크 보내기:", response);
-      if (response.data.result === true) {
+      if (response.data.id) {
         router.push("/forgot-password/password-recovery-feedback");
       } else {
         return;

@@ -1,17 +1,17 @@
 import { ResetPasswordPageStyled } from "./styled";
 import api from "@/util/chek";
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"; // Assuming you are using React Router
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { Input, Button, Space, Spin, Typography } from "antd"; // Importing Ant Design components
 
 const { Title } = Typography;
 
 export default function ResetPasswordPage() {
-  const { email } = useParams(); // Get the emailOrUsername from the URL params
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [userid, setUserId] = useState<string | null>(null);
+  // Assuming 'userid' is already available in the state
+  const [userid, setUserId] = useState<string | null>(
+    /* Initial value based on how you store it */ null
+  );
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,46 +19,8 @@ export default function ResetPasswordPage() {
     null
   );
 
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchUser = async () => {
-      setLoading(true);
-      setPasswordResetError(null);
-      try {
-        // 해당 이메일로 유저한테 비밀번호 재설정 링크보낸후 리다이렉트
-        // 해당 이메일로 유저 정보가 저장되어있는지 확인$
-        // /forgot-password/reset-password
-        const response = await api.get(`/auth/user/${email}`);
-        if (response.data.result && response.data.userid) {
-          if (mounted) {
-            const fetchedUser = response.data;
-
-            setUser(fetchedUser);
-            setUserId(fetchedUser.userid);
-          }
-        } else {
-          setPasswordResetError("Invalid or expired reset link."); // Handle case where user is not found
-        }
-      } catch (error: any) {
-        console.error("Error fetching user:", error);
-        setPasswordResetError("Failed to fetch user details.");
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchUser();
-
-    return () => {
-      mounted = false;
-    };
-  }, [email]);
-
   const resetUserPassword = async (
-    userid: string,
+    currentUserId: string,
     newPassword: string,
     confirmPassword: string
   ) => {
@@ -70,8 +32,8 @@ export default function ResetPasswordPage() {
         return;
       }
       // 비밀번호 재설정 api
-      const response = await api.post("/auth/reset-password", {
-        userid: userid,
+      const response = await api.post("/user/update/password", {
+        userid: currentUserId,
         password: newPassword,
       });
       if (response.data.result) {
@@ -95,7 +57,7 @@ export default function ResetPasswordPage() {
     if (userid) {
       resetUserPassword(userid, password, password2);
     } else {
-      setPasswordResetError("User details not loaded yet.");
+      setPasswordResetError("User identifier not available.");
     }
   };
 
@@ -105,7 +67,7 @@ export default function ResetPasswordPage() {
     password === password2 &&
     !loading;
 
-  if (loading && !user && !passwordResetError) {
+  if (loading) {
     return (
       <div
         style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}
@@ -128,14 +90,17 @@ export default function ResetPasswordPage() {
     );
   }
 
-  if (!user) {
+  if (!userid) {
     return (
       <div
         style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}
       >
         <div>
           <Title level={2}>Reset Password</Title>
-          <p>Loading user data...</p>
+          <p>
+            User identifier not available. Please ensure you have a valid reset
+            link.
+          </p>
         </div>
       </div>
     );
