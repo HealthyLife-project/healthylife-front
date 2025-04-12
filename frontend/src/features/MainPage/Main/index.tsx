@@ -14,15 +14,6 @@ import HashtagsModal from "@/components/HashtagModal/HashtagModal";
 
 //메인 페이지 컴포넌트
 
-/* 컴포넌트 순서
-1.헤더 
-2.메인배너
-3.Today Topic
-4-1.뉴스 - person
-4-2.뉴스 - pet
-5.footer
-*/
-
 const Main = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
@@ -39,7 +30,7 @@ const Main = () => {
       {isAuthenticated ? (
         <HashtagsModal />
       ) : (
-        <div>로그인을 하세요</div> // Or your login component/redirect logic
+        <span></span> // Or your login component/redirect logic
       )}
       <Footer />
     </>

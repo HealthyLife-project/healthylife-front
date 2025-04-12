@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { setTokenList } from "@/redux/redux";
 import api from "@/util/chek";
 import ChatBox from "@/features/ChatBox/Main";
-
+import Loading from "@/components/Loading";
 //채팅방 모달 컴포넌트
 const ChatBoxWrapper = () => {
   const [isOpen, setIsOpen] = useState(false); //채팅방 클릭 유무
@@ -76,11 +76,14 @@ const ChatBoxWrapper = () => {
 };
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [loading, setLoading] = useState(true);
+
   return (
     <Provider store={store}>
       <InitToken />
       <Component {...pageProps} />
       <ChatBoxWrapper />
+      {/* <Loading /> */}
     </Provider>
   );
 }

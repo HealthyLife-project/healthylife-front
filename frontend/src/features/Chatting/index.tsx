@@ -43,18 +43,16 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
 
   //채팅방 목록 리스트
   const [data, setData] = useState<DataType[]>([]);
+
   //채팅 목록 리스트 조회
   useEffect(() => {
     if (!urlstr) return;
     api
       .get(`/chat/chatlist/${urlstr}`)
       .then((res) => {
-        //console.log("res", res.data);
         //테이블 리스트 넣기
         const convertedData = convertChatList(res.data);
-        console.log(res.data, convertedData, "test");
         setData(convertedData);
-        //console.log("data", data);
       })
       .catch((error: string) => {
         console.log("채팅 목록 리스트 조회 error", error);
@@ -66,18 +64,20 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         columns={columns}
         dataSource={search.length > 0 ? search : data}
         onRow={(record, rowIndex) => {
-          console.log(record);
+          //console.log(record);
           return {
             onClick: () => {
               //console.log("클릭된 행:", record);
               const title = record.title;
               setChatTitle(title);
+
               api
                 .post(`/chat/${urlstr}/insert`, {
                   roomid: Number(record.key),
                   userid: Number(tokenList.id),
                 })
                 .then((res) => {
+                  //이미 채팅 있는지 확인 후 만약 채팅 내용이 있으면 추가 내용 보기
                   if (res.data.result) {
                     localStorage.setItem(
                       "ChatBox",
@@ -89,13 +89,21 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
                         arr: res.data.data,
                       })
                     );
-                    //사용자 정의 이벤트 실행 - _app.tsx에서 실행
+                    //사용자 정의 이벤트 실행 - _app.tsx에서 실행 localstroage에서 title 값 넘김
                     const event = new CustomEvent("openChat", {
-                      detail: { title },
+                      detail: {
+                        title,
+                        roomid: Number(record.key),
+                        category: urlstr,
+                      },
                     });
+
+                    //해당 이벤트 실행
                     window.dispatchEvent(event);
+                    //모달 컴포넌트 실행
                     setIsModalOpen(true);
                   } else {
+                    //처음 입장한 경우
                     localStorage.setItem(
                       "ChatBox",
                       JSON.stringify({
@@ -107,7 +115,11 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
                     );
                     //사용자 정의 이벤트 실행 - _app.tsx에서 실행
                     const event = new CustomEvent("openChat", {
-                      detail: { title },
+                      detail: {
+                        title,
+                        roomid: Number(record.key),
+                        category: urlstr,
+                      },
                     });
                     window.dispatchEvent(event);
                     setIsModalOpen(true);

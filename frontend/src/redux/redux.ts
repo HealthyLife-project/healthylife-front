@@ -53,6 +53,7 @@ const tokenSlices = createSlice({
 });
 
 export const { setTokenList, setTokenDataset } = tokenSlices.actions;
+
 export const selectIsAuthenticated = (state: RootState) =>
   state.token.isAuthenticated;
 

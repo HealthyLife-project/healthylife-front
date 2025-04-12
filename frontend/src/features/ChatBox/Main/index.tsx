@@ -7,6 +7,10 @@ import socket from "@/util/socket";
 import { join } from "path";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import api from "@/util/chek";
+
+//image
+import arrowback from "@/assets/images/arrowback.png";
 
 //title 기본 채팅방 interface
 interface ChatBoxProps {
@@ -20,9 +24,12 @@ interface ChatBoxProps {
 const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //변수 선언
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+  //console.log("tolen", tokenList);
 
   //useState
   const [username, setUsername] = useState(tokenList.name); //유저 이름
+  const [userid, setUserid] = useState(tokenList.id); //유저 아이디
+  const [userNickname, setNickname] = useState(tokenList.nickname);
   const [message, setMessage] = useState(""); //보낸 메시지
   const [messages, setMessages] = useState<
     { username: string; message: string }[]
@@ -30,10 +37,13 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
   const [room, setRoom] = useState(title); //방 이름
   const [joined, setJoined] = useState(false);
+  const [chatlocal, setChatLocal] = useState([]);
 
   //useEffect
   useEffect(() => {
     const chatBox = localStorage.getItem("ChatBox");
+
+    setChatLocal(JSON.parse(chatBox!));
     const chatData = chatBox ? JSON.parse(chatBox) : null;
     if (chatData) {
       joinRoom();
@@ -58,6 +68,38 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     //console.log("chat  :", room, username, message);
     if (message.trim()) {
       socket.emit("sendMessage", { room, username, message });
+      //console.log("loca", chatlocal.category);
+      const today = new Date();
+
+      const formatDate = (date: Date) => {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, "0"); // 0~11이니까 +1
+        const dd = String(date.getDate()).padStart(2, "0");
+
+        const hh = String(date.getHours()).padStart(2, "0");
+        const min = String(date.getMinutes()).padStart(2, "0");
+        const sec = String(date.getSeconds()).padStart(2, "0");
+
+        return `${yyyy}.${mm}.${dd} ${hh}:${min}:${sec}`;
+      };
+
+      let chat_data = {
+        text: message,
+        userid: userid,
+        userNickname: userNickname,
+        time: formatDate(today),
+        roomid: chatlocal.roomid,
+      };
+
+      api
+        .post(`/chat/${chatlocal.category}/saveMessage`, chat_data)
+        .then((res) => {
+          console.log("백엔드 저장 완료", res.data);
+        })
+        .catch((error: string) => {
+          console.log("백엔드 저장 실패", error);
+        });
+
       setMessage("");
     }
   };
@@ -67,6 +109,8 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       setJoined(true); // 채팅방 생성
     }
   };
+
+  const showDrawer = () => {};
   //전송 버튼 클릭 함수(추후 변수명 변경)
   // const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
   //   console.log(info?.source, value);
@@ -74,6 +118,9 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   return (
     <ChatBoxStyled className={clsx("main-wrap")}>
       <div className="title">
+        <span onClick={showDrawer}>
+          <img src={arrowback.src} alt="arrow-back" />
+        </span>
         <span>{title}</span>
         <Button
           onClick={onClose}

@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { DrawerStyled } from "./styled";
 import { useRouter } from "next/router";
-import { Button } from "antd";
+import { Button, Switch } from "antd";
 import api from "@/util/chek";
 import { useDispatch } from "react-redux";
 import { setTokenList } from "@/redux/redux";
@@ -40,10 +40,18 @@ const DrawerContainer = () => {
       <div onClick={openMyPage} className="mypage-router">
         마이페이지
       </div>
-      <Button className="main-logout" onClick={handleLogout}>
-        로그아웃
-      </Button>
-      <div className="dark-mode">다크모드</div>
+      <div className="main-bottom">
+        <Button className="main-logout" onClick={handleLogout}>
+          로그아웃
+        </Button>
+        <div className="dark-mode">
+          <Switch
+            checkedChildren="Light"
+            unCheckedChildren="Night"
+            defaultChecked
+          />
+        </div>
+      </div>
     </DrawerStyled>
   );
 };
