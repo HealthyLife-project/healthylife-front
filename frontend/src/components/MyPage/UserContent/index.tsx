@@ -4,6 +4,10 @@ import api from "@/util/chek";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import Image from "next/image";
+
+//image -> 이후 back에서 가져오기
+import userimage from "../../../assets/images/usericon.png";
 
 //Component
 import ContentInfo from "../ContentInfo";
@@ -21,7 +25,7 @@ const UserContent = () => {
   const [phone, setPhone] = useState(""); //전화번호
   const [userid, setUserid] = useState(""); //유저 아이디
   const [id, setId] = useState<number | undefined>(undefined);
-
+  const [age, setAge] = useState();
   //useState - uesrhashtag
   const [hashTag, setHashTag] = useState([""]);
 
@@ -44,8 +48,10 @@ const UserContent = () => {
       setGender(res.data.gender);
       setPhone(res.data.phone);
       setUserid(res.data.userid);
+      setAge(res.data.age);
     });
   }, [id]);
+
   //해당 유저에 해당하는 해시태그
   // axios({
   //   method: "get",
@@ -55,8 +61,16 @@ const UserContent = () => {
   //   //setHashTag(res.data);
   // });
 
+  if (!tokenList?.id) {
+    return <div>로딩 중입니다...</div>;
+  }
+
   return (
     <UserContentStyle className={clsx("main-wrap")}>
+      <div className="user-img">
+        <Image className="imgstyle" src={userimage} alt="user-img"></Image>
+      </div>
+
       <ContentInfo
         name={name}
         nickname={nickname}
@@ -66,6 +80,7 @@ const UserContent = () => {
         phone={phone}
         userid={userid}
         hashtag={hashTag}
+        age={age}
       />
     </UserContentStyle>
   );

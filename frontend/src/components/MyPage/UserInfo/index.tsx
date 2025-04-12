@@ -9,7 +9,6 @@ import UserContent from "../UserContent";
 const Userinfo = () => {
   return (
     <UserInfoStyle className={clsx("main-wrap")}>
-      <UserImage />
       <UserContent />
     </UserInfoStyle>
   );

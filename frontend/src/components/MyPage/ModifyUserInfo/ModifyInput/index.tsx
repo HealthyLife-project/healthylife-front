@@ -24,7 +24,6 @@ const ModifyInput = () => {
       address: "",
       email: "",
       phone: "",
-      // hashtag: "",
     },
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
