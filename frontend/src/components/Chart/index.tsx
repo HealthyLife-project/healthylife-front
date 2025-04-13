@@ -11,13 +11,13 @@ import clsx from "clsx";
 // mypage > Chart 컴포넌트
 const Chart = () => {
   const tokenList = useSelector((state: RootState) => state.token.tokenList);
-  const [id, setId] = useState(tokenList.id);
+  const [id, setId] = useState(tokenList?.id);
   const [value, setValue] = useState(1); // 1: 체중, 2: 골격근량, 3: 체지방량, 4: BMI, 5: 체지방률
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    setId(tokenList.id);
-  }, [tokenList.id]);
+    setId(tokenList?.id);
+  }, [tokenList?.id]);
 
   useEffect(() => {
     api

@@ -1,16 +1,19 @@
 import clsx from "clsx";
 import { DrawerStyled } from "./styled";
 import { useRouter } from "next/router";
-import { Button, Switch } from "antd";
+import { Button, Segmented } from "antd";
 import api from "@/util/chek";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setTokenList } from "@/redux/redux";
+import { MoonOutlined, SunOutlined } from "@ant-design/icons";
+import { setTheme, selectTheme } from "@/redux/theme";
 
 //Drawer 컴포넌트
 const DrawerContainer = () => {
   //변수 선언
   const dispatch = useDispatch();
   const router = useRouter();
+  const theme = useSelector(selectTheme);
 
   //마이페이지 이동
   const openMyPage = () => {
@@ -35,6 +38,12 @@ const DrawerContainer = () => {
     }
   }
 
+  //onChange
+  const onChange = (e: string) => {
+    //console.log("onChange", e);
+    dispatch(setTheme(e as "light" | "dark"));
+  };
+
   return (
     <DrawerStyled className={clsx("main-wrap")}>
       <div onClick={openMyPage} className="mypage-router">
@@ -45,10 +54,15 @@ const DrawerContainer = () => {
           로그아웃
         </Button>
         <div className="dark-mode">
-          <Switch
-            checkedChildren="Light"
-            unCheckedChildren="Night"
-            defaultChecked
+          <Segmented
+            shape="round"
+            options={[
+              { value: "light", icon: <SunOutlined /> },
+              { value: "dark", icon: <MoonOutlined /> },
+            ]}
+            onChange={(e) => {
+              onChange(e);
+            }}
           />
         </div>
       </div>

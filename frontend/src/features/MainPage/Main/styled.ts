@@ -12,6 +12,6 @@ export const MainStyled = styled.div`
     padding: 0px 20px;
     align-items: center;
     margin: 0px auto;
-    //background-color: #d2e4f8;
+    background-color: ${(props) => props.theme.backgroundColor};
   }
 `;
