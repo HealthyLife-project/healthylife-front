@@ -39,7 +39,7 @@ const Main = () => {
       {isAuthenticated ? (
         <HashtagsModal />
       ) : (
-        <div>로그인을 하세요</div> // Or your login component/redirect logic
+        <span></span> // Or your login component/redirect logic
       )}
       <Footer />
     </>

@@ -1,6 +1,6 @@
 import { ResetPasswordPageStyled } from "./styled";
 import api from "@/util/chek";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Input, Button, Space, Spin, Typography } from "antd"; // Importing Ant Design components
 
@@ -8,16 +8,20 @@ const { Title } = Typography;
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  // Assuming 'userid' is already available in the state
-  const [userid, setUserId] = useState<string | null>(
-    /* Initial value based on how you store it */ null
-  );
+  const [userid, setUserId] = useState<string | null>();
+  const { id } = router.query;
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [loading, setLoading] = useState(false);
   const [passwordResetError, setPasswordResetError] = useState<string | null>(
     null
   );
+
+  useEffect(() => {
+    if (typeof id === "string") {
+      setUserId(id);
+    }
+  }, [id]);
 
   const resetUserPassword = async (
     currentUserId: string,

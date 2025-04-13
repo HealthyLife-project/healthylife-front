@@ -1,11 +1,18 @@
 import { SignupPageStyled } from "./styled";
 
 import React from "react";
-import { Formik, Form, Field, FormikHelpers, ErrorMessage } from "formik";
-import { Button } from "antd";
+import {
+  Formik,
+  Form,
+  Field,
+  FormikHelpers,
+  ErrorMessage,
+  useFormikContext,
+} from "formik";
+import { Button, Divider } from "antd";
 import * as Yup from "yup";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
 
@@ -103,15 +110,56 @@ const SignupPage: React.FC = () => {
   const checkUseridAvailability = async (userid: string) => {
     try {
       const response = await api.get(`/user/finduser/${userid}`);
+      const result = response.data.result;
+      const message = response.data.message;
 
-      setUseridAvailability(response.data);
+      setUseridAvailability({ result: result, message: message });
+
+      // setUseridAvailability();
+      // console.log("userid response data", response.data);
     } catch (error) {
+      // error
+      const response = await api.get(`/user/finduser/${userid}`);
+      const result = response.data.result;
+      const message = response.data.message;
+
+      setUseridAvailability({ result: result, message: message });
       console.error("Error checking user ID:", error);
-      setUseridAvailability({
-        result: false,
-        message: "Error checking user ID.",
-      });
     }
+  };
+  //
+  //
+  // update check
+  useEffect(() => {
+    console.log("useridAvailability updated:", useridAvailability);
+  }, [useridAvailability]);
+  //
+  //
+
+  // 유저 아이디 에러 메시지
+  const UseridErrorMessage: React.FC = () => {
+    const { errors, touched } = useFormikContext<SignupPageValues>();
+    const msg = errors.userid;
+    const isTouched = touched.userid;
+    const hasYupError = !!msg;
+
+    // Show availability message if the check has been done
+    if (useridAvailability) {
+      if (!useridAvailability.result) {
+        return <div style={{ color: "red" }}>{useridAvailability.message}</div>;
+      } else {
+        return (
+          <div style={{ color: "green" }}>{useridAvailability.message}</div>
+        );
+      }
+    }
+
+    // If no availability message is shown (check not done or successful), show Yup errors if touched
+    if (msg && isTouched) {
+      return <div style={{ color: "red" }}>{msg}</div>;
+    }
+
+    return null;
   };
 
   const checkNicknameAvailability = async (nickname: string) => {
@@ -193,7 +241,7 @@ const SignupPage: React.FC = () => {
                     );
                   }}
                 /> */}
-                {useridAvailability && (
+                {/* {useridAvailability && (
                   <div
                     style={{
                       color: useridAvailability.result ? "green" : "red",
@@ -206,7 +254,10 @@ const SignupPage: React.FC = () => {
                   name="userid"
                   component="div"
                   render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-                />
+                /> */}
+                {useridAvailability && (
+                  <ErrorMessage name="userid" component={UseridErrorMessage} />
+                )}
                 {/*  */}
                 <label htmlFor="password">비밀번호</label>
                 <Field type="password" id="password" name="password" />
