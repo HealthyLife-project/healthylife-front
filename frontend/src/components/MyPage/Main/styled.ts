@@ -6,31 +6,43 @@ export const MyMain = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
-    padding: 0px 20px;
     align-items: center;
-    margin: 10px auto;
+    margin: 0 auto;
+    padding: 0px 20px;
+    text-align: center;
+    justify-content: center;
 
     .tabs-header {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 10px;
+
+      .tab-button {
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #f5f5f5;
+        transition: all 0.2s ease-in-out;
+        font-weight: 500;
+
+        &.active {
+          background-color: #6ca6cd;
+          color: white;
+          border-color: #6ca6cd;
+        }
+
+        &:hover {
+          background-color: #e0f0ff;
+        }
+      }
+    }
+
+    .tab-content {
       width: 100%;
+      margin-top: 20px;
     }
   }
 `;
-
-//Design Component
-export const theme = {
-  token: {
-    // global token
-  },
-  components: {
-    // component token
-    Tabs: {
-      titleFontSize: 16,
-      itemSelectedColor: "#2A2A2A",
-      itemHoverColor: "#2A2A2A",
-      cardGutter: 5,
-      cardPadding: "12px 110px", // "Tabs" 키 아래 정의해야 함
-    },
-  },
-};
