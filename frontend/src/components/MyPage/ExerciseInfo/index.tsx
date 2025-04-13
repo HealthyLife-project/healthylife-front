@@ -12,13 +12,17 @@ const ExerciseInfo = () => {
     <ExerciseInfoStyle className={clsx("main-wrap")}>
       <div className="main-top">
         <div className="main-map">
+          <h1>현재 위치 기준 반경 2km이내 헬스장 위치</h1>
           <KAKAOMap />
         </div>
         <div className="main-info">
           <Bodyinfo />
         </div>
       </div>
-      <Chart />
+      <div>
+        <h1>최근 1년 인바디 정보</h1>
+        <Chart />
+      </div>
     </ExerciseInfoStyle>
   );
 };

@@ -7,8 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useState } from "react";
 import { CheckboxGroupProps } from "antd/es/checkbox";
-
-type NotificationType = "success" | "info" | "warning" | "error";
+import { openNotificationWithIcon } from "@/util/notification";
 
 //마이페이지 > 개인정보 > 내용 컴포넌트
 const ContentInfo = (props: {
@@ -40,19 +39,6 @@ const ContentInfo = (props: {
 
   const [notifi, contextHolder] = notification.useNotification();
 
-  const openNotificationWithIcon = (type: NotificationType) => {
-    const message =
-      type === "success"
-        ? "성공적으로 수정했습니다"
-        : type === "warning"
-        ? "등록에 실패했습니다"
-        : "";
-
-    notifi[type]({
-      message,
-    });
-  };
-
   const options: CheckboxGroupProps<string>["options"] = [
     { label: "남성", value: "male" },
     { label: "여성", value: "female" },
@@ -76,12 +62,14 @@ const ContentInfo = (props: {
         .post(`user/mypage/modify/${id}`, values)
         .then((res) => {
           console.log("res", res.data);
-          //notification("수정완료 되었습니다");
-          openNotificationWithIcon("success");
+          openNotificationWithIcon("success", "성공적으로 수정하였습니다.");
         })
         .catch((error: string) => {
           //console.log("error", error);
-          openNotificationWithIcon("warning");
+          openNotificationWithIcon(
+            "warning",
+            "수정에 실패하였습니다. 다시 한번 확인해 주세요."
+          );
         });
     },
   });

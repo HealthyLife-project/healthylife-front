@@ -2,13 +2,14 @@ import { BodyInfoStyle } from "./styled"; //스타일
 import clsx from "clsx";
 import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
-import { Button, message, Upload, Input } from "antd";
+import { Button, message, Upload, Input, Tooltip } from "antd";
 import { createWorker } from "tesseract.js";
 import { useEffect, useState } from "react";
 import { Formik, useFormik } from "formik";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { openNotificationWithIcon } from "@/util/notification";
 
 //Component
 
@@ -27,11 +28,13 @@ const Bodyinfo = () => {
   const [id, setId] = useState();
 
   //변수 선언
+  const text = <span>이미지를 업로드 하면 자동으로 입력되요!</span>; //이미지 버튼 호버
 
   //useEffect
   useEffect(() => {
     setId(tokenList.id);
   }, []);
+
   //파일 업로드
   const props: UploadProps = {
     onChange(info) {
@@ -79,21 +82,14 @@ const Bodyinfo = () => {
             setFieldValue("fatmass", extractedData.체지방량);
             setFieldValue("bmi", extractedData.BMI);
             setFieldValue("fatper", extractedData.체지방률);
-            // setExercise([
-            //   extractedData.체중 ?? "",
-            //   extractedData.골격근량 ?? "",
-            //   extractedData.체지방량 ?? "",
-            //   extractedData.BMI ?? "",
-            //   extractedData.체지방률 ?? "",
-            // ]);
 
-            console.log("추출된 데이터:", extractedData);
+            //console.log("추출된 데이터:", extractedData);
             await worker.terminate();
 
             //URL 해제
             URL.revokeObjectURL(imageUrl);
           } catch (error) {
-            console.error("OCR 처리 중 오류 발생:", error);
+            //console.error("OCR 처리 중 오류 발생:", error);
             message.error("이미지 분석 중 오류가 발생했습니다.");
           }
         })();
@@ -114,11 +110,11 @@ const Bodyinfo = () => {
     },
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
-      console.log("values", values);
+      //console.log("values", values);
       api
         .post(`inbody/exerciseinfo/${id}`, values)
         .then((res) => {
-          console.log("전송 성공했습니다.");
+          openNotificationWithIcon("success", "성공적으로 등록하였습니다.");
         })
         .catch((error: string) => {
           console.log("전송 실패 에러: ", error);
@@ -128,58 +124,77 @@ const Bodyinfo = () => {
 
   const { setFieldValue } = SubmitFormik;
   return (
-    <BodyInfoStyle>
-      <div>
-        <h1>인바디 정보</h1>
-        <form onSubmit={SubmitFormik.handleSubmit}>
-          <div>
+    <BodyInfoStyle className={clsx("main-wrap")}>
+      <h1>인바디 정보</h1>
+      <form onSubmit={SubmitFormik.handleSubmit}>
+        <div className="inbody-input-form">
+          <div className="inbody-row">
+            <span className="inbody-title">키</span>
             <Input
+              className="inbody-input"
               name="height"
-              placeholder="키를 입력해 주세요"
               value={SubmitFormik.values.height}
               onChange={SubmitFormik.handleChange}
             />
+          </div>
+          <div className="inbody-row">
+            <span className="inbody-title">체중</span>
             <Input
+              className="inbody-input"
               name="weight"
-              placeholder="몸무게를 입력해 주세요"
               value={SubmitFormik.values.weight}
               onChange={SubmitFormik.handleChange}
             />
+          </div>
+          <div className="inbody-row">
+            <span className="inbody-title">골격근량</span>
             <Input
+              className="inbody-input"
               name="musclemass"
-              placeholder="골격근량을 입력해 주세요"
               value={SubmitFormik.values.musclemass}
               onChange={SubmitFormik.handleChange}
             />
+          </div>
+          <div className="inbody-row">
+            <span className="inbody-title">체지방량</span>
             <Input
+              className="inbody-input"
               name="fatmass"
-              placeholder="체지방량을 입력해 주세요"
               value={SubmitFormik.values.fatmass}
               onChange={SubmitFormik.handleChange}
             />
+          </div>
+          <div className="inbody-row">
+            <span className="inbody-title">BMI</span>
             <Input
+              className="inbody-input"
               name="bmi"
-              placeholder="BMI를 입력해 주세요"
               value={SubmitFormik.values.bmi}
               onChange={SubmitFormik.handleChange}
             />
+          </div>
+          <div className="inbody-row">
+            <span className="inbody-title">체지방률</span>
             <Input
+              className="inbody-input"
               name="fatper"
-              placeholder="체지방률을 입력해 주세요"
               value={SubmitFormik.values.fatper}
               onChange={SubmitFormik.handleChange}
             />
           </div>
-          <div className="btn-group">
+        </div>
+
+        <div className="btn-group">
+          <Tooltip placement="top" color={"geekblue"} title={text}>
             <Upload {...props} showUploadList={false}>
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>
-            <Button htmlType="submit" className="save-btn">
-              저장
-            </Button>
-          </div>
-        </form>
-      </div>
+          </Tooltip>
+          <Button htmlType="submit" className="save-btn">
+            저장
+          </Button>
+        </div>
+      </form>
     </BodyInfoStyle>
   );
 };

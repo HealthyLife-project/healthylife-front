@@ -8,7 +8,7 @@ export const MapStyle = styled.div`
     justify-content: center;
     align-items: center;
 
-    .main-map {
+    #map {
       width: 100%;
       height: 100%;
     }

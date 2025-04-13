@@ -4,46 +4,68 @@ import { Line } from "@ant-design/plots";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import api from "@/util/chek";
+import type { RadioChangeEvent } from "antd";
+import { Radio } from "antd";
+import clsx from "clsx";
 
-//SubMain > Chart 컴포넌트
+// mypage > Chart 컴포넌트
 const Chart = () => {
-  //변수 선언
-  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
-  //console.log("tokenList", tokenList.id);
+  const tokenList = useSelector((state: RootState) => state.token.tokenList);
 
-  //useState
-  const [id, setId] = useState();
+  const [id, setId] = useState(tokenList.id);
+  const [value, setValue] = useState(1); // 1: 체중, 2: 골격근량, 3: 체지방량, 4: BMI, 5: 체지방률
+  const [chartData, setChartData] = useState([]);
 
-  //useEffect
   useEffect(() => {
     setId(tokenList.id);
+  }, [tokenList.id]);
+
+  useEffect(() => {
     api
-      .get(`/inbody/userinfo/${id}`)
+      .get(`/inbody/userinfo/${Number(id)}`)
       .then((res) => {
-        console.log("res", res.data);
+        //console.log("inbody res", res.data);
+        const data = res.data;
+
+        const newChartData = data.map((item: any) => ({
+          date: item.createdAt.slice(5, 10), // "04-10"
+          weight: parseFloat(item.weight),
+          musclemass: parseFloat(item.muscleMass),
+          fatmass: parseFloat(item.bodyFat),
+          bmi: parseFloat(item.bmi),
+          fatper: parseFloat(item.bodyFatPer),
+        }));
+
+        setChartData(newChartData);
       })
       .catch((error: string) => {
         console.log("유저 인바디 정보 가져오기 실패", error);
       });
-  }, []);
+  }, [id]);
 
-  //백엔드에서 id에 따른 인바디 정보 가져오기
-  const data = [
-    { year: "1991", value: 3 },
-    { year: "1992", value: 4 },
-    { year: "1993", value: 3.5 },
-    { year: "1994", value: 5 },
-    { year: "1995", value: 4.9 },
-    { year: "1996", value: 6 },
-    { year: "1997", value: 7 },
-    { year: "1998", value: 9 },
-    { year: "1999", value: 13 },
-  ];
+  const onChange = (e: RadioChangeEvent) => {
+    setValue(e.target.value);
+  };
 
-  //행과 열 설정
+  // 선택된 항목에 따라 필터링된 데이터 생성
+  const selectedData = chartData.map((item: any) => ({
+    Date: item.date,
+    value:
+      value === 1
+        ? item.weight
+        : value === 2
+        ? item.musclemass
+        : value === 3
+        ? item.fatmass
+        : value === 4
+        ? item.bmi
+        : item.fatper,
+  }));
+
+  // 차트 config
   const config = {
-    data,
-    xField: "year",
+    data: selectedData,
+    xField: "Date",
     yField: "value",
     point: {
       shapeField: "square",
@@ -58,9 +80,25 @@ const Chart = () => {
       lineWidth: 2,
     },
   };
+
   return (
-    <ChartStyled>
-      <Line {...config} />
+    <ChartStyled className={clsx("main-wrap")}>
+      <div className="chart">
+        <Line {...config} />
+      </div>
+      <div className="attribute">
+        <Radio.Group
+          onChange={onChange}
+          value={value}
+          options={[
+            { value: 1, label: "체중" },
+            { value: 2, label: "골격근량" },
+            { value: 3, label: "체지방량" },
+            { value: 4, label: "BMI" },
+            { value: 5, label: "체지방률" },
+          ]}
+        />
+      </div>
     </ChartStyled>
   );
 };
