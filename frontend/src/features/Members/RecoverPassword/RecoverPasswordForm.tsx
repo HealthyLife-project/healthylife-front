@@ -44,7 +44,8 @@ export default function RecoverPasswordPage() {
   return (
     <>
       <RecoverPasswordPageStyled>
-        recovery password it's okay we got this
+        <h1>비밀번호 찾기</h1>
+        <p>비밀번호 재설정을 위해 아래에 이메일 주소를 입력해 주세요.</p>
         <form onSubmit={submitHandler}>
           <div className="recover-password-container">
             <div className="input-container">
@@ -56,11 +57,12 @@ export default function RecoverPasswordPage() {
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
-              ></Input>
+              />
             </div>
             <div className="button-container">
-              <button type="submit">Send password reset email</button>
+              <button type="submit">비밀번호 재설정 이메일 보내기</button>
             </div>
+            <a href="/login">비밀번호를 기억하시나요? 로그인</a>
           </div>
         </form>
       </RecoverPasswordPageStyled>

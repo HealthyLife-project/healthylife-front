@@ -107,54 +107,61 @@ const SignupPage: React.FC = () => {
     message: string;
   } | null>(null);
 
+  // const checkUseridAvailability = async (userid: string) => {
+  //   try {
+  //     const response = await api.get(`/user/finduser/${userid}`);
+  //     const { result, message } = response.data;
+  //     // const result = response.data.result;
+  //     // const message = response.data.message;
+
+  //     setUseridAvailability({ result, message });
+
+  //     // setUseridAvailability();
+  //     // console.log("userid response data", response.data);
+  //   } catch (error) {
+  //     // error
+  //     // const response = await api.get(`/user/finduser/${userid}`);
+  //     // const result = response.data.result;
+  //     // const message = response.data.message;
+
+  //     // setUseridAvailability({ result: result, message: message });
+  //     console.error("Error checking user ID:", error);
+  //   }
+  // };
+
   const checkUseridAvailability = async (userid: string) => {
     try {
       const response = await api.get(`/user/finduser/${userid}`);
-      const result = response.data.result;
-      const message = response.data.message;
-
-      setUseridAvailability({ result: result, message: message });
-
-      // setUseridAvailability();
+      const { result, message } = response.data;
+      setUseridAvailability({ result, message });
+      console.log("useridAvailability updated:", { result, message });
       console.log("userid response data", response.data);
-    } catch (error) {
-      // error
-      const response = await api.get(`/user/finduser/${userid}`);
-      const result = response.data.result;
-      const message = response.data.message;
-
-      setUseridAvailability({ result: result, message: message });
+    } catch (error: any) {
       console.error("Error checking user ID:", error);
-    }
-  };
-
-  // 유저 아이디 에러 메시지
-  const UseridErrorMessage: React.FC = () => {
-    const { errors, touched } = useFormikContext<SignupPageValues>();
-    const msg = errors.userid;
-    const isTouched = touched.userid;
-
-    console.log("updated:", useridAvailability);
-
-    if (msg && isTouched) {
-      return <div className="error-message">{msg}</div>;
-    }
-
-    if (useridAvailability) {
-      if (!useridAvailability.result) {
-        return (
-          <div className="error-message">{useridAvailability.message}</div>
-        );
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setUseridAvailability({
+          result: false,
+          message: error.response.data.message,
+        });
+        console.log("useridAvailability updated (error):", {
+          result: false,
+          message: error.response.data.message,
+        });
       } else {
-        return (
-          <div className="error-message" style={{ color: "green" }}>
-            {useridAvailability.message}
-          </div>
-        );
+        setUseridAvailability({
+          result: false,
+          message: error.response.data.message,
+        }); // Default error message
+        console.log("useridAvailability updated (error - generic):", {
+          result: false,
+          message: error.response.data.message,
+        });
       }
     }
-
-    return null;
   };
 
   const checkNicknameAvailability = async (nickname: string) => {
@@ -235,7 +242,40 @@ const SignupPage: React.FC = () => {
                     </Button>
                   </div>
                 </FormItem>
-                <ErrorMessage name="userid" component={UseridErrorMessage} />
+
+                <ErrorMessage
+                  name="userid"
+                  component="div"
+                  render={(msg) => <div className="error-message">{msg}</div>}
+                />
+                {useridAvailability && (
+                  <div
+                    className="error-message"
+                    style={{
+                      color: useridAvailability.result ? "green" : "red",
+                    }}
+                  >
+                    {useridAvailability.message}
+                  </div>
+                )}
+                {/* <ErrorMessage
+                  name="userid"
+                  render={(msg) => (
+                    <UseridErrorMessage
+                      yupErrorMessage={msg}
+                      useridAvailability={useridAvailability}
+                    />
+                  )}
+                /> */}
+                {/* <ErrorMessage name="userid">
+                  {(msg) => (
+                    <UseridErrorMessage
+                      yupErrorMessage={msg}
+                      useridAvailability={useridAvailability}
+                    />
+                  )}
+                </ErrorMessage> */}
+                {/* <ErrorMessage name="userid" component={UseridErrorMessage} /> */}
 
                 <FormItem>
                   <FormLabel htmlFor="password">비밀번호</FormLabel>
