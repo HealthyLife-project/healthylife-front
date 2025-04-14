@@ -21,19 +21,27 @@ const Chart = () => {
 
   useEffect(() => {
     api
-      .get(`/inbody/userinfo/${Number(id)}`)
+      .get(`/inbody/currentinfo/${id}`)
       .then((res) => {
         //console.log("inbody res", res.data);
         const data = res.data;
-
-        const newChartData = data.map((item: any) => ({
-          date: item.createdAt.slice(5, 10), // "04-10"
-          weight: parseFloat(item.weight),
-          musclemass: parseFloat(item.muscleMass),
-          fatmass: parseFloat(item.bodyFat),
-          bmi: parseFloat(item.bmi),
-          fatper: parseFloat(item.bodyFatPer),
-        }));
+        let newChartData = data.map(
+          (item: {
+            createdAt: string;
+            weight: string;
+            muscleMass: string;
+            bodyFat: string;
+            bmi: string;
+            bodyFatPer: string;
+          }) => ({
+            date: item.createdAt.slice(5, 10), // "04-10"
+            weight: parseFloat(item.weight),
+            musclemass: parseFloat(item.muscleMass),
+            fatmass: parseFloat(item.bodyFat),
+            bmi: parseFloat(item.bmi),
+            fatper: parseFloat(item.bodyFatPer),
+          })
+        );
 
         setChartData(newChartData);
       })

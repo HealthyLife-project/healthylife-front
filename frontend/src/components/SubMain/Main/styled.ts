@@ -7,8 +7,6 @@ export const SubMainStyled = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
-    //justify-content: space-between;
-    //padding: 0px 20px;
     align-items: center;
     margin: 0px auto;
     gap: 10px;
@@ -17,34 +15,60 @@ export const SubMainStyled = styled.div`
     .main-content {
       display: flex;
       width: 100%;
+      gap: 20px;
     }
     .main-left,
     .main-right {
       display: flex;
       width: 50%;
       height: 100%;
-      //border: 1px solid black;
     }
 
     .main-left {
+      margin-top: 40px;
       height: 500px;
-      /* position: -webkit-sticky;
-      position: sticky;
-      top: 0px; */
     }
     .main-right {
       flex-direction: column;
       gap: 10px;
+
+      .search {
+        display: flex;
+        width: 100%;
+        justify-content: end;
+
+        .search-antd {
+          width: 220px;
+        }
+      }
+
+      .createRoom {
+        display: flex;
+        justify-content: end;
+        .create-btn {
+          width: 120px;
+        }
+      }
     }
   }
 
-  .search {
-    display: flex;
-    width: 100%;
-    justify-content: flex-end;
+  @media (max-width: 768px) {
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
 
-    .search-antd {
-      width: 300px;
+      .main-left,
+      .main-right {
+        display: flex;
+        width: 100%;
+        height: 100%;
+      }
+
+      .main-left {
+        margin-top: 0px;
+        height: 300px;
+      }
     }
   }
 `;

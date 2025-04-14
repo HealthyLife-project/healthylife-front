@@ -3,7 +3,8 @@ import styled from "styled-components";
 export const FooterStyled = styled.div`
   &.main-wrap {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    text-align: center;
     width: 100%;
     height: 150px;
     background-color: #f9f9f9;
@@ -32,14 +33,8 @@ export const FooterStyled = styled.div`
         letter-spacing: -0.2px;
         color: #777;
       }
-    }
-    .submenu {
-      height: 100%;
-      align-items: center;
-      flex-direction: row;
-      gap: 30px;
 
-      .submenu > span {
+      .github {
         cursor: pointer;
       }
     }

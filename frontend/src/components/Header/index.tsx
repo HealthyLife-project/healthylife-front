@@ -32,7 +32,7 @@ const Header = () => {
 
   //로그인 정보 확인 - store용
   useEffect(() => {
-    console.log("tokenList 업데이트됨:", tokenList);
+    //console.log("tokenList 업데이트됨:", tokenList);
     const username = tokenList?.name;
     const userid = tokenList?.userid;
 
@@ -80,7 +80,7 @@ const Header = () => {
                 <span className="user-name" onClick={showDrawer}>
                   {userid ? userid : name}
                 </span>
-                님 환영합니다
+                <span className="user-name-sub">님 환영합니다</span>
               </div>
               <Drawer title={name} onClose={onClose} open={open}>
                 <DrawerContainer />

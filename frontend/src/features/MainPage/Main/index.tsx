@@ -17,7 +17,7 @@ import HashtagsModal from "@/components/HashtagModal/HashtagModal";
 const Main = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  console.log("is authenticated", isAuthenticated);
+  //console.log("is authenticated", isAuthenticated);
 
   return (
     <>

@@ -64,7 +64,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       joinRoom();
       //console.log(chatData.message ? "메세지 있음" : "메세지 없음");
     }
-    console.log("입장여부 확인", socket.connected);
+    //console.log("입장여부 확인", socket.connected);
 
     socket.on("receiveMessage", (data) => {
       console.log("받은메세지", data);
@@ -140,10 +140,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
   //drawer 닫기
   const closeDrawer = () => setIsChatListOpen(false);
-
-  //전송 버튼 클릭 함수(추후 변수명 변경)
-  // const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
-  //   console.log(info?.source, value);
 
   return (
     <>

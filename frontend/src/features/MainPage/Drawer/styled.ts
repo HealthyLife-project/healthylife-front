@@ -21,7 +21,7 @@ export const DrawerStyled = styled.div`
       width: 100%;
 
       .main-logout {
-        width: 75%;
+        width: 120px;
         cursor: pointer;
       }
 
