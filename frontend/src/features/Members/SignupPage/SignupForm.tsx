@@ -1,4 +1,4 @@
-import { SignupPageStyled } from "./styled";
+import { SignupPageStyled, FormItem, FormLabel } from "./styled";
 
 import React from "react";
 import {
@@ -9,7 +9,7 @@ import {
   ErrorMessage,
   useFormikContext,
 } from "formik";
-import { Button, Divider } from "antd";
+import { Button, Divider, Input } from "antd";
 import * as Yup from "yup";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -41,7 +41,7 @@ const SignupPage: React.FC = () => {
     nickname: "",
     age: undefined,
     gender: "남성",
-    phone: "000-0000-0000",
+    phone: "",
     address: "",
   };
 
@@ -116,7 +116,7 @@ const SignupPage: React.FC = () => {
       setUseridAvailability({ result: result, message: message });
 
       // setUseridAvailability();
-      // console.log("userid response data", response.data);
+      console.log("userid response data", response.data);
     } catch (error) {
       // error
       const response = await api.get(`/user/finduser/${userid}`);
@@ -127,36 +127,31 @@ const SignupPage: React.FC = () => {
       console.error("Error checking user ID:", error);
     }
   };
-  //
-  //
-  // update check
-  useEffect(() => {
-    console.log("useridAvailability updated:", useridAvailability);
-  }, [useridAvailability]);
-  //
-  //
 
   // 유저 아이디 에러 메시지
   const UseridErrorMessage: React.FC = () => {
     const { errors, touched } = useFormikContext<SignupPageValues>();
     const msg = errors.userid;
     const isTouched = touched.userid;
-    const hasYupError = !!msg;
 
-    // Show availability message if the check has been done
-    if (useridAvailability) {
-      if (!useridAvailability.result) {
-        return <div style={{ color: "red" }}>{useridAvailability.message}</div>;
-      } else {
-        return (
-          <div style={{ color: "green" }}>{useridAvailability.message}</div>
-        );
-      }
+    console.log("updated:", useridAvailability);
+
+    if (msg && isTouched) {
+      return <div className="error-message">{msg}</div>;
     }
 
-    // If no availability message is shown (check not done or successful), show Yup errors if touched
-    if (msg && isTouched) {
-      return <div style={{ color: "red" }}>{msg}</div>;
+    if (useridAvailability) {
+      if (!useridAvailability.result) {
+        return (
+          <div className="error-message">{useridAvailability.message}</div>
+        );
+      } else {
+        return (
+          <div className="error-message" style={{ color: "green" }}>
+            {useridAvailability.message}
+          </div>
+        );
+      }
     }
 
     return null;
@@ -209,101 +204,101 @@ const SignupPage: React.FC = () => {
     <>
       <SignupPageStyled>
         <div className="signup-page-container">
-          회원가입 페이지
+          <h1>회원가입</h1>
           <Formik<SignupPageValues>
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
+            validateOnChange={true}
           >
-            {({ isSubmitting, values }) => (
+            {/* touched: boolean values; 유저의 행동을 주시함*/}
+            {/* true: if the user has focused on and then blurred the field */}
+            {/* false: if the user has not yet interacted with the field in this way */}
+            {({
+              isSubmitting,
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+            }) => (
               <Form>
-                <label htmlFor="userid">아이디</label>
-                <Field type="text" id="userid" name="userid" />
-                <Button onClick={() => checkUseridAvailability(values.userid)}>
-                  중복확인
-                </Button>
-                {/* <ErrorMessage
-                  name="userid"
-                  component="div"
-                  render={(msg) => {
-                    console.log(
-                      "useridAvailability in render:",
-                      useridAvailability
-                    );
-                    console.log("Validation message (msg) in render:", msg);
-                    return (
-                      <div style={{ color: "red" }}>
-                        {useridAvailability &&
-                          !useridAvailability.result &&
-                          !msg && <div>{useridAvailability.message}</div>}
-                        {msg}
-                      </div>
-                    );
-                  }}
-                /> */}
-                {/* {useridAvailability && (
-                  <div
-                    style={{
-                      color: useridAvailability.result ? "green" : "red",
-                    }}
-                  >
-                    {useridAvailability.message}
+                <FormItem>
+                  <FormLabel htmlFor="userid">아이디</FormLabel>
+                  <div className="input-with-button-container">
+                    <Field type="text" id="userid" name="userid" />
+                    <Button
+                      onClick={() => checkUseridAvailability(values.userid)}
+                      disabled={!!errors.userid}
+                    >
+                      중복확인
+                    </Button>
                   </div>
+                </FormItem>
+                <ErrorMessage name="userid" component={UseridErrorMessage} />
+
+                <FormItem>
+                  <FormLabel htmlFor="password">비밀번호</FormLabel>
+                  <Input.Password
+                    id="password"
+                    name="password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.password}
+                  />
+                </FormItem>
+                {touched.password && errors.password && (
+                  <div className="error-message">{errors.password}</div>
                 )}
-                <ErrorMessage
-                  name="userid"
-                  component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-                /> */}
-                {useridAvailability && (
-                  <ErrorMessage name="userid" component={UseridErrorMessage} />
+
+                <FormItem>
+                  <FormLabel htmlFor="confirmPassword">비밀번호 확인</FormLabel>
+                  <Input.Password
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.confirmPassword}
+                  />
+                </FormItem>
+                {touched.confirmPassword && errors.confirmPassword && (
+                  <div className="error-message">{errors.confirmPassword}</div>
                 )}
-                {/*  */}
-                <label htmlFor="password">비밀번호</label>
-                <Field type="password" id="password" name="password" />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-                />
-                {/*  */}
-                <label htmlFor="confirmPassword">비밀번호 확인</label>
-                <Field
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                />
-                <ErrorMessage
-                  name="confirmPassword"
-                  component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-                />
-                {/*  */}
-                <label htmlFor="name">이름</label>
-                <Field type="text" id="name" name="name" />
+
+                <FormItem>
+                  <FormLabel htmlFor="name">이름</FormLabel>
+                  <Field type="text" id="name" name="name" />
+                </FormItem>
                 <ErrorMessage
                   name="name"
                   component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                  render={(msg) => <div className="error-message">{msg}</div>}
                 />
-                {/*  */}
-                <label htmlFor="email">이메일</label>
-                <Field type="email" id="email" name="email" />
+
+                <FormItem>
+                  <FormLabel htmlFor="email">이메일</FormLabel>
+                  <Field type="email" id="email" name="email" />
+                </FormItem>
                 <ErrorMessage
                   name="email"
                   component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                  render={(msg) => <div className="error-message">{msg}</div>}
                 />
-                {/*  */}
-                <label htmlFor="nickname">닉네임</label>
-                <Field type="text" id="nickname" name="nickname" />
-                <Button
-                  onClick={() => checkNicknameAvailability(values.nickname)}
-                >
-                  중복확인
-                </Button>
+
+                <FormItem>
+                  <FormLabel htmlFor="nickname">닉네임</FormLabel>
+                  <div className="input-with-button-container">
+                    <Field type="text" id="nickname" name="nickname" />
+                    <Button
+                      onClick={() => checkNicknameAvailability(values.nickname)}
+                    >
+                      중복확인
+                    </Button>
+                  </div>
+                </FormItem>
                 {nicknameAvailability && (
                   <div
+                    className="error-message"
                     style={{
                       color: nicknameAvailability.result ? "green" : "red",
                     }}
@@ -314,21 +309,22 @@ const SignupPage: React.FC = () => {
                 <ErrorMessage
                   name="nickname"
                   component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                  render={(msg) => <div className="error-message">{msg}</div>}
                 />
-                {/*  */}
-                <label htmlFor="age">나이</label>
-                <Field type="number" id="age" name="age" />
+
+                <FormItem>
+                  <FormLabel htmlFor="age">나이</FormLabel>
+                  <Field type="text" id="age" name="age" />
+                </FormItem>
                 <ErrorMessage
                   name="age"
                   component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                  render={(msg) => <div className="error-message">{msg}</div>}
                 />
-                {/*  */}
 
-                <div className="gender">
-                  <label>성별</label>
-                  <label>
+                <FormItem className="gender">
+                  <FormLabel>성별</FormLabel>
+                  <label style={{ marginRight: "15px" }}>
                     <Field type="radio" name="gender" value="male" />
                     남성
                   </label>
@@ -336,29 +332,33 @@ const SignupPage: React.FC = () => {
                     <Field type="radio" name="gender" value="female" />
                     여성
                   </label>
-                </div>
+                </FormItem>
                 <ErrorMessage
                   name="gender"
                   component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                  render={(msg) => <div className="error-message">{msg}</div>}
                 />
-                {/*  */}
-                <label htmlFor="phone">휴대전화 번호</label>
-                <Field type="text" id="phone" name="phone" />
+
+                <FormItem>
+                  <FormLabel htmlFor="phone">휴대전화 번호</FormLabel>
+                  <Field type="text" id="phone" name="phone" />
+                </FormItem>
                 <ErrorMessage
                   name="phone"
                   component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                  render={(msg) => <div className="error-message">{msg}</div>}
                 />
-                {/*  */}
-                <label htmlFor="address">주소</label>
-                <Field type="text" id="address" name="address" />
+
+                <FormItem>
+                  <FormLabel htmlFor="address">주소</FormLabel>
+                  <Field type="text" id="address" name="address" />
+                </FormItem>
                 <ErrorMessage
                   name="address"
                   component="div"
-                  render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+                  render={(msg) => <div className="error-message">{msg}</div>}
                 />
-                {/*  */}
+
                 <Button htmlType="submit" disabled={isSubmitting}>
                   회원가입
                 </Button>

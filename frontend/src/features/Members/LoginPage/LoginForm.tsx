@@ -13,13 +13,10 @@ import Link from "next/link";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-
 //image
 import naver from "../../../assets/images/naverloginimg.png";
 import google_login from "../../../assets/images/google_logo.png";
 import kakao from "@/assets/images/kakaotalk_sharing_btn_small.png";
-import HashtagForm from "../Hashtags/HashtagForm";
-
 
 //로그인 컴포넌트
 export default function LoginPage() {
