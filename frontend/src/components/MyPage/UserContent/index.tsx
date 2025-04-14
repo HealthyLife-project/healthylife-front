@@ -26,6 +26,7 @@ const UserContent = () => {
   const [userid, setUserid] = useState(""); //유저 아이디
   const [id, setId] = useState<number | undefined>(undefined);
   const [age, setAge] = useState();
+  const [pri, setPri] = useState(); //결제유무
   //useState - uesrhashtag
   const [hashTag, setHashTag] = useState([""]);
 
@@ -41,6 +42,7 @@ const UserContent = () => {
     if (!id) return;
 
     api.get(`/user/${id}`).then((res) => {
+      //console.log("res", res.data);
       setName(res.data.name);
       setNickName(res.data.nickname);
       setAddress(res.data.address);
@@ -49,6 +51,7 @@ const UserContent = () => {
       setPhone(res.data.phone);
       setUserid(res.data.userid);
       setAge(res.data.age);
+      setPri(res.data.premium);
     });
   }, [id]);
 
@@ -81,6 +84,7 @@ const UserContent = () => {
         userid={userid}
         hashtag={hashTag}
         age={age}
+        premium={pri}
       />
     </UserContentStyle>
   );

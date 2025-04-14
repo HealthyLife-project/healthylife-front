@@ -12,10 +12,19 @@ import { useEffect, useState } from "react";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { Button } from "antd";
+import useCheckLoginAlert from "@/hook/useCheckLoginAlert ";
 
 const MyPageMain = () => {
   const [activeTab, setActiveTab] = useState("1");
-  const token = useSelector((state: RootState) => state.token.tokenList);
+  const tokenList = useSelector((state: RootState) => state.token.tokenList);
+
+  //hook
+  const checkLogin = useCheckLoginAlert();
+
+  //로그인 확인
+  useEffect(() => {
+    const isLogin = checkLogin(tokenList);
+  }, [tokenList]);
 
   //카테고리
   const items = [
@@ -40,14 +49,6 @@ const MyPageMain = () => {
       children: <ModifyUserInfo />,
     },
   ];
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const signup = searchParams.get("signup");
-    if (signup) {
-      setActiveTab("4");
-    }
-  }, []);
 
   return (
     <MyMain className={clsx("main-wrap")}>

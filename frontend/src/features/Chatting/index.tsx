@@ -10,6 +10,7 @@ import { io, Socket } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import socket from "@/util/socket"; //웹 소켓 연결
+import useCheckLoginAlert from "@/hook/useCheckLoginAlert ";
 
 interface DataType {
   key: string;
@@ -44,12 +45,24 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
   //useState
   const [isModalComponentOpen, setIsModalComponentOpen] = useState(false); //모달 컴포넌트 open 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
-  const [username, setUserName] = useState(tokenList?.name);
+  const [username, setUserName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // 채팅방 open 유무
   const [selectedRecord, setSelectedRecord] = useState<DataType | null>(null); //선택한 행의 내용
 
+  //hook
+  const checkLogin = useCheckLoginAlert();
+
   //채팅방 목록 리스트
   const [data, setData] = useState<DataType[]>([]);
+
+  //로그인 확인
+  useEffect(() => {
+    const isLogin = checkLogin(tokenList);
+
+    if (!isLogin) {
+      setUserName(tokenList?.name);
+    }
+  }, [tokenList]);
 
   //모달 open
   const showModal = () => {
@@ -135,10 +148,14 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         console.log("채팅 목록 리스트 조회 error", error);
       });
   }, [urlstr]);
+
+  const pagination = () => {};
+
   return (
     <ChattingStyled className={clsx("main-wrap")}>
       <Table<DataType>
         columns={columns}
+        onChange={pagination}
         dataSource={search.length > 0 ? search : data}
         onRow={(record, rowIndex) => {
           //console.log(record);

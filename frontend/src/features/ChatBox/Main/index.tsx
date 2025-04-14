@@ -108,11 +108,13 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         time: formatDate(today),
         roomid: chatlocal?.roomid,
       };
-      console.log("chat data", arr);
+      //console.log("chat data", arr);
+
+      //db 저장 요청
       api
         .post(`/chat/${chatlocal?.category}/saveMessage`, arr)
         .then((res) => {
-          console.log("백엔드 저장 완료", res.data);
+          //console.log("백엔드 저장 완료", res.data);
         })
         .catch((error: string) => {
           console.log("백엔드 저장 실패", error);

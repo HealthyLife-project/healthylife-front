@@ -20,6 +20,7 @@ const ContentInfo = (props: {
   userid: string;
   hashtag: string[];
   age?: number;
+  premium?: number;
 }) => {
   const {
     name,
@@ -31,11 +32,12 @@ const ContentInfo = (props: {
     userid,
     hashtag,
     age,
+    premium,
   } = props;
 
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
   //useState
-  const [id, setId] = useState(tokenList.id);
+  const [id, setId] = useState(tokenList?.id);
 
   const [notifi, contextHolder] = notification.useNotification();
 
@@ -57,11 +59,11 @@ const ContentInfo = (props: {
     enableReinitialize: true,
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
-      console.log("values", values);
+      //console.log("values", values);
       api
         .post(`user/mypage/modify/${id}`, values)
         .then((res) => {
-          console.log("res", res.data);
+          //console.log("res", res.data);
           openNotificationWithIcon("success", "성공적으로 수정하였습니다.");
         })
         .catch((error: string) => {
@@ -74,21 +76,21 @@ const ContentInfo = (props: {
     },
   });
 
+  //console.log("premium", premium);
+
   return (
     <ContentInfoStyle className={clsx("main-wrap")}>
-      <form onSubmit={modifyFormik.handleSubmit}>
+      <form className="modify-form" onSubmit={modifyFormik.handleSubmit}>
         {contextHolder}
         <div className="user-info">
           <div className="info-group">
             <span className="info-title">이름</span>
-            <span>
-              <Input
-                name="name"
-                className="info-input"
-                onChange={modifyFormik.handleChange}
-                value={modifyFormik.values.name}
-              />
-            </span>
+            <Input
+              name="name"
+              className="info-input"
+              onChange={modifyFormik.handleChange}
+              value={modifyFormik.values.name}
+            />
           </div>
           <div className="info-group">
             <span className="info-title">닉네임</span>
@@ -160,7 +162,9 @@ const ContentInfo = (props: {
             </span>
           </div>
         </div>
-        <Button htmlType="submit">저장</Button>
+        <Button className="info-save" htmlType="submit">
+          저장
+        </Button>
       </form>
     </ContentInfoStyle>
   );
