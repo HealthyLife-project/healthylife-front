@@ -8,7 +8,6 @@ export const FooterStyled = styled.div`
     width: 100%;
     height: 150px;
     background-color: #f9f9f9;
-    margin-top: 20px;
     padding: 10px 20px;
 
     .team,

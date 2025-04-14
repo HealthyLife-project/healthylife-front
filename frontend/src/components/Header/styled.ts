@@ -37,6 +37,7 @@ export const HeaderStyled = styled.div`
       cursor: pointer;
     }
     .user-name {
+      font-weight: bold;
       cursor: pointer;
     }
   }

@@ -49,6 +49,7 @@ const DrawerContainer = () => {
       <div onClick={openMyPage} className="mypage-router">
         마이페이지
       </div>
+      <div className="mypage-router">채팅방 목록</div>
       <div className="main-bottom">
         <Button className="main-logout" onClick={handleLogout}>
           로그아웃

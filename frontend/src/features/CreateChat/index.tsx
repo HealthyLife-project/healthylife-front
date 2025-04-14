@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import useCheckLoginAlert from "@/hook/useCheckLoginAlert ";
 
 //Coponent
 
@@ -16,12 +17,16 @@ import { RootState } from "@/redux/store";
 const CreateChat = () => {
   //변수 선언
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+  const router = useRouter();
 
   //useState
   const [category, setCategory] = useState("");
-  const [id, setId] = useState(tokenList.id);
+  const [id, setId] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false); //모달 생성 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
+
+  //hook
+  const checkLogin = useCheckLoginAlert();
 
   //useEffect
   useEffect(() => {
@@ -31,7 +36,14 @@ const CreateChat = () => {
     setCategory(params.get("category")!);
   }, []);
 
-  const router = useRouter();
+  //로그인 확인
+  useEffect(() => {
+    const isLogin = checkLogin(tokenList);
+
+    if (!isLogin) {
+      setId(tokenList?.id);
+    }
+  }, [tokenList]);
 
   const createFormik = useFormik({
     initialValues: {
@@ -48,7 +60,7 @@ const CreateChat = () => {
           title: values.title,
         })
         .then((res) => {
-          console.log("res", res.data);
+          //console.log("res", res.data);
           alert("채팅방 생성 성공!");
 
           localStorage.setItem(
@@ -71,7 +83,7 @@ const CreateChat = () => {
     },
   });
 
-  console.log("createFormik", createFormik.values);
+  //console.log("createFormik", createFormik.values);
 
   return (
     <>
@@ -80,6 +92,10 @@ const CreateChat = () => {
         <div className="chat-box">
           <h1>채팅방 생성하기</h1>
           <div className="chat-title">방 제목 입력</div>
+          <div>
+            한번 생성된 채팅방은 모든 유저가 나가기 전까지 삭제되지 않습니다
+          </div>
+          <div>방 제목을 신중하게 작성해 주세요!</div>
           <form onSubmit={createFormik.handleSubmit}>
             <Input
               name="title"

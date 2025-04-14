@@ -1,12 +1,16 @@
 import React from "react";
 import { ClimbingBoxLoader } from "react-spinners";
+import { LoadingStyled } from "./styled";
+import clsx from "clsx";
 
+//로딩 컴포넌트
 const Loading = () => {
   return (
-    <div>
-      <h3>잠시만 기다려주세요.</h3>
-      <ClimbingBoxLoader />
-    </div>
+    <LoadingStyled className={clsx("main-wrap")}>
+      <div className="loading-img">
+        <ClimbingBoxLoader />
+      </div>
+    </LoadingStyled>
   );
 };
 
