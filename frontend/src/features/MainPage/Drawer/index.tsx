@@ -56,8 +56,6 @@ const DrawerContainer = () => {
           }
         });
       }
-
-      // router.push("/login");
     });
   }
 

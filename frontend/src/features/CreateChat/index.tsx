@@ -30,6 +30,7 @@ const CreateChat = () => {
 
   //useEffect
   useEffect(() => {
+    setId(tokenList?.id);
     //console.log(window.location.pathname);
     let params = new URLSearchParams(window.location.search); //pathName person인지 pet인지 확인용
     //console.log(params.get("category"));
@@ -49,11 +50,12 @@ const CreateChat = () => {
     initialValues: {
       title: "",
     },
+    //생성하기 버튼 클릭
     onSubmit: (values): void => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
       //console.log("values", values);
       //router.push("/");
-
+      console.log("chat", id, values.title);
       api
         .post(`/chat/${category}/create`, {
           id: Number(id),
