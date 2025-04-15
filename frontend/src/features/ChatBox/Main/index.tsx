@@ -28,6 +28,7 @@ type ChatBoxLocal = {
   roomid: number;
   category: string;
   title: string;
+  isOpen: boolean;
 };
 
 //채팅방 > 메인 컴포넌트
@@ -42,7 +43,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [userNickname, setNickname] = useState(""); //유저 닉네임
   const [message, setMessage] = useState(""); //보낸 메시지
   const [messages, setMessages] = useState<
-    { userNickname: string; message: string }[]
+    { userNickname: string; message: string; aopen?: string }[]
   >([]); //메시지 전체
   const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
   const [room, setRoom] = useState(title); //방 이름
@@ -81,16 +82,36 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     const chatData: ChatBoxLocal = chatBox ? JSON.parse(chatBox) : null;
 
     if (chatData) {
-      joinRoom();
+      joinRoom(chatData);
       //console.log(chatData.message ? "메세지 있음" : "메세지 없음");
     }
   }, [username, room]);
 
   //방 입장하기
-  const joinRoom = () => {
-    if (userNickname?.trim() && room?.trim()) {
+  const joinRoom = (chatData: ChatBoxLocal) => {
+    if (userNickname.trim() && room.trim()) {
       socket.emit("joinRoom", { room });
       setJoined(true); // 채팅방 생성
+
+      api
+        .post(`/chat/${chatData.category}/insert`, {
+          roomid: Number(chatData.roomid),
+          userid: Number(tokenList?.id),
+        })
+        .then((res) => {
+          console.log(res.data);
+        });
+
+      if (!chatData.isOpen) {
+        socket.emit("sendMessage", {
+          room,
+          username,
+          message,
+          aopen: `${userNickname}님이 입장하셨습니다.`,
+        });
+      } else {
+        return;
+      }
     }
   };
 
@@ -180,11 +201,17 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
         <div className="content-div">
           <div className="content">
-            {messages.map((msg, index) => (
-              <p key={index}>
-                <strong>{msg.userNickname}: </strong> {msg.message}
-              </p>
-            ))}
+            {messages.map((msg, index) =>
+              msg.aopen ? (
+                <p key={index}>
+                  <strong>{msg.aopen}</strong>
+                </p>
+              ) : (
+                <p key={index}>
+                  <strong>{msg.userNickname}: </strong> {msg.message}
+                </p>
+              )
+            )}
           </div>
           <div className="chat-input-div">
             <Input

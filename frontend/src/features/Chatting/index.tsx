@@ -85,6 +85,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         userid: Number(tokenList?.id),
       })
       .then((res) => {
+        //console.log("Res", res.data);
         //이미 채팅 있는지 확인 후 만약 채팅 내용이 있으면 추가 내용 보기
         if (res.data.result) {
           localStorage.setItem(
