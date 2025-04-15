@@ -9,6 +9,12 @@ import { useState } from "react";
 import { CheckboxGroupProps } from "antd/es/checkbox";
 import { openNotificationWithIcon } from "@/util/notification";
 
+declare global {
+  interface Window {
+    daum: any;
+  }
+}
+
 //마이페이지 > 개인정보 > 내용 컴포넌트
 const ContentInfo = (props: {
   name: string;
@@ -158,6 +164,13 @@ const ContentInfo = (props: {
                 name="address"
                 onChange={modifyFormik.handleChange}
                 value={modifyFormik.values.address}
+                onClick={() => {
+                  new window.daum.Postcode({
+                    oncomplete: function (data: any) {
+                      modifyFormik.setFieldValue("address", data.address);
+                    },
+                  }).open();
+                }}
               />
             </span>
           </div>
