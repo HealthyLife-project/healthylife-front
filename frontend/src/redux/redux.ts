@@ -7,6 +7,7 @@ interface UserType {
   name: string;
   userid: string;
   id: string;
+  premium: number;
 }
 
 // 타입 정의
@@ -27,6 +28,7 @@ const initialState: TokenState = {
       name: "",
       userid: "",
       id: "",
+      premium: 0,
     },
   },
   tokenSet: {},

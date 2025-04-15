@@ -1,5 +1,6 @@
 import { RootState } from "@/redux/store";
 import api from "@/util/chek";
+import router from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
@@ -14,14 +15,15 @@ export function SuccessPage() {
   //useEffect
   useEffect(() => {
     setId(tokenList?.id);
-  }, []);
+  }, [tokenList]);
 
   // 서버로 승인 요청
-
+  console.log("ud", id);
   api
-    .post(`/pay/success/${id}`)
+    .get(`/user/premium/${id}`)
     .then((res) => {
       console.log("res", res.data);
+      router.push("/");
     })
     .catch((error: string) => {
       console.log("결제 성공 후 백엔드 수정 요청 error", error);

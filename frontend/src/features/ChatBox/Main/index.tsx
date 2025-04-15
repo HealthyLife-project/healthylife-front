@@ -101,17 +101,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         .then((res) => {
           console.log(res.data);
         });
-
-      if (!chatData.isOpen) {
-        socket.emit("sendMessage", {
-          room,
-          username,
-          message,
-          aopen: `${userNickname}님이 입장하셨습니다.`,
-        });
-      } else {
-        return;
-      }
     }
   };
 
