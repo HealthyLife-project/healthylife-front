@@ -8,8 +8,8 @@ export const ChatBoxStyled = styled.div`
     width: 450px;
     height: 500px;
     background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    //border-radius: 16px;
+    //box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
     z-index: 9999;
     display: flex;
     flex-direction: column;
@@ -32,12 +32,12 @@ export const ChatBoxStyled = styled.div`
     .title {
       background-color: #6ca6cd;
       color: #fff;
-      font-weight: bold;
       font-size: 16px;
       padding: 14px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 40px;
 
       .close-btn {
         color: #fff;
@@ -52,9 +52,15 @@ export const ChatBoxStyled = styled.div`
       }
     }
 
-    .content {
-      flex: 1;
+    .content-div {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
       background-color: #f7f9fb;
+    }
+    .content {
       padding: 16px;
       overflow-y: auto;
       font-size: 14px;

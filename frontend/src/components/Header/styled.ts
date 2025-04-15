@@ -11,7 +11,6 @@ export const HeaderStyled = styled.div`
     padding: 0px 20px;
     align-items: center;
     margin: 10px auto;
-    //background-color: #d2e4f8;
 
     .main-logo {
       font-size: 35px;
@@ -38,7 +37,25 @@ export const HeaderStyled = styled.div`
       cursor: pointer;
     }
     .user-name {
+      font-weight: bold;
       cursor: pointer;
+    }
+  }
+
+  @media (max-width: 480px) {
+    &.main-wrap {
+      .main-logo {
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .user-name {
+        font-size: 12px;
+      }
+      .user-name-sub {
+        display: none;
+      }
     }
   }
 `;

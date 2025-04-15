@@ -47,7 +47,7 @@ const SubMain = () => {
 
   //serach 클릭 함수
   const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
-    console.log(info, value);
+    //console.log(info, value);
     api
       .post("/chat/search", { value: value })
       .then((res) => {
@@ -66,24 +66,29 @@ const SubMain = () => {
 
   return (
     <SubMainStyled className={clsx("main-wrap")}>
-      <div className="search">
-        <Search
-          className="search-antd"
-          placeholder="채팅방 이름을 입력하시오"
-          onSearch={onSearch}
-        />
-      </div>
       <div className="main-content">
         <div className="main-left">
           <KAKAOMap />
         </div>
 
         <div className="main-right">
+          <div className="search">
+            <div className="search-antd">
+              <Search
+                placeholder="채팅방 이름을 입력하시오"
+                onSearch={onSearch}
+              />
+            </div>
+          </div>
           <ConfigProvider theme={theme}></ConfigProvider>
           <SubCategory urlstr={urlstr} search={search} />
-          <ConfigProvider theme={theme}>
-            <Button onClick={NewChat}>방 생성하기</Button>
-          </ConfigProvider>
+          <div className="createRoom">
+            <ConfigProvider theme={theme}>
+              <Button className="create-btn" onClick={NewChat}>
+                방 생성하기
+              </Button>
+            </ConfigProvider>
+          </div>
         </div>
       </div>
     </SubMainStyled>

@@ -14,7 +14,7 @@ interface TokenState {
   tokenList: {
     [x: string]: any;
     token: UserType;
-  };
+  } | null;
   tokenSet: Record<string, string>; // key-value 형태의 객체
   isAuthenticated: boolean; // 추가: 인증 상태
 }
@@ -53,6 +53,7 @@ const tokenSlices = createSlice({
 });
 
 export const { setTokenList, setTokenDataset } = tokenSlices.actions;
+
 export const selectIsAuthenticated = (state: RootState) =>
   state.token.isAuthenticated;
 

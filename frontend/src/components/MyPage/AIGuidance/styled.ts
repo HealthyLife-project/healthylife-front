@@ -8,6 +8,6 @@ export const AIGuidanceStyle = styled.div`
   .main-ai {
     width: 100%;
     height: 500px;
-    background-color: yellow;
+    border: 1px solid black;
   }
 `;

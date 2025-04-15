@@ -6,7 +6,28 @@ export const DrawerStyled = styled.div`
     width: 100%;
     height: 100%;
     flex-direction: column;
-    cursor: pointer;
     gap: 10px;
+
+    .mypage-router {
+      cursor: pointer;
+    }
+
+    .main-bottom {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      width: 100%;
+
+      .main-logout {
+        width: 120px;
+        cursor: pointer;
+      }
+
+      .dark-mode {
+        cursor: pointer;
+      }
+    }
   }
 `;

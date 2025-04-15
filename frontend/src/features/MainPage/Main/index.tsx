@@ -14,19 +14,10 @@ import HashtagsModal from "@/components/HashtagModal/HashtagModal";
 
 //메인 페이지 컴포넌트
 
-/* 컴포넌트 순서
-1.헤더 
-2.메인배너
-3.Today Topic
-4-1.뉴스 - person
-4-2.뉴스 - pet
-5.footer
-*/
-
 const Main = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  console.log("is authenticated", isAuthenticated);
+  //console.log("is authenticated", isAuthenticated);
 
   return (
     <>
