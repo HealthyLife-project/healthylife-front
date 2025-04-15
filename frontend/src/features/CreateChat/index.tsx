@@ -24,7 +24,7 @@ const CreateChat = () => {
   const [id, setId] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false); //모달 생성 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
-
+  const [isModalComponentOpen, setIsModalComponentOpen] = useState(false); //모달 컴포넌트 open 여부
   //hook
   const checkLogin = useCheckLoginAlert();
 
@@ -53,9 +53,8 @@ const CreateChat = () => {
     //생성하기 버튼 클릭
     onSubmit: (values): void => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
-      //console.log("values", values);
-      //router.push("/");
-      console.log("chat", id, values.title);
+      //console.log("chat", id, values.title);
+
       api
         .post(`/chat/${category}/create`, {
           id: Number(id),
@@ -76,6 +75,20 @@ const CreateChat = () => {
 
           setChatTitle(values.title);
           setIsModalOpen(true);
+
+          //사용자 정의 이벤트 실행 - _app.tsx에서 실행 localstroage에서 title 값 넘김
+          const event = new CustomEvent("openChat", {
+            detail: {
+              title: values.title,
+              //roomid: Number(selectedRecord?.key),
+              category: category,
+            },
+          });
+
+          //해당 이벤트 실행
+          window.dispatchEvent(event);
+          //모달 컴포넌트 실행
+          setIsModalComponentOpen(true);
 
           router.push(`/${category}`);
         })
