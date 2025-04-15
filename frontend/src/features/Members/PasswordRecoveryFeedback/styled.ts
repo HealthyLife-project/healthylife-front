@@ -1,3 +1,45 @@
 import styled from "styled-components";
+import Link from "next/link";
 
-export const PasswordRecoveryFeedbackPageStyled = styled.div``;
+export const PasswordRecoveryFeedbackPageStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f7f6f4;
+  padding: 20px;
+  text-align: center;
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 30px;
+    padding: 0 20px;
+  }
+
+  .link-container {
+    /* 링크를 감싸는 div에 대한 스타일 */
+    margin-top: 20px;
+  }
+`;
+
+export const StyledLink = styled(Link)`
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: 1px solid #1976d2;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: #1976d2;
+    color: white;
+  }
+`;

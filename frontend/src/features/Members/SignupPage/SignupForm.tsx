@@ -9,7 +9,7 @@ import {
   ErrorMessage,
   useFormikContext,
 } from "formik";
-import { Button, Divider, Input } from "antd";
+import { Button, Divider, Input, notification } from "antd";
 import * as Yup from "yup";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -188,7 +188,12 @@ const SignupPage: React.FC = () => {
       const response = await api.post("/user/signup", values);
       console.log("response.data", response.data); // Log response from backend
       setStatus({ success: true, message: "회원가입 성공!" }); // Set success message
-      alert("회원가입 성공");
+
+      notification.success({
+        message: ":)",
+        description: "회원가입 성공하였습니다.",
+        duration: 3,
+      });
 
       router.push("/");
     } catch (error) {
@@ -198,9 +203,19 @@ const SignupPage: React.FC = () => {
           success: false,
           message: error.response?.data?.message || "회원가입 실패",
         });
+        notification.error({
+          message: ":(",
+          description: "회원가입 실패하였습니다.",
+          duration: 3,
+        });
       } else {
         console.error("회원가입 실패:", error);
         setStatus({ success: false, message: "회원가입 실패" });
+        notification.error({
+          message: ":(",
+          description: "회원가입 실패하였습니다.",
+          duration: 3,
+        });
       }
     } finally {
       setSubmitting(false);
