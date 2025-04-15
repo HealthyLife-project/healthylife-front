@@ -39,15 +39,26 @@ export const ChatBoxStyled = styled.div`
       align-items: center;
       height: 40px;
 
-      .close-btn {
-        color: #fff;
-        background: none;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
+      .menu {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
 
-        &:hover {
-          opacity: 0.7;
+        .menu-bar {
+          cursor: pointer;
+        }
+
+        .close-btn {
+          color: #fff;
+          background: none;
+          border: none;
+          font-size: 18px;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.7;
+          }
         }
       }
     }
@@ -61,6 +72,12 @@ export const ChatBoxStyled = styled.div`
       background-color: #f7f9fb;
     }
     .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      //text-align: right;
+      background-color: #fff;
+      max-height: 420px;
       height: 100%;
       padding: 16px;
       overflow-y: auto;

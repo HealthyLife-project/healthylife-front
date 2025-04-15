@@ -59,7 +59,7 @@ const ContentInfo = (props: {
     enableReinitialize: true,
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
-      //console.log("values", values);
+      console.log("values", values);
       api
         .post(`user/mypage/modify/${id}`, values)
         .then((res) => {

@@ -11,6 +11,7 @@ import api from "@/util/chek";
 
 //image
 import arrowback from "@/assets/images/arrowback.png";
+import menu from "@/assets/images/menu.png";
 
 //component
 import ChatDrawer from "../ChatDrawer";
@@ -38,10 +39,10 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //useState
   const [username, setUsername] = useState(""); //유저 이름
   const [userid, setUserid] = useState(); //유저 아이디
-  const [userNickname, setNickname] = useState("");
+  const [userNickname, setNickname] = useState(""); //유저 닉네임
   const [message, setMessage] = useState(""); //보낸 메시지
   const [messages, setMessages] = useState<
-    { username: string; message: string }[]
+    { userNickname: string; message: string }[]
   >([]); //메시지 전체
   const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
   const [room, setRoom] = useState(title); //방 이름
@@ -56,15 +57,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     setUserid(tokenList?.id);
     setNickname(tokenList?.nickname);
 
-    const chatBox = localStorage.getItem("ChatBox");
-
-    setChatLocal(JSON.parse(chatBox!));
-    const chatData: ChatBoxLocal = chatBox ? JSON.parse(chatBox) : null;
-
-    if (chatData) {
-      joinRoom();
-      //console.log(chatData.message ? "메세지 있음" : "메세지 없음");
-    }
     //console.log("입장여부 확인", socket.connected);
 
     socket.on("receiveMessage", (data) => {
@@ -82,11 +74,31 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    const chatBox = localStorage.getItem("ChatBox");
+
+    setChatLocal(JSON.parse(chatBox!));
+    const chatData: ChatBoxLocal = chatBox ? JSON.parse(chatBox) : null;
+
+    if (chatData) {
+      joinRoom();
+      //console.log(chatData.message ? "메세지 있음" : "메세지 없음");
+    }
+  }, [username, room]);
+
+  //방 입장하기
+  const joinRoom = () => {
+    if (userNickname?.trim() && room?.trim()) {
+      socket.emit("joinRoom", { room });
+      setJoined(true); // 채팅방 생성
+    }
+  };
+
   //메시지 보내기
   const sendMessage = () => {
-    //console.log("chat  :", room, username, message);
+    console.log("chat  :", room, userNickname, message);
     if (message.trim()) {
-      socket.emit("sendMessage", { room, username, message });
+      socket.emit("sendMessage", { room, userNickname, message });
       //console.log("loca", chatlocal);
       const today = new Date();
 
@@ -125,12 +137,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       setMessage("");
     }
   };
-  const joinRoom = () => {
-    if (username.trim() && room.trim()) {
-      socket.emit("joinRoom", { room });
-      setJoined(true); // 채팅방 생성
-    }
-  };
 
   //drawer 열기
   const showDrawer = () => {
@@ -145,6 +151,10 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //drawer 닫기
   const closeDrawer = () => setIsChatListOpen(false);
 
+  const menuModal = () => {
+    //console.log("df");
+  };
+
   return (
     <>
       <ChatBoxStyled className={clsx("main-wrap")}>
@@ -153,21 +163,26 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
             <img src={arrowback.src} alt="arrow-back" />
           </span>
           <span>{title}</span>
-          <Button
-            onClick={onClose}
-            size="small"
-            className="close-btn"
-            type="text"
-          >
-            ✕
-          </Button>
+          <div className="menu">
+            <span className="menu-bar" onClick={menuModal}>
+              <img src={menu.src} alt="menu" />
+            </span>
+            <Button
+              onClick={onClose}
+              size="small"
+              className="close-btn"
+              type="text"
+            >
+              ✕
+            </Button>
+          </div>
         </div>
 
         <div className="content-div">
           <div className="content">
             {messages.map((msg, index) => (
               <p key={index}>
-                <strong>{msg.username}: </strong> {msg.message}
+                <strong>{msg.userNickname}: </strong> {msg.message}
               </p>
             ))}
           </div>
