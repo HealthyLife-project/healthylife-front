@@ -59,7 +59,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
   useEffect(() => {
     const isLogin = checkLogin(tokenList);
 
-    if (!isLogin) {
+    if (isLogin) {
       setUserName(tokenList?.name);
     }
   }, [tokenList]);
@@ -72,6 +72,12 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
   //모달 확인
   const handleOk = () => {
     setIsModalOpen(false);
+    //console.log("user", username);
+    if (!username) {
+      alert("상세 정보를 입력해 주세요.");
+      router.push("/mypage");
+      return;
+    }
 
     api
       .post(`/chat/${urlstr}/insert`, {

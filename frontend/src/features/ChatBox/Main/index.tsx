@@ -14,6 +14,7 @@ import arrowback from "@/assets/images/arrowback.png";
 
 //component
 import ChatDrawer from "../ChatDrawer";
+import router from "next/router";
 
 //title 기본 채팅방 interface
 interface ChatBoxProps {
@@ -108,6 +109,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         time: formatDate(today),
         roomid: chatlocal?.roomid,
       };
+
       //console.log("chat data", arr);
 
       //db 저장 요청
@@ -185,6 +187,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         <ChatDrawer
           onClose={closeDrawer}
           category={chatlocal?.category || "카테고리"}
+          title={title}
         />
       )}
     </>

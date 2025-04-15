@@ -61,6 +61,7 @@ export const ChatBoxStyled = styled.div`
       background-color: #f7f9fb;
     }
     .content {
+      height: 100%;
       padding: 16px;
       overflow-y: auto;
       font-size: 14px;

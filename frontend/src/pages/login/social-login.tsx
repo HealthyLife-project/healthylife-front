@@ -7,17 +7,17 @@ export default function SocialLogin() {
   //변수 선언
   const router = useRouter();
   const dispatch = useDispatch();
-  const { signup } = router.query;
+  const { userid, token, signup } = router.query;
 
   //console.log("query", router.query);
 
-  // dispatch(
-  //   setTokenList({
-  //     token: {
-  //       userid: userid,
-  //     },
-  //   })
-  // );
+  dispatch(
+    setTokenList({
+      token: {
+        userid: userid,
+      },
+    })
+  );
 
   useEffect(() => {
     if (signup === "false") {
@@ -26,6 +26,10 @@ export default function SocialLogin() {
     } else if (signup === "true") {
       router.push("/");
     }
-  }, [signup]);
-  return <></>;
+  }, [signup, userid, token]);
+  return (
+    <>
+      <div>hello social login</div>
+    </>
+  );
 }
