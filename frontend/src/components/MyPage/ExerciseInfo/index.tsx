@@ -13,7 +13,7 @@ const ExerciseInfo = () => {
       <div className="main-top">
         <div className="main-map">
           <h1 className="title">주소 기준 반경 2km이내 헬스장 위치</h1>
-          <KAKAOMap />
+          <KAKAOMap position={"mypage"} />
         </div>
         <div className="main-info">
           <Bodyinfo />
