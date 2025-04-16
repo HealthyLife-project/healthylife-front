@@ -39,8 +39,6 @@ export default function LoginPage() {
         password: password,
       });
 
-      //console.log("response.data.user", response.data.user); user데이터
-
       //로그인 정보 - store 저장
       dispatch(setTokenList(response.data.user));
       router.push("/");
@@ -56,17 +54,17 @@ export default function LoginPage() {
 
   //네이버 소셜 로그인
   const NaverLogin = () => {
-    window.location.href = "http://localhost:5001/auth/naver";
+    window.location.href = `${process.env.NEXT_PUBLIC_ORIGIN_URL}/auth/naver`;
   };
 
   //카카오 소셜 로그인
   function handleKakaoLogin() {
-    window.location.href = "http://localhost:5001/auth/kakao";
+    window.location.href = `${process.env.NEXT_PUBLIC_ORIGIN_URL}/auth/kakao`;
   }
 
   //구글 소셜 로그인
   function handleGoogleLogin() {
-    window.location.href = "http://localhost:5001/auth/google";
+    window.location.href = `${process.env.NEXT_PUBLIC_ORIGIN_URL}/auth/google`;
   }
 
   function handleResetPassword() {
@@ -115,16 +113,13 @@ export default function LoginPage() {
           </div>
           <div className="login-sub-container">
             <div>아이디 찾기</div>
-            {/*  */}
-            {/*  */}
+
             <div className="recover-password">
               <Link href="/forgot-password/recover-password">
                 비밀번호 찾기
               </Link>
             </div>
-            {/* <div onClick={handleResetPassword}>비밀번호 재설정</div> */}
-            {/*  */}
-            {/*  */}
+
             <div
               onClick={() => {
                 router.push("/signup");
