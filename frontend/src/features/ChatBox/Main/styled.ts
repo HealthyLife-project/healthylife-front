@@ -10,14 +10,12 @@ export const ChatBoxStyled = styled.div`
     background-color: #ffffff;
     //border-radius: 16px;
     //box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
+    z-index: 999;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 
-    /* 애니메이션으로 살짝 등장 */
     animation: fadeInUp 0.3s ease;
-
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -44,6 +42,16 @@ export const ChatBoxStyled = styled.div`
         flex-direction: row;
         justify-content: center;
         align-items: center;
+
+        .dropdown-container {
+          position: relative;
+          z-index: 999;
+        }
+
+        .dropdown-menu {
+          position: absolute;
+          z-index: 999;
+        }
 
         .menu-bar {
           cursor: pointer;
