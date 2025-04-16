@@ -146,7 +146,8 @@ const InitToken = () => {
         const user = res.data.user;
         dispatch(setTokenList(user));
       })
-      .catch((err) => {
+      .catch((err: string) => {
+        //console.log("err", err);
         dispatch(setTokenList(null));
       });
   }, [dispatch]);

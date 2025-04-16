@@ -78,17 +78,17 @@ export const ChatBoxStyled = styled.div`
       width: 100%;
       height: 100%;
       background-color: #f7f9fb;
+      flex: 1;
+      overflow: hidden;
     }
     .content {
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      //text-align: right;
       background-color: #fff;
       max-height: 420px;
       height: 100%;
       padding: 16px;
-      overflow-y: auto;
       font-size: 14px;
     }
     .chat-input-div {

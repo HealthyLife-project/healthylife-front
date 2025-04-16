@@ -70,9 +70,9 @@ const UserContent = () => {
 
   return (
     <UserContentStyle className={clsx("main-wrap")}>
-      <div className="user-img">
+      {/* <div className="user-img">
         <Image className="imgstyle" src={userimage} alt="user-img"></Image>
-      </div>
+      </div> */}
 
       <ContentInfo
         name={name}

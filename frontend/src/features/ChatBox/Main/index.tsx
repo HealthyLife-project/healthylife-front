@@ -170,11 +170,15 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //메뉴 모달
   const menuModal = () => {
     const MySwal = withReactContent(Swal);
-    //console.log("chat", chatlocal);
+    console.log("chat", chatlocal?.roomid);
 
     //채팅방 나가기
     api
-      .delete(`/chat/${chatlocal?.category}/delete/${tokenList?.id}`)
+      .delete(`/chat/${chatlocal?.category}/delete/${tokenList?.id}`, {
+        params: {
+          roomid: chatlocal?.roomid,
+        },
+      })
       .then((res) => {
         console.log("요청 성공");
 
