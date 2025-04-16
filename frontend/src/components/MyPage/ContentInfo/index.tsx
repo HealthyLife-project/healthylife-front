@@ -5,9 +5,12 @@ import { useFormik } from "formik";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckboxGroupProps } from "antd/es/checkbox";
 import { openNotificationWithIcon } from "@/util/notification";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import router from "next/router";
 
 declare global {
   interface Window {
@@ -43,15 +46,21 @@ const ContentInfo = (props: {
 
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
   //useState
-  const [id, setId] = useState(tokenList?.id);
+  const [id, setId] = useState();
 
   const [notifi, contextHolder] = notification.useNotification();
 
+  //라디오 버튼
   const options: CheckboxGroupProps<string>["options"] = [
     { label: "남성", value: "male" },
     { label: "여성", value: "female" },
   ];
 
+  useEffect(() => {
+    setId(tokenList?.id);
+  }, []);
+
+  //수정 폼
   const modifyFormik = useFormik({
     initialValues: {
       name: name || "",
@@ -82,7 +91,34 @@ const ContentInfo = (props: {
     },
   });
 
-  //console.log("premium", premium);
+  //회원탈퇴 클릭
+  const withdrawal = () => {
+    const MySwal = withReactContent(Swal);
+
+    MySwal.fire({
+      title: "정말로 탈퇴할실 건가요?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      allowOutsideClick: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "삭제되었습니다",
+          text: "아쉽네요. 다음 기회에 만나요.",
+          icon: "success",
+        });
+
+        api.delete(`/user/out/${id}`).then((res) => {
+          console.log("성공");
+        });
+
+        router.push("/login");
+      }
+    });
+  };
 
   return (
     <ContentInfoStyle className={clsx("main-wrap")}>
@@ -179,6 +215,9 @@ const ContentInfo = (props: {
           저장
         </Button>
       </form>
+      <div className="withdrawal" onClick={withdrawal}>
+        회원탈퇴
+      </div>
     </ContentInfoStyle>
   );
 };
