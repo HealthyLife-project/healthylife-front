@@ -242,9 +242,9 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
                   <strong>{msg.aopen}</strong>
                 </p>
               ) : (
-                <p key={index}>
+                <div className="chat-content" key={index}>
                   <strong>{msg.userNickname}: </strong> {msg.message}
-                </p>
+                </div>
               )
             )}
           </div>

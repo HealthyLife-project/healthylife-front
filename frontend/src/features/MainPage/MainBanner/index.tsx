@@ -11,12 +11,34 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import api from "@/util/chek";
+import { useEffect, useState } from "react";
 
 //Component
 
+type AdBanner = {
+  id: number;
+  imgsrc: string;
+  imgsrcAder: string | null;
+};
+
 //메인 페이지 > 메인 배너 컴포넌트
 const MainBanner = () => {
+  //변수 선언
   const router = useRouter();
+
+  //useState
+  const [bannerimg, setBannerImg] = useState<AdBanner[]>([]);
+
+  useEffect(() => {
+    api.get("/ad/getAd").then((res) => {
+      console.log("res", res.data);
+
+      setBannerImg(res.data);
+    });
+
+    console.log(bannerimg[0]?.imgsrc);
+  }, []);
 
   return (
     <MainBannerStyled className={clsx("main-wrap")}>
@@ -28,7 +50,9 @@ const MainBanner = () => {
           //onSlideChange={() => console.log("slide change")}
           //onSwiper={(swiper) => console.log(swiper)}
         >
-          <SwiperSlide>Slide 1</SwiperSlide>
+          <SwiperSlide>
+            <img src={bannerimg[0]?.imgsrc} alt="" />
+          </SwiperSlide>
           <SwiperSlide>Slide 2</SwiperSlide>
           <SwiperSlide>Slide 3</SwiperSlide>
           <SwiperSlide>Slide 4</SwiperSlide>

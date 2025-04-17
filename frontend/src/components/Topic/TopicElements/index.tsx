@@ -10,7 +10,7 @@ const TopicElement = () => {
 
   return (
     <TopicElementStyled className={clsx("main-wrap")}>
-      요소 컴포넌트
+      news 요소 컴포넌트
     </TopicElementStyled>
   );
 };

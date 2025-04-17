@@ -17,6 +17,13 @@ export const TodayTopicStyled = styled.div`
       display: flex;
       width: 100%;
       gap: 20px;
+
+      .today-img {
+        width: 35%;
+      }
+      .today-hash {
+        width: 65%;
+      }
     }
   }
 `;
