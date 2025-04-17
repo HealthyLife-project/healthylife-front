@@ -2,18 +2,11 @@ import { SignupPageStyled, FormItem, FormLabel } from "./styled";
 import AddressSearchModal from "../AddressSearch/AddressSearchModal";
 
 import React from "react";
-import {
-  Formik,
-  Form,
-  Field,
-  FormikHelpers,
-  ErrorMessage,
-  useFormikContext,
-} from "formik";
-import { Button, Divider, Input, notification } from "antd";
+import { Formik, Form, Field, FormikHelpers, ErrorMessage } from "formik";
+import { Button, Input, notification } from "antd";
 import * as Yup from "yup";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
 
@@ -121,28 +114,7 @@ const SignupPage: React.FC = () => {
     message: string;
   } | null>(null);
 
-  // const checkUseridAvailability = async (userid: string) => {
-  //   try {
-  //     const response = await api.get(`/user/finduser/${userid}`);
-  //     const { result, message } = response.data;
-  //     // const result = response.data.result;
-  //     // const message = response.data.message;
-
-  //     setUseridAvailability({ result, message });
-
-  //     // setUseridAvailability();
-  //     // console.log("userid response data", response.data);
-  //   } catch (error) {
-  //     // error
-  //     // const response = await api.get(`/user/finduser/${userid}`);
-  //     // const result = response.data.result;
-  //     // const message = response.data.message;
-
-  //     // setUseridAvailability({ result: result, message: message });
-  //     console.error("Error checking user ID:", error);
-  //   }
-  // };
-
+  // 유저아이디 중복확인 백엔드 요청
   const checkUseridAvailability = async (userid: string) => {
     try {
       const response = await api.get(`/user/finduser/${userid}`);
@@ -183,6 +155,7 @@ const SignupPage: React.FC = () => {
     null
   );
 
+  // 닉네임 중복확인 백엔드 요청
   const checkNicknameAvailability = async (nickname: string) => {
     try {
       const response = await api.get(`/user/findnickname/${nickname}`);
@@ -356,9 +329,10 @@ const SignupPage: React.FC = () => {
                         type="text"
                         id="userid"
                         name="userid"
+                        placeholder="아이디를 입력해주세요"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          handleChange(e); // Keep your existing Formik handleChange
-                          setUseridAvailability(null); // Reset the availability state
+                          handleChange(e);
+                          setUseridAvailability(null);
                         }}
                       />
                       <Button
@@ -375,7 +349,6 @@ const SignupPage: React.FC = () => {
                         <div className="error-message">{msg}</div>
                       )}
                     />
-                    {/* Conditionally render the availability message only if there are no validation errors for userid */}
                     {!errors.userid && useridAvailability && (
                       <div
                         className="error-message"
@@ -395,6 +368,7 @@ const SignupPage: React.FC = () => {
                       <Input.Password
                         id="password"
                         name="password"
+                        placeholder="비밀번호를 입력해주세요"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.password}
@@ -428,6 +402,7 @@ const SignupPage: React.FC = () => {
                       <Input.Password
                         id="confirmPassword"
                         name="confirmPassword"
+                        placeholder="비밀번호를 재입력해 주세요"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.confirmPassword}
@@ -449,7 +424,12 @@ const SignupPage: React.FC = () => {
                   {/* 이름 */}
                   <FormItem>
                     <FormLabel htmlFor="name">이름</FormLabel>
-                    <Field type="text" id="name" name="name" />
+                    <Field
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="이름을 입력해주세요"
+                    />
                     <ErrorMessage
                       name="name"
                       component="div"
@@ -462,7 +442,12 @@ const SignupPage: React.FC = () => {
                   {/* 이메일 */}
                   <FormItem>
                     <FormLabel htmlFor="email">이메일</FormLabel>
-                    <Field type="email" id="email" name="email" />
+                    <Field
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="이메일을 입력해주세요"
+                    />
                     <ErrorMessage
                       name="email"
                       component="div"
@@ -480,9 +465,10 @@ const SignupPage: React.FC = () => {
                         type="text"
                         id="nickname"
                         name="nickname"
+                        placeholder="닉네임을 입력해주세요"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          handleChange(e); // Keep your existing Formik handleChange
-                          setNicknameAvailability(null); // Reset the availability state
+                          handleChange(e);
+                          setNicknameAvailability(null);
                         }}
                       />
                       <Button
@@ -510,23 +496,17 @@ const SignupPage: React.FC = () => {
                         {nicknameAvailability.message}
                       </div>
                     )}
-
-                    {/* {nicknameAvailability && (
-                      <div
-                        className="error-message"
-                        style={{
-                          color: nicknameAvailability.result ? "green" : "red",
-                        }}
-                      >
-                        {nicknameAvailability.message}
-                      </div>
-                    )} */}
                   </FormItem>
 
                   {/* 나이 */}
                   <FormItem>
                     <FormLabel htmlFor="age">나이</FormLabel>
-                    <Field type="text" id="age" name="age" />
+                    <Field
+                      type="text"
+                      id="age"
+                      name="age"
+                      placeholder="나이를 입력해주세요"
+                    />
                     <ErrorMessage
                       name="age"
                       component="div"
@@ -563,7 +543,12 @@ const SignupPage: React.FC = () => {
                   {/* 휴대전화 번호 */}
                   <FormItem>
                     <FormLabel htmlFor="phone">휴대전화 번호</FormLabel>
-                    <Field type="text" id="phone" name="phone" />
+                    <Field
+                      type="text"
+                      id="phone"
+                      name="phone"
+                      placeholder="휴대전화 번호를 입력해주세요"
+                    />
                     <ErrorMessage
                       name="phone"
                       component="div"
