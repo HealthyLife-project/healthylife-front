@@ -6,7 +6,6 @@ export const ResetPasswordPageStyled = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh; /* Make sure it takes up the full viewport height */
-  background-color: #f7f6f4; /* Light blue background */
   padding: 20px; /* Add some padding around the content */
 
   form {

@@ -4,13 +4,12 @@ export const SignupPageStyled = styled.div`
   .signup-page-container {
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 600px;
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     max-width: 1280px;
-    background-color: #f7f6f4;
 
     h1 {
       text-align: center;
@@ -26,8 +25,6 @@ export const SignupPageStyled = styled.div`
       bottom: 0;
       transform: translateX(-50%);
       width: 80%;
-      height: 2px;
-      background-color: #333;
     }
 
     h1::before {
@@ -37,8 +34,12 @@ export const SignupPageStyled = styled.div`
       bottom: 4px;
       transform: translateX(-50%);
       width: 80%;
-      height: 2px;
-      background-color: #333;
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
     }
 
     label {
@@ -81,6 +82,7 @@ export const SignupPageStyled = styled.div`
       cursor: pointer;
       font-size: 0.8em;
       font-weight: bold;
+      margin-left: 5px;
 
       &:disabled {
         background-color: #ccc;
@@ -100,23 +102,13 @@ export const SignupPageStyled = styled.div`
       font-weight: bold;
     }
 
-    .gender {
+    .gender > div {
+      /* Style the container for radio buttons */
       display: flex;
       align-items: center;
     }
 
-    .gender label:first-child {
-      margin-right: 15px;
-    }
-
-    .gender label {
-      margin-top: 0;
-      font-weight: bold;
-      display: flex; /* Use flex to align radio and text */
-      align-items: center; /* Vertically align */
-    }
-
-    .gender label input[type="radio"] {
+    .gender > div > label input[type="radio"] {
       display: inline-block;
       margin-right: 10px;
     }
@@ -127,29 +119,19 @@ export const SignupPageStyled = styled.div`
       font-size: 0.9em;
       margin-top: 3px;
       display: block;
-      text-align: center;
+      text-align: left;
       margin-bottom: 3px;
+      margin-right: 20px;
     }
   }
 
   .ant-input-affix-wrapper.ant-input-password {
-    border: none;
-    padding: 8px; /* You might need to adjust padding if the border was providing spacing */
+    border: none !important; /* Remove default border */
+    border-radius: 0px;
   }
 
-  .ant-input-affix-wrapper.ant-input-password:focus,
-  .ant-input-affix-wrapper.ant-input-password-focused {
-    border: none;
-    box-shadow: none; /* Remove focus outline if desired */
-  }
-
-  .ant-input-password-input {
-    border: none;
-    padding: 0; /* Adjust padding if needed */
-  }
-
-  .ant-input-password-input:focus {
-    outline: none; /* Remove focus outline for the inner input */
+  .css-dev-only-do-not-override-1261szd.ant-input-affix-wrapper {
+    padding: 0 !important;
   }
 `;
 
@@ -158,7 +140,7 @@ export const FormItem = styled.div`
   grid-template-columns: 150px 1fr;
   align-items: center;
   padding: 10px 15px;
-  border-bottom: 1px solid #dcdcdc;
+  /* border-bottom: 1px solid #dcdcdc; */
 
   &:last-child {
     border-bottom: none;

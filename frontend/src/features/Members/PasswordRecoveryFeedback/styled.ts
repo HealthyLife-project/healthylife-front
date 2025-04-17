@@ -7,7 +7,6 @@ export const PasswordRecoveryFeedbackPageStyled = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f7f6f4;
   padding: 20px;
   text-align: center;
 

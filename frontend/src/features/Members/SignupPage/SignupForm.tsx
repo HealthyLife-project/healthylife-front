@@ -1,4 +1,5 @@
 import { SignupPageStyled, FormItem, FormLabel } from "./styled";
+import AddressSearchModal from "../AddressSearch/AddressSearchModal";
 
 import React from "react";
 import {
@@ -23,10 +24,12 @@ interface SignupPageValues {
   name: string;
   email: string;
   nickname: string;
-  age: number | undefined;
+  age: string;
   gender: "남성" | "여성";
   phone: string;
   address: string;
+  postcode: string;
+  detailAddress: string;
 }
 
 const SignupPage: React.FC = () => {
@@ -39,10 +42,12 @@ const SignupPage: React.FC = () => {
     name: "",
     email: "",
     nickname: "",
-    age: undefined,
+    age: "",
     gender: "남성",
     phone: "",
     address: "",
+    postcode: "",
+    detailAddress: "",
   };
 
   const phoneRegExp =
@@ -78,8 +83,9 @@ const SignupPage: React.FC = () => {
 
     nickname: Yup.string().required("닉네임은 필수입니다"),
 
-    age: Yup.number()
-      .integer("나이는 숫자여야 합니다")
+    age: Yup.string()
+      .required("나이는 필수입니다")
+      .matches(/^[0-9]+$/, "나이는 숫자여야 합니다")
       .min(1, "1 보다 커야합니다")
       .max(150, "150 미만 이여야합니다"),
 
@@ -92,7 +98,9 @@ const SignupPage: React.FC = () => {
       .required("휴대폰 번호를 입력해주세요.")
       .matches(phoneRegExp, "휴대폰 번호를 입력해주세요."),
 
-    address: Yup.string().required("주소를 입력해 주세요"),
+    address: Yup.string().required("주소를 검색해주세요."),
+    postcode: Yup.string().required("우편번호가 필요합니다."),
+    detailAddress: Yup.string().required("상세주소를 입력해주세요."),
   });
 
   // 아이디 중복확인
@@ -164,6 +172,11 @@ const SignupPage: React.FC = () => {
     }
   };
 
+  // 비밀번호 일치 확인 변수
+  const [passwordMatchError, setPasswordMatchError] = useState<string | null>(
+    null
+  );
+
   const checkNicknameAvailability = async (nickname: string) => {
     try {
       const response = await api.get(`/user/findnickname/${nickname}`);
@@ -179,13 +192,42 @@ const SignupPage: React.FC = () => {
     }
   };
 
+  // 주소
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [address, setAddress] = useState({ mainAddress: "", postcode: "" });
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // 회원가입 버튼 함수
   const handleSubmit = async (
     values: SignupPageValues,
     { setSubmitting, setStatus }: FormikHelpers<SignupPageValues>
   ) => {
     try {
       console.log("values prior to axios request", values);
-      const response = await api.post("/user/signup", values);
+      const fulladdress = `${values.address} ${values.detailAddress} (${values.postcode})`;
+
+      const signupData = {
+        userid: values.userid,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        name: values.name,
+        email: values.email,
+        nickname: values.nickname,
+        age: values.age,
+        gender: values.gender,
+        phone: values.phone,
+        address: fulladdress,
+      };
+      console.log("signupData prior to axios request", signupData);
+
+      const response = await api.post("/user/signup", signupData);
       console.log("response.data", response.data); // Log response from backend
       setStatus({ success: true, message: "회원가입 성공!" }); // Set success message
 
@@ -226,12 +268,16 @@ const SignupPage: React.FC = () => {
     <>
       <SignupPageStyled>
         <div className="signup-page-container">
-          <h1>회원가입</h1>
+          <h1 style={{ cursor: "pointer" }} onClick={() => router.push("/")}>
+            HEALTHYLIFE
+          </h1>
+          <h3>회원가입</h3>
           <Formik<SignupPageValues>
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
             validateOnChange={true}
+            enableReinitialize // 초기값 바뀔수도 있음
           >
             {/* touched: boolean values; 유저의 행동을 주시함*/}
             {/* true: if the user has focused on and then blurred the field */}
@@ -243,37 +289,90 @@ const SignupPage: React.FC = () => {
               touched,
               handleBlur,
               handleChange,
-            }) => (
-              <Form>
-                <FormItem>
-                  <FormLabel htmlFor="userid">아이디</FormLabel>
-                  <div className="input-with-button-container">
-                    <Field type="text" id="userid" name="userid" />
-                    <Button
-                      onClick={() => checkUseridAvailability(values.userid)}
-                      disabled={!!errors.userid}
-                    >
-                      중복확인
-                    </Button>
-                  </div>
-                </FormItem>
+              setFieldValue,
+            }) => {
+              const handleCompletePost = (data: any) => {
+                let fullAddress = data.address;
+                let extraAddress = "";
 
-                <ErrorMessage
-                  name="userid"
-                  component="div"
-                  render={(msg) => <div className="error-message">{msg}</div>}
-                />
-                {useridAvailability && (
-                  <div
-                    className="error-message"
-                    style={{
-                      color: useridAvailability.result ? "green" : "red",
-                    }}
-                  >
-                    {useridAvailability.message}
-                  </div>
-                )}
-                {/* <ErrorMessage
+                if (data.addressType === "R") {
+                  if (data.bname !== "") {
+                    extraAddress += data.bname;
+                  }
+                  if (data.buildingName !== "") {
+                    extraAddress +=
+                      extraAddress !== ""
+                        ? `, ${data.buildingName}`
+                        : data.buildingName;
+                  }
+                  fullAddress +=
+                    extraAddress !== "" ? ` (${extraAddress})` : "";
+                }
+
+                setAddress({
+                  mainAddress: fullAddress,
+                  postcode: data.zonecode,
+                });
+                setFieldValue("address", fullAddress);
+                setFieldValue("postcode", data.zonecode);
+                handleCloseModal();
+              };
+
+              // 비밀번호 일치 확인 함수
+              const handlePasswordMatchCheck = () => {
+                if (values.password === "" && values.confirmPassword === "") {
+                  setPasswordMatchError(
+                    "비밀번호 와 비밀번호 확인을 입력해 주세요."
+                  );
+                } else if (values.password === values.confirmPassword) {
+                  setPasswordMatchError("비밀번호가 일치합니다.");
+                } else if (
+                  values.password === "" ||
+                  values.confirmPassword === ""
+                ) {
+                  setPasswordMatchError(
+                    "비밀번호 와 비밀번호 확인을 입력해 주세요."
+                  );
+                } else {
+                  setPasswordMatchError("비밀번호가 일치하지 않습니다.");
+                }
+              };
+
+              return (
+                <Form>
+                  <FormItem>
+                    {/* 유저 아이디 */}
+                    <FormLabel htmlFor="userid">아이디</FormLabel>
+                    <div className="input-with-button-container">
+                      <Field type="text" id="userid" name="userid" />
+                      <Button
+                        onClick={() => checkUseridAvailability(values.userid)}
+                        disabled={!!errors.userid}
+                      >
+                        중복확인
+                      </Button>
+                    </div>
+
+                    <ErrorMessage
+                      name="userid"
+                      component="div"
+                      render={(msg) => (
+                        <div className="error-message">{msg}</div>
+                      )}
+                    />
+                    {useridAvailability && (
+                      <div
+                        className="error-message"
+                        style={{
+                          color: useridAvailability.result ? "green" : "red",
+                        }}
+                      >
+                        {useridAvailability.message}
+                      </div>
+                    )}
+                  </FormItem>
+
+                  {/* <ErrorMessage
                   name="userid"
                   render={(msg) => (
                     <UseridErrorMessage
@@ -282,7 +381,7 @@ const SignupPage: React.FC = () => {
                     />
                   )}
                 /> */}
-                {/* <ErrorMessage name="userid">
+                  {/* <ErrorMessage name="userid">
                   {(msg) => (
                     <UseridErrorMessage
                       yupErrorMessage={msg}
@@ -290,121 +389,174 @@ const SignupPage: React.FC = () => {
                     />
                   )}
                 </ErrorMessage> */}
-                {/* <ErrorMessage name="userid" component={UseridErrorMessage} /> */}
+                  {/* <ErrorMessage name="userid" component={UseridErrorMessage} /> */}
 
-                <FormItem>
-                  <FormLabel htmlFor="password">비밀번호</FormLabel>
-                  <Input.Password
-                    id="password"
-                    name="password"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.password}
-                  />
-                </FormItem>
-                {touched.password && errors.password && (
-                  <div className="error-message">{errors.password}</div>
-                )}
+                  {/* 비밀번호 */}
+                  <FormItem>
+                    <FormLabel htmlFor="password">비밀번호</FormLabel>
+                    <div className="input-with-button-container">
+                      <Input.Password
+                        id="password"
+                        name="password"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.password}
+                      />
+                      <Button
+                        onClick={handlePasswordMatchCheck}
+                        disabled={!!errors.password || isSubmitting}
+                      >
+                        비밀번호 확인
+                      </Button>
+                    </div>
+                    {touched.password && errors.password && (
+                      <div className="error-message">{errors.password}</div>
+                    )}
 
-                <FormItem>
-                  <FormLabel htmlFor="confirmPassword">비밀번호 확인</FormLabel>
-                  <Input.Password
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.confirmPassword}
-                  />
-                </FormItem>
-                {touched.confirmPassword && errors.confirmPassword && (
-                  <div className="error-message">{errors.confirmPassword}</div>
-                )}
+                    {passwordMatchError && (
+                      <div
+                        className="error-message"
+                        style={{
+                          color:
+                            passwordMatchError === "비밀번호가 일치합니다."
+                              ? "green"
+                              : "red",
+                        }}
+                      >
+                        {passwordMatchError}
+                      </div>
+                    )}
+                  </FormItem>
 
-                <FormItem>
-                  <FormLabel htmlFor="name">이름</FormLabel>
-                  <Field type="text" id="name" name="name" />
-                </FormItem>
-                <ErrorMessage
-                  name="name"
-                  component="div"
-                  render={(msg) => <div className="error-message">{msg}</div>}
-                />
+                  {/* 비밀번호 재입력 */}
+                  <FormItem>
+                    <FormLabel htmlFor="confirmPassword">
+                      비밀번호 확인
+                    </FormLabel>
+                    <Input.Password
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.confirmPassword}
+                    />
+                    {touched.confirmPassword && errors.confirmPassword && (
+                      <div className="error-message">
+                        {errors.confirmPassword}
+                      </div>
+                    )}
+                  </FormItem>
 
-                <FormItem>
-                  <FormLabel htmlFor="email">이메일</FormLabel>
-                  <Field type="email" id="email" name="email" />
-                </FormItem>
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  render={(msg) => <div className="error-message">{msg}</div>}
-                />
+                  {/* 이름 */}
+                  <FormItem>
+                    <FormLabel htmlFor="name">이름</FormLabel>
+                    <Field type="text" id="name" name="name" />
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      render={(msg) => (
+                        <div className="error-message">{msg}</div>
+                      )}
+                    />
+                  </FormItem>
 
-                <FormItem>
-                  <FormLabel htmlFor="nickname">닉네임</FormLabel>
-                  <div className="input-with-button-container">
-                    <Field type="text" id="nickname" name="nickname" />
-                    <Button
-                      onClick={() => checkNicknameAvailability(values.nickname)}
-                    >
-                      중복확인
-                    </Button>
-                  </div>
-                </FormItem>
-                {nicknameAvailability && (
-                  <div
-                    className="error-message"
-                    style={{
-                      color: nicknameAvailability.result ? "green" : "red",
-                    }}
-                  >
-                    {nicknameAvailability.message}
-                  </div>
-                )}
-                <ErrorMessage
-                  name="nickname"
-                  component="div"
-                  render={(msg) => <div className="error-message">{msg}</div>}
-                />
+                  {/* 이메일 */}
+                  <FormItem>
+                    <FormLabel htmlFor="email">이메일</FormLabel>
+                    <Field type="email" id="email" name="email" />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      render={(msg) => (
+                        <div className="error-message">{msg}</div>
+                      )}
+                    />
+                  </FormItem>
 
-                <FormItem>
-                  <FormLabel htmlFor="age">나이</FormLabel>
-                  <Field type="text" id="age" name="age" />
-                </FormItem>
-                <ErrorMessage
-                  name="age"
-                  component="div"
-                  render={(msg) => <div className="error-message">{msg}</div>}
-                />
+                  {/* 닉네임 */}
+                  <FormItem>
+                    <FormLabel htmlFor="nickname">닉네임</FormLabel>
+                    <div className="input-with-button-container">
+                      <Field type="text" id="nickname" name="nickname" />
+                      <Button
+                        onClick={() =>
+                          checkNicknameAvailability(values.nickname)
+                        }
+                      >
+                        중복확인
+                      </Button>
+                    </div>
+                    {nicknameAvailability && (
+                      <div
+                        className="error-message"
+                        style={{
+                          color: nicknameAvailability.result ? "green" : "red",
+                        }}
+                      >
+                        {nicknameAvailability.message}
+                      </div>
+                    )}
+                    <ErrorMessage
+                      name="nickname"
+                      component="div"
+                      render={(msg) => (
+                        <div className="error-message">{msg}</div>
+                      )}
+                    />
+                  </FormItem>
 
-                <FormItem className="gender">
-                  <FormLabel>성별</FormLabel>
-                  <label style={{ marginRight: "15px" }}>
-                    <Field type="radio" name="gender" value="male" />
-                    남성
-                  </label>
-                  <label>
-                    <Field type="radio" name="gender" value="female" />
-                    여성
-                  </label>
-                </FormItem>
-                <ErrorMessage
-                  name="gender"
-                  component="div"
-                  render={(msg) => <div className="error-message">{msg}</div>}
-                />
+                  {/* 나이 */}
+                  <FormItem>
+                    <FormLabel htmlFor="age">나이</FormLabel>
+                    <Field type="text" id="age" name="age" />
+                    <ErrorMessage
+                      name="age"
+                      component="div"
+                      render={(msg) => (
+                        <div className="error-message">{msg}</div>
+                      )}
+                    />
+                  </FormItem>
 
-                <FormItem>
-                  <FormLabel htmlFor="phone">휴대전화 번호</FormLabel>
-                  <Field type="text" id="phone" name="phone" />
-                </FormItem>
-                <ErrorMessage
-                  name="phone"
-                  component="div"
-                  render={(msg) => <div className="error-message">{msg}</div>}
-                />
+                  {/* 성별 */}
+                  <FormItem className="gender">
+                    <FormLabel>성별</FormLabel>
+                    <div>
+                      <label style={{ marginRight: "15px" }}>
+                        <Field type="radio" name="gender" value="male" />
+                        남성
+                      </label>
+                      <label>
+                        <Field type="radio" name="gender" value="female" />
+                        여성
+                      </label>
+                    </div>
+                    <div>
+                      <ErrorMessage
+                        name="gender"
+                        component="div"
+                        render={(msg) => (
+                          <div className="error-message">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </FormItem>
 
-                <FormItem>
+                  {/* 휴대전화 번호 */}
+                  <FormItem>
+                    <FormLabel htmlFor="phone">휴대전화 번호</FormLabel>
+                    <Field type="text" id="phone" name="phone" />
+                    <ErrorMessage
+                      name="phone"
+                      component="div"
+                      render={(msg) => (
+                        <div className="error-message">{msg}</div>
+                      )}
+                    />
+                  </FormItem>
+
+                  {/* 주소 */}
+                  {/* <FormItem>
                   <FormLabel htmlFor="address">주소</FormLabel>
                   <Field type="text" id="address" name="address" />
                 </FormItem>
@@ -412,13 +564,74 @@ const SignupPage: React.FC = () => {
                   name="address"
                   component="div"
                   render={(msg) => <div className="error-message">{msg}</div>}
-                />
+                /> */}
+                  <FormItem>
+                    <FormLabel htmlFor="address">주소</FormLabel>
+                    <div className="address-input-group">
+                      {/* Read-only input to display address & trigger modal */}
+                      <input
+                        type="text"
+                        value={address.mainAddress || ""}
+                        placeholder="주소 검색"
+                        readOnly
+                        onClick={handleOpenModal} // Open modal on click
+                        style={{ cursor: "pointer", flexGrow: 1 }}
+                      />
+                      <Field
+                        type="text"
+                        id="detailAddress"
+                        name="detailAddress"
+                        placeholder="상세주소 입력 (예: 101동 101호)"
+                      />
+                      {/* Read-only postcode */}
+                      <input
+                        type="text"
+                        value={address.postcode || ""}
+                        placeholder="우편번호"
+                        readOnly
+                      />
+                    </div>
 
-                <Button htmlType="submit" disabled={isSubmitting}>
-                  회원가입
-                </Button>
-              </Form>
-            )}
+                    {/* Editable Detail Address - Managed by Formik */}
+
+                    <Field type="hidden" name="address" />
+                    <Field type="hidden" name="postcode" />
+
+                    {/* Display Formik validation errors */}
+                    <ErrorMessage
+                      name="address"
+                      component="div"
+                      className="error-message"
+                    />
+                    {touched.address && (
+                      <ErrorMessage
+                        name="postcode"
+                        component="div"
+                        className="error-message"
+                      />
+                    )}
+                    <ErrorMessage
+                      name="detailAddress"
+                      component="div"
+                      className="error-message"
+                    />
+                  </FormItem>
+
+                  {/* === Render Modal === */}
+                  {isModalOpen && (
+                    <AddressSearchModal
+                      isOpen={isModalOpen}
+                      onClose={handleCloseModal}
+                      onCompletePost={handleCompletePost}
+                    />
+                  )}
+
+                  <Button htmlType="submit" disabled={isSubmitting}>
+                    회원가입
+                  </Button>
+                </Form>
+              );
+            }}
           </Formik>
         </div>
       </SignupPageStyled>

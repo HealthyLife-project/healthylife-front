@@ -3,6 +3,7 @@ import api from "@/util/chek";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Input, Button, Space, Spin, Typography } from "antd"; // Importing Ant Design components
+import { current } from "@reduxjs/toolkit";
 
 const { Title } = Typography;
 
@@ -40,13 +41,16 @@ export default function ResetPasswordPage() {
         userid: currentUserId,
         password: newPassword,
       });
-      if (response.data.result) {
+      console.log("userid, password", currentUserId, newPassword);
+      const { result, message } = response.data;
+      if (result) {
         console.log("Password reset successful:", response);
         router.push("/login");
-      } else if (response.data.message) {
-        setPasswordResetError(response.data.message);
+      } else if (!result) {
+        console.log("response.data.message", response);
+        setPasswordResetError(message);
       } else {
-        setPasswordResetError("비밀번호 재설정 실패하였습니다.");
+        setPasswordResetError(message);
       }
     } catch (error: any) {
       console.error("Error resetting password:", error);
@@ -61,7 +65,7 @@ export default function ResetPasswordPage() {
     if (userid) {
       resetUserPassword(userid, password, password2);
     } else {
-      setPasswordResetError("User identifier not available.");
+      setPasswordResetError("사용자 식별 정보를 확인할 수 없습니다.");
     }
   };
 
@@ -88,7 +92,11 @@ export default function ResetPasswordPage() {
       >
         <div>
           <Title level={2}>비밀번호 재설정</Title>
-          <p style={{ color: "red" }}>{passwordResetError}</p>
+          <p
+            style={{ color: "red", display: "flex", justifyContent: "center" }}
+          >
+            {passwordResetError}
+          </p>
         </div>
       </div>
     );
