@@ -79,7 +79,9 @@ const SignupPage: React.FC = () => {
       .oneOf([Yup.ref("password")], "비밀번호가 일치하지 않습니다")
       .required("비밀번호 확인은 필수입니다"),
 
-    name: Yup.string().min(2, "이름은 2글자 이상이여야 합니다"),
+    name: Yup.string()
+      .min(2, "이름은 2글자 이상이여야 합니다")
+      .required("이름은 필수입니다"),
 
     email: Yup.string()
       .email("유효한 이메일 주소를 입력하세요")
@@ -350,7 +352,15 @@ const SignupPage: React.FC = () => {
                     {/* 유저 아이디 */}
                     <FormLabel htmlFor="userid">아이디</FormLabel>
                     <div className="input-with-button-container">
-                      <Field type="text" id="userid" name="userid" />
+                      <Field
+                        type="text"
+                        id="userid"
+                        name="userid"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          handleChange(e); // Keep your existing Formik handleChange
+                          setUseridAvailability(null); // Reset the availability state
+                        }}
+                      />
                       <Button
                         onClick={() => checkUseridAvailability(values.userid)}
                         disabled={!!errors.userid}
@@ -358,7 +368,6 @@ const SignupPage: React.FC = () => {
                         중복확인
                       </Button>
                     </div>
-
                     <ErrorMessage
                       name="userid"
                       component="div"
@@ -366,7 +375,8 @@ const SignupPage: React.FC = () => {
                         <div className="error-message">{msg}</div>
                       )}
                     />
-                    {useridAvailability && (
+                    {/* Conditionally render the availability message only if there are no validation errors for userid */}
+                    {!errors.userid && useridAvailability && (
                       <div
                         className="error-message"
                         style={{
@@ -377,25 +387,6 @@ const SignupPage: React.FC = () => {
                       </div>
                     )}
                   </FormItem>
-
-                  {/* <ErrorMessage
-                  name="userid"
-                  render={(msg) => (
-                    <UseridErrorMessage
-                      yupErrorMessage={msg}
-                      useridAvailability={useridAvailability}
-                    />
-                  )}
-                /> */}
-                  {/* <ErrorMessage name="userid">
-                  {(msg) => (
-                    <UseridErrorMessage
-                      yupErrorMessage={msg}
-                      useridAvailability={useridAvailability}
-                    />
-                  )}
-                </ErrorMessage> */}
-                  {/* <ErrorMessage name="userid" component={UseridErrorMessage} /> */}
 
                   {/* 비밀번호 */}
                   <FormItem>
@@ -485,7 +476,15 @@ const SignupPage: React.FC = () => {
                   <FormItem>
                     <FormLabel htmlFor="nickname">닉네임</FormLabel>
                     <div className="input-with-button-container">
-                      <Field type="text" id="nickname" name="nickname" />
+                      <Field
+                        type="text"
+                        id="nickname"
+                        name="nickname"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          handleChange(e); // Keep your existing Formik handleChange
+                          setNicknameAvailability(null); // Reset the availability state
+                        }}
+                      />
                       <Button
                         onClick={() =>
                           checkNicknameAvailability(values.nickname)
@@ -494,7 +493,14 @@ const SignupPage: React.FC = () => {
                         중복확인
                       </Button>
                     </div>
-                    {nicknameAvailability && (
+                    <ErrorMessage
+                      name="nickname"
+                      component="div"
+                      render={(msg) => (
+                        <div className="error-message">{msg}</div>
+                      )}
+                    />
+                    {!errors.nickname && nicknameAvailability && (
                       <div
                         className="error-message"
                         style={{
@@ -504,13 +510,17 @@ const SignupPage: React.FC = () => {
                         {nicknameAvailability.message}
                       </div>
                     )}
-                    <ErrorMessage
-                      name="nickname"
-                      component="div"
-                      render={(msg) => (
-                        <div className="error-message">{msg}</div>
-                      )}
-                    />
+
+                    {/* {nicknameAvailability && (
+                      <div
+                        className="error-message"
+                        style={{
+                          color: nicknameAvailability.result ? "green" : "red",
+                        }}
+                      >
+                        {nicknameAvailability.message}
+                      </div>
+                    )} */}
                   </FormItem>
 
                   {/* 나이 */}

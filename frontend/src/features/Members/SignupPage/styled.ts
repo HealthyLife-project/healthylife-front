@@ -120,8 +120,9 @@ export const SignupPageStyled = styled.div`
       margin-top: 3px;
       display: block;
       text-align: left;
+      width: 100%;
       margin-bottom: 3px;
-      margin-right: 20px;
+      margin-right: 50px;
     }
   }
 
