@@ -9,7 +9,7 @@ const HashtagsModal = () => {
   // const router = useRouter();
 
   const store = useSelector((state: RootState) => state.token.tokenList);
-  const idNum = store.id;
+  const idNum = store?.id;
   // const userID = store.userid;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

@@ -147,7 +147,7 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
                   onClick={() =>
                     handleToggle(hashtag.id, hashtag.hash, hashtag.categoryid)
                   }
-                  toggled={toggledStates[hashtag.id] || false}
+                  toggled={toggledStates[hashtag.id] ? true : false}
                   // style={{
                   //   marginRight: "8px",
                   //   marginBottom: "8px",

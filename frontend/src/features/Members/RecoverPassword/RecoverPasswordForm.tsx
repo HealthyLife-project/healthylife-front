@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RecoverPasswordPageStyled } from "./styled";
-import { Input } from "antd";
+import { Input, notification } from "antd";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -28,7 +28,11 @@ export default function RecoverPasswordPage() {
       if (response.data.id) {
         router.push("/forgot-password/password-recovery-feedback");
       } else {
-        return;
+        notification.error({
+          message: ":(",
+          description: "등록되어있는 이메일이 아닙니다.",
+          duration: 3,
+        });
       }
     } catch (error: any) {
       console.error("Error sending password recovery email:", error);
@@ -51,7 +55,7 @@ export default function RecoverPasswordPage() {
             <div className="input-container">
               <Input
                 type="text"
-                placeholder="Please enter your email"
+                placeholder="이메일 주소를 입력해 주십시오."
                 className="email-input"
                 value={email}
                 onChange={(e) => {

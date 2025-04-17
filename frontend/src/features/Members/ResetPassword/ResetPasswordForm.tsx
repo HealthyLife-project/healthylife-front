@@ -3,6 +3,7 @@ import api from "@/util/chek";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Input, Button, Space, Spin, Typography } from "antd"; // Importing Ant Design components
+import { current } from "@reduxjs/toolkit";
 
 const { Title } = Typography;
 
@@ -40,13 +41,16 @@ export default function ResetPasswordPage() {
         userid: currentUserId,
         password: newPassword,
       });
-      if (response.data.result) {
+      console.log("userid, password", currentUserId, newPassword);
+      const { result, message } = response.data;
+      if (result) {
         console.log("Password reset successful:", response);
         router.push("/login");
-      } else if (response.data.message) {
-        setPasswordResetError(response.data.message);
+      } else if (!result) {
+        console.log("response.data.message", response);
+        setPasswordResetError(message);
       } else {
-        setPasswordResetError("비밀번호 재설정 실패하였습니다.");
+        setPasswordResetError(message);
       }
     } catch (error: any) {
       console.error("Error resetting password:", error);
@@ -61,7 +65,7 @@ export default function ResetPasswordPage() {
     if (userid) {
       resetUserPassword(userid, password, password2);
     } else {
-      setPasswordResetError("User identifier not available.");
+      setPasswordResetError("사용자 식별 정보를 확인할 수 없습니다.");
     }
   };
 
@@ -87,8 +91,12 @@ export default function ResetPasswordPage() {
         style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}
       >
         <div>
-          <Title level={2}>Reset Password</Title>
-          <p style={{ color: "red" }}>{passwordResetError}</p>
+          <Title level={2}>비밀번호 재설정</Title>
+          <p
+            style={{ color: "red", display: "flex", justifyContent: "center" }}
+          >
+            {passwordResetError}
+          </p>
         </div>
       </div>
     );
@@ -100,10 +108,10 @@ export default function ResetPasswordPage() {
         style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}
       >
         <div>
-          <Title level={2}>Reset Password</Title>
+          <Title level={2}>비밀번호 재설정</Title>
           <p>
-            User identifier not available. Please ensure you have a valid reset
-            link.
+            사용자 식별 정보를 확인할 수 없습니다. 유효한 비밀번호 재설정 링크를
+            다시 한번 확인하여 주시기 바랍니다.
           </p>
         </div>
       </div>
@@ -113,37 +121,49 @@ export default function ResetPasswordPage() {
   return (
     <ResetPasswordPageStyled>
       <div>
-        Reset Password
+        <h1>비밀번호 재설정</h1>
+        <p>새로운 비밀번호를 아래에 입력해주세요.</p>
         <form onSubmit={submitHandler}>
-          <Space
-            direction="vertical"
-            size="middle"
-            style={{ textAlign: "center" }}
-          >
-            {passwordResetError && (
-              <p style={{ color: "red" }}>{passwordResetError}</p>
-            )}
-            <Input.Password
-              placeholder="New password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <Input.Password
-              placeholder="Confirm password"
-              value={password2}
-              onChange={(e) => setPassword2(e.target.value)}
-              required
-            />
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={!isButtonDisabled}
-              loading={loading}
-            >
-              Change Password
-            </Button>
-          </Space>
+          <div className="reset-password-container">
+            <div className="input-container">
+              <Space
+                direction="vertical"
+                size="middle"
+                style={{ textAlign: "center" }}
+              >
+                {passwordResetError && (
+                  <p style={{ color: "red" }}>{passwordResetError}</p>
+                )}
+
+                <Input.Password
+                  className="new-password-input"
+                  placeholder="새로운 비밀번호"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <Input.Password
+                  className="confirm-password-input"
+                  placeholder="새로운 비밀번호 재입력"
+                  value={password2}
+                  onChange={(e) => setPassword2(e.target.value)}
+                  required
+                />
+              </Space>
+            </div>
+
+            <div className="button-container">
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={!isButtonDisabled}
+                loading={loading}
+              >
+                비밀번호 변경
+              </Button>
+            </div>
+            {/* </Space> */}
+          </div>
         </form>
       </div>
     </ResetPasswordPageStyled>
