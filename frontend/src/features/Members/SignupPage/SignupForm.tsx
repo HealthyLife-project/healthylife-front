@@ -99,8 +99,8 @@ const SignupPage: React.FC = () => {
     ),
 
     phone: Yup.string()
-      .required("휴대폰 번호를 입력해주세요.")
-      .matches(phoneRegExp, "휴대폰 번호를 입력해주세요."),
+      .required("휴대전화 번호를 입력해주세요.")
+      .matches(phoneRegExp, "휴대전화 번호를 확인해주세요."),
 
     address: Yup.string().required("주소를 검색해주세요."),
     postcode: Yup.string().required("우편번호가 필요합니다."),
@@ -216,6 +216,8 @@ const SignupPage: React.FC = () => {
     try {
       console.log("values prior to axios request", values);
       const fulladdress = `${values.address} ${values.detailAddress} (${values.postcode})`;
+      // 전화번호 형식 정리 010-1234-5678, 01012345678, 010 1234 5678 => 01012345678
+      const cleanedPhoneNumber = values.phone.replace(/[\s-]/g, "");
 
       const signupData = {
         userid: values.userid,
@@ -226,7 +228,7 @@ const SignupPage: React.FC = () => {
         nickname: values.nickname,
         age: values.age,
         gender: values.gender,
-        phone: values.phone,
+        phone: cleanedPhoneNumber,
         address: fulladdress,
       };
       console.log("signupData prior to axios request", signupData);
