@@ -13,7 +13,6 @@ export const ChatBoxStyled = styled.div`
     z-index: 999;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 
     animation: fadeInUp 0.3s ease;
     @keyframes fadeInUp {
@@ -76,36 +75,46 @@ export const ChatBoxStyled = styled.div`
       flex-direction: column;
       justify-content: space-between;
       width: 100%;
-      height: 100%;
       background-color: #f7f9fb;
-      overflow: hidden;
-    }
-    .content {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      background-color: #f7f9fb;
-      max-height: 420px;
-      padding: 16px;
-      font-size: 14px;
-      gap: 15px;
+      height: 450px;
 
-      .chat-content {
+      .content-srcoll {
+        height: 100%;
+        overflow-y: scroll;
         display: flex;
-        background-color: white;
-        width: 100%;
-        padding: 10px 5px;
-        border-radius: 15px;
-      }
-    }
-    .chat-input-div {
-      display: flex;
-      justify-content: space-around;
-      background-color: #f7f9fb;
-      padding: 3px 2px;
+        flex-direction: column;
 
-      .chat-input {
-        width: 85%;
+        .content {
+          display: flex;
+          flex-direction: column;
+          background-color: #f7f9fb;
+          max-height: 400px;
+          height: 100%;
+          padding: 16px;
+          font-size: 14px;
+          gap: 15px;
+          min-height: 100%;
+          height: auto;
+
+          .chat-content {
+            display: flex;
+            background-color: white;
+            width: 100%;
+            padding: 10px 5px;
+            border-radius: 15px;
+          }
+        }
+      }
+
+      .chat-input-div {
+        display: flex;
+        justify-content: space-around;
+        background-color: #f7f9fb;
+        padding: 3px 2px;
+
+        .chat-input {
+          width: 85%;
+        }
       }
     }
   }

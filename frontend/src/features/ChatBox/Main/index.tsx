@@ -90,6 +90,14 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     }
   }, [username, room]);
 
+  //채팅입력 시 밑에서 부터 스크롤
+  useEffect(() => {
+    const container = document.querySelector(".content-srcoll");
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [messages]);
+
   //방 입장하기
   const joinRoom = (chatData: ChatBoxLocal) => {
     if (userNickname.trim() && room.trim()) {
@@ -235,19 +243,22 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         </div>
 
         <div className="content-div">
-          <div className="content">
-            {messages.map((msg, index) =>
-              msg.aopen ? (
-                <p key={index}>
-                  <strong>{msg.aopen}</strong>
-                </p>
-              ) : (
-                <div className="chat-content" key={index}>
-                  <strong>{msg.userNickname}: </strong> {msg.message}
-                </div>
-              )
-            )}
+          <div className="content-srcoll">
+            <div className="content">
+              {messages.map((msg, index) =>
+                msg.aopen ? (
+                  <p key={index}>
+                    <strong>{msg.aopen}</strong>
+                  </p>
+                ) : (
+                  <div className="chat-content" key={index}>
+                    <strong>{msg.userNickname}: </strong> {msg.message}
+                  </div>
+                )
+              )}
+            </div>
           </div>
+
           <div className="chat-input-div">
             <Input
               type="text"
