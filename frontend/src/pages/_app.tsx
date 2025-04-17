@@ -102,7 +102,6 @@ const AppWithTheme = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
     const start = () => setLoading(true);
     const end = () => {
-      // 최소 500ms 로딩 유지
       const timeout = setTimeout(() => {
         setLoading(false);
       }, 500);
