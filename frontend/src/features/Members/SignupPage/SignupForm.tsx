@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
 
+// 회원 정보 데이터 종류 설정
 interface SignupPageValues {
   userid: string;
   password: string;
@@ -35,6 +36,7 @@ interface SignupPageValues {
 const SignupPage: React.FC = () => {
   const router = useRouter();
 
+  // 초기 정보
   const initialValues: SignupPageValues = {
     userid: "",
     password: "",
@@ -50,9 +52,11 @@ const SignupPage: React.FC = () => {
     detailAddress: "",
   };
 
+  // 휴대전화 번호 형식
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
+  //  아이디, 비밀번호, 이름, 이메일, 등 정보 형식
   const validationSchema = Yup.object().shape({
     userid: Yup.string()
       .min(4, "4자 이상 입력해주세요!")
@@ -402,12 +406,6 @@ const SignupPage: React.FC = () => {
                         onChange={handleChange}
                         value={values.password}
                       />
-                      <Button
-                        onClick={handlePasswordMatchCheck}
-                        disabled={!!errors.password || isSubmitting}
-                      >
-                        비밀번호 확인
-                      </Button>
                     </div>
                     {touched.password && errors.password && (
                       <div className="error-message">{errors.password}</div>
@@ -433,13 +431,21 @@ const SignupPage: React.FC = () => {
                     <FormLabel htmlFor="confirmPassword">
                       비밀번호 확인
                     </FormLabel>
-                    <Input.Password
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.confirmPassword}
-                    />
+                    <div className="input-with-button-container">
+                      <Input.Password
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.confirmPassword}
+                      />
+                      <Button
+                        onClick={handlePasswordMatchCheck}
+                        disabled={!!errors.password || isSubmitting}
+                      >
+                        비밀번호 확인
+                      </Button>
+                    </div>
                     {touched.confirmPassword && errors.confirmPassword && (
                       <div className="error-message">
                         {errors.confirmPassword}
