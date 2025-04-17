@@ -53,6 +53,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [chatlocal, setChatLocal] = useState<ChatBoxLocal>(); //로컬 스토리지 값
   const [isChatListOpen, setIsChatListOpen] = useState(false);
   const [chatList, setChatList] = useState<ChatBoxLocal[]>([]);
+  const [pagecnt, setPageCnt] = useState(1);
   //const [roomid, setRoomid] = useState();
 
   //useEffect
@@ -107,13 +108,28 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       // const roomid_num:number = chatData.roomid
       // setRoomid(roomid_num?);
 
+      //입장 시 이전 내용
       api
         .post(`/chat/${chatData.category}/insert`, {
           roomid: Number(chatData.roomid),
           userid: Number(tokenList?.id),
         })
         .then((res) => {
-          console.log(res.data);
+          //console.log(res.data);
+          //setMessages(res.data);
+        });
+
+      //채팅방 입력 시 이전 내용 불러오기
+
+      api
+        .post(`/chat/${chatData.category}/getMessage`, {
+          roomid: chatData.roomid,
+          userid: userid,
+          page: pagecnt,
+          limit: 10,
+        })
+        .then((res) => {
+          console.log("res", res.data);
         });
     }
   };
@@ -152,10 +168,10 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       api
         .post(`/chat/${chatlocal?.category}/saveMessage`, arr)
         .then((res) => {
-          console.log("백엔드 저장 완료", res.data);
+          //console.log("백엔드 저장 완료", res.data);
         })
         .catch((error: string) => {
-          console.log("백엔드 저장 실패", error);
+          //console.log("백엔드 저장 실패", error);
         });
 
       setMessage("");
