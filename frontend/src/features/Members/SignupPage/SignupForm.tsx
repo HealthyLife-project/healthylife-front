@@ -9,6 +9,7 @@ import axios from "axios";
 import { useState } from "react";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
+import Password from "antd/es/input/Password";
 
 // 회원 정보 데이터 종류 설정
 interface SignupPageValues {
@@ -151,9 +152,7 @@ const SignupPage: React.FC = () => {
   };
 
   // 비밀번호 일치 확인 변수
-  const [passwordMatchError, setPasswordMatchError] = useState<string | null>(
-    null
-  );
+  const [passwordMatchError, setPasswordMatchError] = useState("");
 
   // 닉네임 중복확인 백엔드 요청
   const checkNicknameAvailability = async (nickname: string) => {
@@ -219,8 +218,10 @@ const SignupPage: React.FC = () => {
       });
 
       router.push("/");
+      setPasswordMatchError("");
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        setPasswordMatchError("");
         console.error("회원가입 실패:", error.response?.data || error.message);
         setStatus({
           success: false,
@@ -299,25 +300,20 @@ const SignupPage: React.FC = () => {
                 handleCloseModal();
               };
 
-              // 비밀번호 일치 확인 함수
-              const handlePasswordMatchCheck = () => {
-                if (values.password === "" && values.confirmPassword === "") {
-                  setPasswordMatchError(
-                    "비밀번호 와 비밀번호 확인을 입력해 주세요."
-                  );
-                } else if (values.password === values.confirmPassword) {
-                  setPasswordMatchError("비밀번호가 일치합니다.");
-                } else if (
-                  values.password === "" ||
-                  values.confirmPassword === ""
-                ) {
-                  setPasswordMatchError(
-                    "비밀번호 와 비밀번호 확인을 입력해 주세요."
-                  );
-                } else {
-                  setPasswordMatchError("비밀번호가 일치하지 않습니다.");
-                }
-              };
+              // 비밀번호 일치 함수
+              // const handlePasswordMatchCheck = () => {
+              //   if (
+              //     values.password &&
+              //     values.confirmPassword &&
+              //     values.password === values.confirmPassword
+              //   ) {
+              //     setPasswordMatchError("비밀번호가 일치합니다.");
+              //   } else {
+              //     setPasswordMatchError("");
+              //   }
+              // };
+
+              setPasswordMatchError("비밀번호가 일치합니다."); // ADD THIS LINE HERE
 
               return (
                 <Form>
@@ -365,31 +361,25 @@ const SignupPage: React.FC = () => {
                   <FormItem>
                     <FormLabel htmlFor="password">비밀번호</FormLabel>
                     <div className="input-with-button-container">
-                      <Input.Password
+                      <Field
                         id="password"
                         name="password"
+                        as={Input.Password}
                         placeholder="비밀번호를 입력해주세요"
                         onBlur={handleBlur}
-                        onChange={handleChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          console.log(
+                            "Ant Design Input.Password onChange triggered!"
+                          ); // Simple log
+
+                          handleChange(e);
+                          // handlePasswordMatchCheck();
+                        }}
                         value={values.password}
                       />
                     </div>
                     {touched.password && errors.password && (
                       <div className="error-message">{errors.password}</div>
-                    )}
-
-                    {passwordMatchError && (
-                      <div
-                        className="error-message"
-                        style={{
-                          color:
-                            passwordMatchError === "비밀번호가 일치합니다."
-                              ? "green"
-                              : "red",
-                        }}
-                      >
-                        {passwordMatchError}
-                      </div>
                     )}
                   </FormItem>
 
@@ -404,21 +394,28 @@ const SignupPage: React.FC = () => {
                         name="confirmPassword"
                         placeholder="비밀번호를 재입력해 주세요"
                         onBlur={handleBlur}
-                        onChange={handleChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          handleChange(e);
+                          // handlePasswordMatchCheck();
+                        }}
                         value={values.confirmPassword}
                       />
-                      <Button
-                        onClick={handlePasswordMatchCheck}
-                        disabled={!!errors.password || isSubmitting}
-                      >
-                        비밀번호 확인
-                      </Button>
                     </div>
                     {touched.confirmPassword && errors.confirmPassword && (
                       <div className="error-message">
                         {errors.confirmPassword}
                       </div>
                     )}
+                    {touched.confirmPassword &&
+                      !errors.confirmPassword &&
+                      passwordMatchError && (
+                        <div
+                          className="success-message"
+                          style={{ color: "green" }}
+                        >
+                          {passwordMatchError}
+                        </div>
+                      )}
                   </FormItem>
 
                   {/* 이름 */}
