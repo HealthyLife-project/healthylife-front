@@ -17,25 +17,20 @@ export const MyMain = styled.div`
       display: flex;
       justify-content: center;
       margin: 20px 0;
-      gap: 10px;
+      gap: 15px;
 
       .tab-button {
-        padding: 10px 20px;
+        padding: 18px 20px;
         border: 1px solid #ccc;
         border-radius: 8px;
         cursor: pointer;
-        background-color: #f5f5f5;
+        //background-color: #f5f5f5;
         transition: all 0.2s ease-in-out;
-        font-weight: 500;
 
         &.active {
           background-color: #6ca6cd;
           color: white;
           border-color: #6ca6cd;
-        }
-
-        &:hover {
-          background-color: #e0f0ff;
         }
       }
     }

@@ -6,11 +6,17 @@ import { useEffect, useState } from "react";
 interface ChatDrawerProps {
   onClose: () => void;
   category: string;
+  title: string;
 }
 
-const ChatDrawer: React.FC<ChatDrawerProps> = ({ onClose, category }) => {
+const ChatDrawer: React.FC<ChatDrawerProps> = ({
+  onClose,
+  category,
+  title,
+}) => {
   //useState
   const [chatlist, setChatList] = useState([""]);
+  //const [currentchat, setCurrentChat] = useState(""); //현재 위치해 있는 채팅방 title
 
   useEffect(() => {
     api
@@ -18,7 +24,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({ onClose, category }) => {
       .then((res) => {
         const data = res.data;
         const titles = data.map((item: { title: string }) => item.title);
-        setChatList(titles); // 여기가 이제 안전해짐
+        setChatList(titles);
         //console.log("채팅방 제목 목록:", titles);
       })
       .catch((error) => {
@@ -36,8 +42,12 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({ onClose, category }) => {
       </div>
       <div className="drawer-content">
         {chatlist.map((element: string, index: number) => {
+          const isActive = element === title; // 현재 채팅방과 같은지 확인
           return (
-            <div className="chat-element" key={index}>
+            <div
+              className={clsx("chat-element", { active: isActive })}
+              key={index}
+            >
               {element}
             </div>
           );

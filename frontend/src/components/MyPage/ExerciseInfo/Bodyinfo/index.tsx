@@ -32,7 +32,7 @@ const Bodyinfo = () => {
 
   //useEffect
   useEffect(() => {
-    setId(tokenList.id);
+    setId(tokenList?.id);
   }, []);
 
   //파일 업로드

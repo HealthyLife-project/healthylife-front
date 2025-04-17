@@ -10,14 +10,12 @@ export const ChatBoxStyled = styled.div`
     background-color: #ffffff;
     //border-radius: 16px;
     //box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
+    z-index: 999;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 
-    /* 애니메이션으로 살짝 등장 */
     animation: fadeInUp 0.3s ease;
-
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -39,15 +37,36 @@ export const ChatBoxStyled = styled.div`
       align-items: center;
       height: 40px;
 
-      .close-btn {
-        color: #fff;
-        background: none;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
+      .menu {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
 
-        &:hover {
-          opacity: 0.7;
+        .dropdown-container {
+          position: relative;
+          z-index: 999;
+        }
+
+        .dropdown-menu {
+          position: absolute;
+          z-index: 999;
+        }
+
+        .menu-bar {
+          cursor: pointer;
+        }
+
+        .close-btn {
+          color: #fff;
+          background: none;
+          border: none;
+          font-size: 18px;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.7;
+          }
         }
       }
     }
@@ -59,11 +78,25 @@ export const ChatBoxStyled = styled.div`
       width: 100%;
       height: 100%;
       background-color: #f7f9fb;
+      overflow: hidden;
     }
     .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-color: #f7f9fb;
+      max-height: 420px;
       padding: 16px;
-      overflow-y: auto;
       font-size: 14px;
+      gap: 15px;
+
+      .chat-content {
+        display: flex;
+        background-color: white;
+        width: 100%;
+        padding: 10px 5px;
+        border-radius: 15px;
+      }
     }
     .chat-input-div {
       display: flex;

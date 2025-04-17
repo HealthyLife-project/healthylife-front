@@ -13,5 +13,7 @@ export const MainStyled = styled.div`
     align-items: center;
     margin: 0px auto;
     background-color: ${(props) => props.theme.backgroundColor};
+
+    margin-bottom: 50px;
   }
 `;

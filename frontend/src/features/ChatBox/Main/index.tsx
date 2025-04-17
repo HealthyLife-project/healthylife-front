@@ -1,19 +1,23 @@
 import clsx from "clsx";
 import { ChatBoxStyled, theme } from "./styled";
-import { Button, Input, ConfigProvider } from "antd";
+import { Button, Input, ConfigProvider, Dropdown } from "antd";
 import { useState, useEffect } from "react";
-import { SearchProps } from "antd/es/input";
 import socket from "@/util/socket";
 import { join } from "path";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import api from "@/util/chek";
+import type { MenuProps } from "antd";
+import router from "next/router";
 
 //image
 import arrowback from "@/assets/images/arrowback.png";
+import menu from "@/assets/images/menu.png";
 
 //component
 import ChatDrawer from "../ChatDrawer";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
 
 //title 기본 채팅방 interface
 interface ChatBoxProps {
@@ -26,6 +30,7 @@ type ChatBoxLocal = {
   roomid: number;
   category: string;
   title: string;
+  isOpen: boolean;
 };
 
 //채팅방 > 메인 컴포넌트
@@ -37,10 +42,10 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //useState
   const [username, setUsername] = useState(""); //유저 이름
   const [userid, setUserid] = useState(); //유저 아이디
-  const [userNickname, setNickname] = useState("");
+  const [userNickname, setNickname] = useState(""); //유저 닉네임
   const [message, setMessage] = useState(""); //보낸 메시지
   const [messages, setMessages] = useState<
-    { username: string; message: string }[]
+    { userNickname: string; message: string; aopen?: string }[]
   >([]); //메시지 전체
   const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
   const [room, setRoom] = useState(title); //방 이름
@@ -48,6 +53,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [chatlocal, setChatLocal] = useState<ChatBoxLocal>(); //로컬 스토리지 값
   const [isChatListOpen, setIsChatListOpen] = useState(false);
   const [chatList, setChatList] = useState<ChatBoxLocal[]>([]);
+  //const [roomid, setRoomid] = useState();
 
   //useEffect
   useEffect(() => {
@@ -55,15 +61,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     setUserid(tokenList?.id);
     setNickname(tokenList?.nickname);
 
-    const chatBox = localStorage.getItem("ChatBox");
-
-    setChatLocal(JSON.parse(chatBox!));
-    const chatData: ChatBoxLocal = chatBox ? JSON.parse(chatBox) : null;
-
-    if (chatData) {
-      joinRoom();
-      //console.log(chatData.message ? "메세지 있음" : "메세지 없음");
-    }
     //console.log("입장여부 확인", socket.connected);
 
     socket.on("receiveMessage", (data) => {
@@ -81,11 +78,43 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    const chatBox = localStorage.getItem("ChatBox");
+
+    setChatLocal(JSON.parse(chatBox!));
+    const chatData: ChatBoxLocal = chatBox ? JSON.parse(chatBox) : null;
+
+    if (chatData) {
+      joinRoom(chatData);
+      //console.log(chatData.message ? "메세지 있음" : "메세지 없음");
+    }
+  }, [username, room]);
+
+  //방 입장하기
+  const joinRoom = (chatData: ChatBoxLocal) => {
+    if (userNickname.trim() && room.trim()) {
+      socket.emit("joinRoom", { room });
+      setJoined(true); // 채팅방 생성
+      // console.log("room id", chatData.roomid);
+      // const roomid_num:number = chatData.roomid
+      // setRoomid(roomid_num?);
+
+      api
+        .post(`/chat/${chatData.category}/insert`, {
+          roomid: Number(chatData.roomid),
+          userid: Number(tokenList?.id),
+        })
+        .then((res) => {
+          console.log(res.data);
+        });
+    }
+  };
+
   //메시지 보내기
   const sendMessage = () => {
-    //console.log("chat  :", room, username, message);
+    console.log("chat  :", room, userNickname, message);
     if (message.trim()) {
-      socket.emit("sendMessage", { room, username, message });
+      socket.emit("sendMessage", { room, userNickname, message });
       //console.log("loca", chatlocal);
       const today = new Date();
 
@@ -108,25 +137,20 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         time: formatDate(today),
         roomid: chatlocal?.roomid,
       };
-      //console.log("chat data", arr);
+
+      console.log("chat data", arr);
 
       //db 저장 요청
       api
         .post(`/chat/${chatlocal?.category}/saveMessage`, arr)
         .then((res) => {
-          //console.log("백엔드 저장 완료", res.data);
+          console.log("백엔드 저장 완료", res.data);
         })
         .catch((error: string) => {
           console.log("백엔드 저장 실패", error);
         });
 
       setMessage("");
-    }
-  };
-  const joinRoom = () => {
-    if (username.trim() && room.trim()) {
-      socket.emit("joinRoom", { room });
-      setJoined(true); // 채팅방 생성
     }
   };
 
@@ -143,6 +167,46 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //drawer 닫기
   const closeDrawer = () => setIsChatListOpen(false);
 
+  //메뉴 모달
+  const menuModal = () => {
+    const MySwal = withReactContent(Swal);
+    console.log("chat", chatlocal?.roomid);
+
+    //채팅방 나가기
+    api
+      .delete(`/chat/${chatlocal?.category}/delete/${tokenList?.id}`, {
+        params: {
+          roomid: chatlocal?.roomid,
+        },
+      })
+      .then((res) => {
+        console.log("요청 성공");
+
+        MySwal.fire({
+          title: "체팅방을 나가실 건가요?",
+          footer: "채팅방을 나가시면 이전 내용은 확인 할 수 없습니다.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            socket.disconnect();
+            onClose();
+          }
+        });
+      });
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      key: 1,
+      label: <div onClick={menuModal}>채팅방 나가기</div>,
+    },
+  ];
+
   return (
     <>
       <ChatBoxStyled className={clsx("main-wrap")}>
@@ -150,24 +214,39 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           <span onClick={showDrawer}>
             <img src={arrowback.src} alt="arrow-back" />
           </span>
+
           <span>{title}</span>
-          <Button
-            onClick={onClose}
-            size="small"
-            className="close-btn"
-            type="text"
-          >
-            ✕
-          </Button>
+          <div className="menu">
+            <Dropdown menu={{ items }} placement="bottom" arrow>
+              <span className="menu-bar" onClick={(e) => e.preventDefault()}>
+                <img src={menu.src} alt="menu" />
+              </span>
+            </Dropdown>
+
+            <Button
+              onClick={onClose}
+              size="small"
+              className="close-btn"
+              type="text"
+            >
+              ✕
+            </Button>
+          </div>
         </div>
 
         <div className="content-div">
           <div className="content">
-            {messages.map((msg, index) => (
-              <p key={index}>
-                <strong>{msg.username}: </strong> {msg.message}
-              </p>
-            ))}
+            {messages.map((msg, index) =>
+              msg.aopen ? (
+                <p key={index}>
+                  <strong>{msg.aopen}</strong>
+                </p>
+              ) : (
+                <div className="chat-content" key={index}>
+                  <strong>{msg.userNickname}: </strong> {msg.message}
+                </div>
+              )
+            )}
           </div>
           <div className="chat-input-div">
             <Input
@@ -185,6 +264,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         <ChatDrawer
           onClose={closeDrawer}
           category={chatlocal?.category || "카테고리"}
+          title={title}
         />
       )}
     </>

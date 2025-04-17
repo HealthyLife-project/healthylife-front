@@ -21,7 +21,7 @@ const Chart = () => {
 
   useEffect(() => {
     api
-      .get(`/inbody/currentinfo/${id}`)
+      .get(`/inbody/userinfo/${id}`)
       .then((res) => {
         //console.log("inbody res", res.data);
         const data = res.data;

@@ -47,6 +47,7 @@ const DrawerContainer = () => {
                   name: "",
                   userid: "",
                   id: "",
+                  premium: 0,
                 },
               })
             ); // redux 초기화
@@ -56,8 +57,6 @@ const DrawerContainer = () => {
           }
         });
       }
-
-      // router.push("/login");
     });
   }
 

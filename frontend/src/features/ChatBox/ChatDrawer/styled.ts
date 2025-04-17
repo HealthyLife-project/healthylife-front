@@ -45,6 +45,10 @@ export const DrawerStyled = styled.div`
         font-size: 13px;
         align-items: center;
         padding: 0px 5px;
+
+        &.active {
+          background-color: #6ca6cd;
+        }
       }
     }
 

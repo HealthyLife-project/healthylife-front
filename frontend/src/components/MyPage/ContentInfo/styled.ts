@@ -47,6 +47,13 @@ export const ContentInfoStyle = styled.div`
       height: 35px;
       width: 120px;
     }
+
+    .withdrawal {
+      margin: 20px 0px;
+      color: gray;
+      font-size: 13px;
+      cursor: pointer;
+    }
   }
 
   @media (max-width: 486px) {

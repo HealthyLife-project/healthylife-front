@@ -11,6 +11,10 @@ export const ExerciseInfoStyle = styled.div`
       display: flex;
       width: 100%;
 
+      .title {
+        margin-bottom: 10px;
+      }
+
       .main-map {
         width: 50%;
         height: 380px;
@@ -19,6 +23,10 @@ export const ExerciseInfoStyle = styled.div`
         width: 50%;
         height: 100%;
       }
+    }
+
+    .inbody {
+      margin-top: 30px;
     }
   }
 `;

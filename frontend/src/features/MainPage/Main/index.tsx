@@ -17,8 +17,6 @@ import HashtagsModal from "@/components/HashtagModal/HashtagModal";
 const Main = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  //console.log("is authenticated", isAuthenticated);
-
   return (
     <>
       <Header />
@@ -27,11 +25,7 @@ const Main = () => {
         <MainBanner />
         <TopicMain />
       </MainStyled>
-      {isAuthenticated ? (
-        <HashtagsModal />
-      ) : (
-        <span></span> // Or your login component/redirect logic
-      )}
+      {isAuthenticated ? <HashtagsModal /> : <span></span>}
       <Footer />
     </>
   );
