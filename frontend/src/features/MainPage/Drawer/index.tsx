@@ -1,14 +1,29 @@
 import clsx from "clsx";
 import { DrawerStyled } from "./styled";
 import { useRouter } from "next/router";
-import { Button, Segmented } from "antd";
 import api from "@/util/chek";
-import { useDispatch, useSelector } from "react-redux";
-import { setTokenList } from "@/redux/redux";
-import { MoonOutlined, SunOutlined } from "@ant-design/icons";
-import { setTheme, selectTheme } from "@/redux/theme";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { setTokenList } from "@/redux/redux";
+import { setTheme, selectTheme } from "@/redux/theme";
+
+//antd
+import type { MenuProps } from "antd";
+import { Button, Segmented, Menu } from "antd";
+import {
+  MoonOutlined,
+  SunOutlined,
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { RootState } from "@/redux/store";
+
+type MenuItem = Required<MenuProps>["items"][number];
 
 //Drawer 컴포넌트
 const DrawerContainer = () => {
@@ -16,6 +31,71 @@ const DrawerContainer = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const theme = useSelector(selectTheme);
+  const tokenList = useSelector((state: RootState) => state.token.tokenList);
+
+  //useState
+  const [id, setId] = useState(tokenList?.id);
+  const [petlist, setPetlist] = useState([]); //사용자가 속해있는 pet 채팅방 리스트
+  const [personlist, setPersonList] = useState([]); //사용자가 속해있는 person 채팅방 리스트
+  const chatlist: any[] = [];
+
+  //useEffect
+  useEffect(() => {
+    api.get(`/chat/pet/${id}`).then((res) => {
+      let pet_data = res.data;
+
+      console.log("res pet", pet_data);
+
+      setPetlist(pet_data);
+      //chatlist.push(res.data);
+    });
+
+    api.get(`/chat/person/${id}`).then((res) => {
+      setPersonList(res.data);
+      chatlist.push(res.data);
+      console.log("res person", res.data);
+    });
+
+    console.log("chat", petlist);
+  }, [tokenList?.id]);
+
+  const items: MenuItem[] = [
+    {
+      key: "sub1",
+      label: "채팅방 목록",
+      children: [
+        {
+          key: "g1",
+          label: "Pet",
+          type: "group",
+          children: petlist.map((pet: any, index: number) => ({
+            key: `pet-${index}`,
+            label: pet.roomid,
+            onClick: () => {
+              console.log("Pet chat clicked:", pet);
+            },
+          })),
+        },
+
+        {
+          key: "g2",
+          label: "Person",
+          type: "group",
+          children: personlist.map((person: any, index: number) => ({
+            key: `person-${index}`,
+            label: person.roomid,
+            onClick: () => {
+              console.log("Pet chat clicked:", person);
+            },
+          })),
+        },
+      ],
+    },
+  ];
+
+  // useEffect(() => {
+
+  // }, []);
 
   //마이페이지 이동
   const openMyPage = () => {
@@ -60,10 +140,14 @@ const DrawerContainer = () => {
     });
   }
 
-  //onChange
+  //다크모드 설정
   const onChange = (e: string) => {
-    //console.log("onChange", e);
     dispatch(setTheme(e as "light" | "dark"));
+  };
+
+  //채팅방목록 클릭 이벤트
+  const onClick: MenuProps["onClick"] = (e) => {
+    console.log("click ", e);
   };
 
   return (
@@ -71,7 +155,16 @@ const DrawerContainer = () => {
       <div onClick={openMyPage} className="mypage-router">
         마이페이지
       </div>
-      <div className="mypage-router">채팅방 목록</div>
+      <div className="mypage-router">
+        <Menu
+          onClick={onClick}
+          style={{ width: 256 }}
+          defaultSelectedKeys={["1"]}
+          defaultOpenKeys={["sub1"]}
+          mode="inline"
+          items={items}
+        />
+      </div>
       <div className="main-bottom">
         <Button className="main-logout" onClick={handleLogout}>
           로그아웃

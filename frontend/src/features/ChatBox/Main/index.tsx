@@ -31,6 +31,7 @@ type ChatBoxLocal = {
   category: string;
   title: string;
   isOpen: boolean;
+  boolean: boolean;
 };
 
 //채팅방 > 메인 컴포넌트
@@ -104,10 +105,19 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     if (userNickname.trim() && room.trim()) {
       const category = chatData.category;
       const roomid = chatData.roomid;
-      socket.emit("joinRoom", { userNickname, room, category, roomid, userid });
+      const boolean = chatData.boolean;
+      socket.emit("joinRoom", {
+        userNickname,
+        room,
+        category,
+        roomid,
+        userid,
+        boolean,
+      });
 
       setJoined(true); // 채팅방 생성
-      // console.log("room id", chatData.roomid);
+      console.log("room id", chatData);
+      //console.log("type",ChatBox)
       // const roomid_num:number = chatData.roomid
       // setRoomid(roomid_num?);
 
@@ -145,7 +155,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
       // 스크롤이 가장 위에 도달한 경우
       if (container.scrollTop === 0) {
-        console.log("맨 위에 도달함, 이전 채팅 불러오기");
+        //console.log("맨 위에 도달함, 이전 채팅 불러오기");
         fetchPreviousMessages(); // 이전 메시지 불러오기 함수 호출
       }
     };
@@ -162,6 +172,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
     setPageCnt(pagecnt + 1);
 
+    //메시지 조회 후 가져오기 (무한 스크롤)
     api
       .post(`/chat/${chatlocal.category}/getMessage`, {
         roomid: chatlocal.roomid,
@@ -215,7 +226,8 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       api
         .post(`/chat/${chatlocal?.category}/saveMessage`, arr)
         .then((res) => {
-          //console.log("백엔드 저장 완료", res.data);
+          //console.log("REs", res.data);
+          console.log("백엔드 저장 완료", res.data);
         })
         .catch((error: string) => {
           //console.log("백엔드 저장 실패", error);

@@ -43,7 +43,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
 
   //useState
-  const [isModalComponentOpen, setIsModalComponentOpen] = useState(false); //모달 컴포넌트 open 여부
+  //const [isModalComponentOpen, setIsModalComponentOpen] = useState(false); //모달 컴포넌트 open 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
   const [username, setUserName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // 채팅방 open 유무
@@ -85,7 +85,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         userid: Number(tokenList?.id),
       })
       .then((res) => {
-        //console.log("Res", res.data);
+        console.log("Res chatting", res.data);
         //이미 채팅 있는지 확인 후 만약 채팅 내용이 있으면 추가 내용 보기
         if (res.data.result) {
           //사용자 정의 이벤트 실행 - _app.tsx에서 실행 localstroage에서 title 값 넘김
@@ -102,15 +102,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
           window.dispatchEvent(event);
         } else {
           //처음 입장한 경우
-          // localStorage.setItem(
-          //   "ChatBox",
-          //   JSON.stringify({
-          //     title: selectedRecord?.title,
-          //     category: urlstr,
-          //     isOpen: true,
-          //     id: Number(selectedRecord?.key),
-          //   })
-          // );
+
           //사용자 정의 이벤트 실행 - _app.tsx에서 실행
           const event = new CustomEvent("openChat", {
             detail: {
@@ -138,6 +130,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
       .then((res) => {
         //테이블 리스트 넣기
         const convertedData = convertChatList(res.data);
+        console.log("convertedData", convertedData);
         setData(convertedData);
       })
       .catch((error: string) => {
@@ -145,13 +138,10 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
       });
   }, [urlstr]);
 
-  const pagination = () => {};
-
   return (
     <ChattingStyled className={clsx("main-wrap")}>
       <Table<DataType>
         columns={columns}
-        onChange={pagination}
         dataSource={search.length > 0 ? search : data}
         onRow={(record, rowIndex) => {
           //console.log(record);
