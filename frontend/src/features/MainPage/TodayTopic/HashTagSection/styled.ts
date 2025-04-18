@@ -1,29 +1,33 @@
 import styled from "styled-components";
+
 export const HashTagSectionStyled = styled.div`
   &.main-wrap {
-    display: flex;
-    flex-wrap: wrap; // 여러 줄로 감기게 함
     width: 100%;
     height: 250px;
+    overflow: hidden;
     border: 1px solid black;
     border-radius: 20px;
     padding: 10px;
-    gap: 10px;
-    overflow: hidden;
-    position: relative;
+
+    .scroll-track {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      animation: scroll-left 1s linear infinite;
+      width: max-content;
+    }
 
     .hashtag-element {
+      flex-shrink: 0;
       display: flex;
       min-width: 100px;
       height: 40px;
       border: 1px solid black;
       justify-content: center;
       align-items: center;
-      text-align: center;
       border-radius: 10px;
+      background-color: #f0f0f0;
       white-space: nowrap;
-
-      animation: scroll-left 2s linear infinite;
     }
 
     @keyframes scroll-left {
@@ -31,7 +35,7 @@ export const HashTagSectionStyled = styled.div`
         transform: translateX(0);
       }
       100% {
-        transform: translateX(-100%);
+        transform: translateX(-50%);
       }
     }
   }

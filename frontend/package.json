@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/charts": "^2.2.7",
+    "@ant-design/icons": "^5.6.1",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.10.7",
     "@emotion/react": "^11.14.0",

@@ -65,15 +65,11 @@ const UserContent = () => {
   // });
 
   if (!tokenList?.id) {
-    return <div>로딩 중입니다...</div>;
+    return <div></div>;
   }
 
   return (
     <UserContentStyle className={clsx("main-wrap")}>
-      {/* <div className="user-img">
-        <Image className="imgstyle" src={userimage} alt="user-img"></Image>
-      </div> */}
-
       <ContentInfo
         name={name}
         nickname={nickname}

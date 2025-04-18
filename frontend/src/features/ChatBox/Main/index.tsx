@@ -78,7 +78,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       socket.off("receiveMessage");
       socket.off("userList");
     };
-  }, []);
+  }, [userNickname]);
 
   useEffect(() => {
     const chatBox = localStorage.getItem("ChatBox");
@@ -196,8 +196,8 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const sendMessage = () => {
     console.log("chat  :", room, userNickname, message);
     if (message.trim()) {
-      const data = `${chatlocal?.roomid}-${chatlocal?.category}`;
-      socket.emit("sendMessage", { data, userNickname, message });
+      const roomid = `${chatlocal?.roomid}-${chatlocal?.category}`;
+      socket.emit("sendMessage", { roomid, userNickname, message });
       //console.log("loca", chatlocal);
       const today = new Date();
 

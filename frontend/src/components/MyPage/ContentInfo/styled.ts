@@ -29,6 +29,10 @@ export const ContentInfoStyle = styled.div`
           line-height: 20px;
           letter-spacing: -0.28px;
         }
+
+        .tooltip {
+          padding-left: 5px;
+        }
         .info-input {
           display: flex;
           width: 100%;

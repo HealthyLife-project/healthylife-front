@@ -27,15 +27,13 @@ const HashTagSection = () => {
 
   return (
     <HashTagSectionStyled className={clsx("main-wrap")}>
-      {[...hashtaglist, ...hashtaglist].map(
-        (element: string, index: number) => {
-          return (
-            <div key={index} className="hashtag-element">
-              {element}
-            </div>
-          );
-        }
-      )}
+      <div className="scroll-track">
+        {[...hashtaglist, ...hashtaglist].map((element, index) => (
+          <div key={index} className="hashtag-element">
+            {element}
+          </div>
+        ))}
+      </div>
     </HashTagSectionStyled>
   );
 };
