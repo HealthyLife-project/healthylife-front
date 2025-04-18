@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-
 import api from "@/util/chek";
 
 //redux
@@ -69,7 +68,6 @@ const ChatBoxWrapper = () => {
         JSON.stringify({ isOpen: true, title, roomid, category, boolean })
       );
 
-      // 같은 탭에서는 수동으로 상태 업데이트
       setIsOpen(true);
       setChatTitle(title);
     };
@@ -77,6 +75,18 @@ const ChatBoxWrapper = () => {
     window.addEventListener("openChat", handleOpenChat as EventListener);
     return () => {
       window.removeEventListener("openChat", handleOpenChat as EventListener);
+    };
+  }, []);
+
+  // 브라우저 종료 시 ChatBox 제거
+  useEffect(() => {
+    const handleTabClosed = () => {
+      handleClose();
+    };
+
+    window.addEventListener("beforeunload", handleTabClosed);
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClosed);
     };
   }, []);
 
