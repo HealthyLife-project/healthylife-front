@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-
 import api from "@/util/chek";
 
 //redux
@@ -25,48 +24,52 @@ import { useRouter } from "next/router";
 const ChatBoxWrapper = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [chatTitle, setChatTitle] = useState("");
-  const [roomid, setRoomid] = useState();
-  const [category, setCategory] = useState("");
 
-  // 새로고침 시 유지
+  // 초기 마운트 및 storage 이벤트 감지
   useEffect(() => {
-    const localChat = localStorage.getItem("ChatBox");
-    if (localChat) {
-      try {
-        const parsed = JSON.parse(localChat);
-        setChatTitle(parsed.title);
-        setRoomid(parsed.roomid);
-        setIsOpen(parsed.isOpen);
-        setCategory(parsed.category);
-      } catch (err) {
-        console.error("localStorage JSON 파싱 에러:", err);
+    const checkChatState = () => {
+      const localChat = localStorage.getItem("ChatBox");
+      if (localChat) {
+        try {
+          const parsed = JSON.parse(localChat);
+          setIsOpen(true);
+          setChatTitle(parsed.title);
+        } catch (err) {
+          console.error("localStorage JSON 파싱 에러:", err);
+          setIsOpen(false);
+        }
+      } else {
+        setIsOpen(false);
       }
-    }
+    };
+
+    checkChatState();
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "ChatBox") {
+        checkChatState();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
-  // 모달 닫기
-  const handleClose = () => {
-    localStorage.removeItem("ChatBox");
-    setIsOpen(false);
-  };
-
-  // 외부에서 열기 이벤트
+  // openChat 이벤트 감지 (같은 탭에서는 storage 이벤트가 발생하지 않음)
   useEffect(() => {
     const handleOpenChat = (e: CustomEvent) => {
-      const { title, roomid, category } = e.detail;
-      setChatTitle(title);
-      setIsOpen(true);
-      setRoomid(roomid);
-      setCategory(category);
+      const { title, roomid, category, boolean } = e.detail;
+
+      // localStorage 저장
       localStorage.setItem(
         "ChatBox",
-        JSON.stringify({
-          isOpen: true,
-          title,
-          roomid,
-          category,
-        })
+        JSON.stringify({ isOpen: true, title, roomid, category, boolean })
       );
+
+      setIsOpen(true);
+      setChatTitle(title);
     };
 
     window.addEventListener("openChat", handleOpenChat as EventListener);
@@ -75,8 +78,25 @@ const ChatBoxWrapper = () => {
     };
   }, []);
 
-  if (!isOpen) return null;
-  return <ChatBox title={chatTitle} onClose={handleClose} />;
+  // 브라우저 종료 시 ChatBox 제거
+  useEffect(() => {
+    const handleTabClosed = () => {
+      handleClose();
+    };
+
+    window.addEventListener("beforeunload", handleTabClosed);
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClosed);
+    };
+  }, []);
+
+  const handleClose = () => {
+    localStorage.removeItem("ChatBox");
+    setIsOpen(false);
+    setChatTitle("");
+  };
+
+  return isOpen ? <ChatBox title={chatTitle} onClose={handleClose} /> : null;
 };
 
 // Redux Provider를 최상단에 위치 - 테마
@@ -102,7 +122,6 @@ const AppWithTheme = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
     const start = () => setLoading(true);
     const end = () => {
-      // 최소 500ms 로딩 유지
       const timeout = setTimeout(() => {
         setLoading(false);
       }, 500);

@@ -53,6 +53,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [chatlocal, setChatLocal] = useState<ChatBoxLocal>(); //로컬 스토리지 값
   const [isChatListOpen, setIsChatListOpen] = useState(false);
   const [chatList, setChatList] = useState<ChatBoxLocal[]>([]);
+  const [pagecnt, setPageCnt] = useState(1);
   //const [roomid, setRoomid] = useState();
 
   //useEffect
@@ -90,24 +91,94 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     }
   }, [username, room]);
 
+  //채팅입력 시 밑에서 부터 스크롤
+  useEffect(() => {
+    const container = document.querySelector(".content-srcoll");
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [messages]);
+
   //방 입장하기
   const joinRoom = (chatData: ChatBoxLocal) => {
     if (userNickname.trim() && room.trim()) {
-      socket.emit("joinRoom", { room });
+      const category = chatData.category;
+      const roomid = chatData.roomid;
+      socket.emit("joinRoom", { userNickname, room, category, roomid, userid });
+
       setJoined(true); // 채팅방 생성
       // console.log("room id", chatData.roomid);
       // const roomid_num:number = chatData.roomid
       // setRoomid(roomid_num?);
 
+      //입장 시 이전 내용
       api
         .post(`/chat/${chatData.category}/insert`, {
           roomid: Number(chatData.roomid),
           userid: Number(tokenList?.id),
         })
+        .then((res: any) => {
+          console.log("joinroom", res.data);
+          //setMessages(res.data);
+        });
+
+      //채팅방 입력 시 이전 내용 불러오기
+      console.log("user", chatData.roomid, userid, pagecnt);
+      api
+        .post(`/chat/${chatData.category}/getMessage`, {
+          roomid: chatData.roomid,
+          userid: userid,
+          page: pagecnt,
+          limit: 10,
+        })
         .then((res) => {
-          console.log(res.data);
+          console.log("res", res.data);
         });
     }
+  };
+
+  useEffect(() => {
+    const container = document.querySelector(".content-srcoll");
+
+    const handleScroll = () => {
+      if (!container) return;
+
+      // 스크롤이 가장 위에 도달한 경우
+      if (container.scrollTop === 0) {
+        console.log("맨 위에 도달함, 이전 채팅 불러오기");
+        fetchPreviousMessages(); // 이전 메시지 불러오기 함수 호출
+      }
+    };
+
+    container?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      container?.removeEventListener("scroll", handleScroll);
+    };
+  }, [messages]);
+
+  const fetchPreviousMessages = () => {
+    if (!chatlocal || !userid) return;
+
+    setPageCnt(pagecnt + 1);
+
+    api
+      .post(`/chat/${chatlocal.category}/getMessage`, {
+        roomid: chatlocal.roomid,
+        userid: userid,
+        page: pagecnt,
+        limit: 10,
+      })
+      .then((res) => {
+        const newMessages = res.data;
+        if (newMessages && newMessages.length > 0) {
+          setMessages((prev) => [...newMessages, ...prev]); // 이전 메시지들을 위에 붙이기
+          setPageCnt(pagecnt); // 페이지 수 증가
+        }
+      })
+      .catch((error) => {
+        console.error("이전 메시지 불러오기 실패", error);
+      });
   };
 
   //메시지 보내기
@@ -144,10 +215,10 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       api
         .post(`/chat/${chatlocal?.category}/saveMessage`, arr)
         .then((res) => {
-          console.log("백엔드 저장 완료", res.data);
+          //console.log("백엔드 저장 완료", res.data);
         })
         .catch((error: string) => {
-          console.log("백엔드 저장 실패", error);
+          //console.log("백엔드 저장 실패", error);
         });
 
       setMessage("");
@@ -235,19 +306,22 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         </div>
 
         <div className="content-div">
-          <div className="content">
-            {messages.map((msg, index) =>
-              msg.aopen ? (
-                <p key={index}>
-                  <strong>{msg.aopen}</strong>
-                </p>
-              ) : (
-                <div className="chat-content" key={index}>
-                  <strong>{msg.userNickname}: </strong> {msg.message}
-                </div>
-              )
-            )}
+          <div className="content-srcoll">
+            <div className="content">
+              {messages.map((msg, index) =>
+                msg.aopen ? (
+                  <p key={index}>
+                    <strong>{msg.aopen}</strong>
+                  </p>
+                ) : (
+                  <div className="chat-content" key={index}>
+                    <strong>{msg.userNickname}: </strong> {msg.message}
+                  </div>
+                )
+              )}
+            </div>
           </div>
+
           <div className="chat-input-div">
             <Input
               type="text"

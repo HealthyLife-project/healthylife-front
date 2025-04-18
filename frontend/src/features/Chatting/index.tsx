@@ -80,7 +80,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
     }
 
     api
-      .post(`/chat/${urlstr}/insert`, {
+      .post(`/chat/${urlstr}/validate`, {
         roomid: Number(selectedRecord?.key),
         userid: Number(tokenList?.id),
       })
@@ -88,50 +88,39 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         //console.log("Res", res.data);
         //이미 채팅 있는지 확인 후 만약 채팅 내용이 있으면 추가 내용 보기
         if (res.data.result) {
-          localStorage.setItem(
-            "ChatBox",
-            JSON.stringify({
-              title: selectedRecord?.title,
-              category: urlstr,
-              isOpen: true,
-              id: Number(selectedRecord?.key),
-              arr: res.data.data,
-            })
-          );
           //사용자 정의 이벤트 실행 - _app.tsx에서 실행 localstroage에서 title 값 넘김
           const event = new CustomEvent("openChat", {
             detail: {
               title: selectedRecord?.title,
               roomid: Number(selectedRecord?.key),
               category: urlstr,
+              boolean: res.data,
             },
           });
 
           //해당 이벤트 실행
           window.dispatchEvent(event);
-          //모달 컴포넌트 실행
-          setIsModalComponentOpen(true);
         } else {
           //처음 입장한 경우
-          localStorage.setItem(
-            "ChatBox",
-            JSON.stringify({
-              title: selectedRecord?.title,
-              category: urlstr,
-              isOpen: true,
-              id: Number(selectedRecord?.key),
-            })
-          );
+          // localStorage.setItem(
+          //   "ChatBox",
+          //   JSON.stringify({
+          //     title: selectedRecord?.title,
+          //     category: urlstr,
+          //     isOpen: true,
+          //     id: Number(selectedRecord?.key),
+          //   })
+          // );
           //사용자 정의 이벤트 실행 - _app.tsx에서 실행
           const event = new CustomEvent("openChat", {
             detail: {
               title: selectedRecord?.title,
               roomid: Number(selectedRecord?.key),
               category: urlstr,
+              boolean: res.data,
             },
           });
           window.dispatchEvent(event);
-          setIsModalComponentOpen(true);
         }
       });
   };
