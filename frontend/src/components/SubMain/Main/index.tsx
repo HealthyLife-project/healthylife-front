@@ -68,7 +68,7 @@ const SubMain = () => {
     <SubMainStyled className={clsx("main-wrap")}>
       <div className="main-content">
         <div className="main-left">
-          <KAKAOMap />
+          <KAKAOMap position={""} />
         </div>
 
         <div className="main-right">
