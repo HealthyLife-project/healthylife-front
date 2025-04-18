@@ -196,7 +196,8 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const sendMessage = () => {
     console.log("chat  :", room, userNickname, message);
     if (message.trim()) {
-      socket.emit("sendMessage", { room, userNickname, message });
+      const data = `${chatlocal?.roomid}-${chatlocal?.category}`;
+      socket.emit("sendMessage", { data, userNickname, message });
       //console.log("loca", chatlocal);
       const today = new Date();
 

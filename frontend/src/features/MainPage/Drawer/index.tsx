@@ -93,10 +93,6 @@ const DrawerContainer = () => {
     },
   ];
 
-  // useEffect(() => {
-
-  // }, []);
-
   //마이페이지 이동
   const openMyPage = () => {
     router.push("/mypage");
