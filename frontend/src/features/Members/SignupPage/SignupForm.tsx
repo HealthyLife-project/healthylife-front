@@ -2,20 +2,14 @@ import { SignupPageStyled, FormItem, FormLabel } from "./styled";
 import AddressSearchModal from "../AddressSearch/AddressSearchModal";
 
 import React from "react";
-import {
-  Formik,
-  Form,
-  Field,
-  FormikHelpers,
-  ErrorMessage,
-  useFormikContext,
-} from "formik";
-import { Button, Divider, Input, notification } from "antd";
+import { Formik, Form, Field, FormikHelpers, ErrorMessage } from "formik";
+import { Button, Input, notification } from "antd";
 import * as Yup from "yup";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
+import Password from "antd/es/input/Password";
 
 // 회원 정보 데이터 종류 설정
 interface SignupPageValues {
@@ -79,7 +73,9 @@ const SignupPage: React.FC = () => {
       .oneOf([Yup.ref("password")], "비밀번호가 일치하지 않습니다")
       .required("비밀번호 확인은 필수입니다"),
 
-    name: Yup.string().min(2, "이름은 2글자 이상이여야 합니다"),
+    name: Yup.string()
+      .min(2, "이름은 2글자 이상이여야 합니다")
+      .required("이름은 필수입니다"),
 
     email: Yup.string()
       .email("유효한 이메일 주소를 입력하세요")
@@ -99,8 +95,8 @@ const SignupPage: React.FC = () => {
     ),
 
     phone: Yup.string()
-      .required("휴대폰 번호를 입력해주세요.")
-      .matches(phoneRegExp, "휴대폰 번호를 입력해주세요."),
+      .required("휴대전화 번호를 입력해주세요.")
+      .matches(phoneRegExp, "휴대전화 번호를 확인해주세요."),
 
     address: Yup.string().required("주소를 검색해주세요."),
     postcode: Yup.string().required("우편번호가 필요합니다."),
@@ -119,28 +115,7 @@ const SignupPage: React.FC = () => {
     message: string;
   } | null>(null);
 
-  // const checkUseridAvailability = async (userid: string) => {
-  //   try {
-  //     const response = await api.get(`/user/finduser/${userid}`);
-  //     const { result, message } = response.data;
-  //     // const result = response.data.result;
-  //     // const message = response.data.message;
-
-  //     setUseridAvailability({ result, message });
-
-  //     // setUseridAvailability();
-  //     // console.log("userid response data", response.data);
-  //   } catch (error) {
-  //     // error
-  //     // const response = await api.get(`/user/finduser/${userid}`);
-  //     // const result = response.data.result;
-  //     // const message = response.data.message;
-
-  //     // setUseridAvailability({ result: result, message: message });
-  //     console.error("Error checking user ID:", error);
-  //   }
-  // };
-
+  // 유저아이디 중복확인 백엔드 요청
   const checkUseridAvailability = async (userid: string) => {
     try {
       const response = await api.get(`/user/finduser/${userid}`);
@@ -177,10 +152,9 @@ const SignupPage: React.FC = () => {
   };
 
   // 비밀번호 일치 확인 변수
-  const [passwordMatchError, setPasswordMatchError] = useState<string | null>(
-    null
-  );
+  const [passwordMatchError, setPasswordMatchError] = useState("");
 
+  // 닉네임 중복확인 백엔드 요청
   const checkNicknameAvailability = async (nickname: string) => {
     try {
       const response = await api.get(`/user/findnickname/${nickname}`);
@@ -216,6 +190,8 @@ const SignupPage: React.FC = () => {
     try {
       console.log("values prior to axios request", values);
       const fulladdress = `${values.address} ${values.detailAddress} (${values.postcode})`;
+      // 전화번호 형식 정리 010-1234-5678, 01012345678, 010 1234 5678 => 01012345678
+      const cleanedPhoneNumber = values.phone.replace(/[\s-]/g, "");
 
       const signupData = {
         userid: values.userid,
@@ -226,7 +202,7 @@ const SignupPage: React.FC = () => {
         nickname: values.nickname,
         age: values.age,
         gender: values.gender,
-        phone: values.phone,
+        phone: cleanedPhoneNumber,
         address: fulladdress,
       };
       console.log("signupData prior to axios request", signupData);
@@ -242,8 +218,10 @@ const SignupPage: React.FC = () => {
       });
 
       router.push("/");
+      setPasswordMatchError("");
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        setPasswordMatchError("");
         console.error("회원가입 실패:", error.response?.data || error.message);
         setStatus({
           success: false,
@@ -322,25 +300,20 @@ const SignupPage: React.FC = () => {
                 handleCloseModal();
               };
 
-              // 비밀번호 일치 확인 함수
-              const handlePasswordMatchCheck = () => {
-                if (values.password === "" && values.confirmPassword === "") {
-                  setPasswordMatchError(
-                    "비밀번호 와 비밀번호 확인을 입력해 주세요."
-                  );
-                } else if (values.password === values.confirmPassword) {
-                  setPasswordMatchError("비밀번호가 일치합니다.");
-                } else if (
-                  values.password === "" ||
-                  values.confirmPassword === ""
-                ) {
-                  setPasswordMatchError(
-                    "비밀번호 와 비밀번호 확인을 입력해 주세요."
-                  );
-                } else {
-                  setPasswordMatchError("비밀번호가 일치하지 않습니다.");
-                }
-              };
+              // 비밀번호 일치 함수
+              // const handlePasswordMatchCheck = () => {
+              //   if (
+              //     values.password &&
+              //     values.confirmPassword &&
+              //     values.password === values.confirmPassword
+              //   ) {
+              //     setPasswordMatchError("비밀번호가 일치합니다.");
+              //   } else {
+              //     setPasswordMatchError("");
+              //   }
+              // };
+
+              setPasswordMatchError("비밀번호가 일치합니다."); // ADD THIS LINE HERE
 
               return (
                 <Form>
@@ -348,7 +321,16 @@ const SignupPage: React.FC = () => {
                     {/* 유저 아이디 */}
                     <FormLabel htmlFor="userid">아이디</FormLabel>
                     <div className="input-with-button-container">
-                      <Field type="text" id="userid" name="userid" />
+                      <Field
+                        type="text"
+                        id="userid"
+                        name="userid"
+                        placeholder="아이디를 입력해주세요"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          handleChange(e);
+                          setUseridAvailability(null);
+                        }}
+                      />
                       <Button
                         onClick={() => checkUseridAvailability(values.userid)}
                         disabled={!!errors.userid}
@@ -356,7 +338,6 @@ const SignupPage: React.FC = () => {
                         중복확인
                       </Button>
                     </div>
-
                     <ErrorMessage
                       name="userid"
                       component="div"
@@ -364,7 +345,7 @@ const SignupPage: React.FC = () => {
                         <div className="error-message">{msg}</div>
                       )}
                     />
-                    {useridAvailability && (
+                    {!errors.userid && useridAvailability && (
                       <div
                         className="error-message"
                         style={{
@@ -376,53 +357,29 @@ const SignupPage: React.FC = () => {
                     )}
                   </FormItem>
 
-                  {/* <ErrorMessage
-                  name="userid"
-                  render={(msg) => (
-                    <UseridErrorMessage
-                      yupErrorMessage={msg}
-                      useridAvailability={useridAvailability}
-                    />
-                  )}
-                /> */}
-                  {/* <ErrorMessage name="userid">
-                  {(msg) => (
-                    <UseridErrorMessage
-                      yupErrorMessage={msg}
-                      useridAvailability={useridAvailability}
-                    />
-                  )}
-                </ErrorMessage> */}
-                  {/* <ErrorMessage name="userid" component={UseridErrorMessage} /> */}
-
                   {/* 비밀번호 */}
                   <FormItem>
                     <FormLabel htmlFor="password">비밀번호</FormLabel>
                     <div className="input-with-button-container">
-                      <Input.Password
+                      <Field
                         id="password"
                         name="password"
+                        as={Input.Password}
+                        placeholder="비밀번호를 입력해주세요"
                         onBlur={handleBlur}
-                        onChange={handleChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          console.log(
+                            "Ant Design Input.Password onChange triggered!"
+                          ); // Simple log
+
+                          handleChange(e);
+                          // handlePasswordMatchCheck();
+                        }}
                         value={values.password}
                       />
                     </div>
                     {touched.password && errors.password && (
                       <div className="error-message">{errors.password}</div>
-                    )}
-
-                    {passwordMatchError && (
-                      <div
-                        className="error-message"
-                        style={{
-                          color:
-                            passwordMatchError === "비밀번호가 일치합니다."
-                              ? "green"
-                              : "red",
-                        }}
-                      >
-                        {passwordMatchError}
-                      </div>
                     )}
                   </FormItem>
 
@@ -435,28 +392,41 @@ const SignupPage: React.FC = () => {
                       <Input.Password
                         id="confirmPassword"
                         name="confirmPassword"
+                        placeholder="비밀번호를 재입력해 주세요"
                         onBlur={handleBlur}
-                        onChange={handleChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          handleChange(e);
+                          // handlePasswordMatchCheck();
+                        }}
                         value={values.confirmPassword}
                       />
-                      <Button
-                        onClick={handlePasswordMatchCheck}
-                        disabled={!!errors.password || isSubmitting}
-                      >
-                        비밀번호 확인
-                      </Button>
                     </div>
                     {touched.confirmPassword && errors.confirmPassword && (
                       <div className="error-message">
                         {errors.confirmPassword}
                       </div>
                     )}
+                    {touched.confirmPassword &&
+                      !errors.confirmPassword &&
+                      passwordMatchError && (
+                        <div
+                          className="success-message"
+                          style={{ color: "green" }}
+                        >
+                          {passwordMatchError}
+                        </div>
+                      )}
                   </FormItem>
 
                   {/* 이름 */}
                   <FormItem>
                     <FormLabel htmlFor="name">이름</FormLabel>
-                    <Field type="text" id="name" name="name" />
+                    <Field
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="이름을 입력해주세요"
+                    />
                     <ErrorMessage
                       name="name"
                       component="div"
@@ -469,7 +439,12 @@ const SignupPage: React.FC = () => {
                   {/* 이메일 */}
                   <FormItem>
                     <FormLabel htmlFor="email">이메일</FormLabel>
-                    <Field type="email" id="email" name="email" />
+                    <Field
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="이메일을 입력해주세요"
+                    />
                     <ErrorMessage
                       name="email"
                       component="div"
@@ -483,7 +458,16 @@ const SignupPage: React.FC = () => {
                   <FormItem>
                     <FormLabel htmlFor="nickname">닉네임</FormLabel>
                     <div className="input-with-button-container">
-                      <Field type="text" id="nickname" name="nickname" />
+                      <Field
+                        type="text"
+                        id="nickname"
+                        name="nickname"
+                        placeholder="닉네임을 입력해주세요"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          handleChange(e);
+                          setNicknameAvailability(null);
+                        }}
+                      />
                       <Button
                         onClick={() =>
                           checkNicknameAvailability(values.nickname)
@@ -492,7 +476,14 @@ const SignupPage: React.FC = () => {
                         중복확인
                       </Button>
                     </div>
-                    {nicknameAvailability && (
+                    <ErrorMessage
+                      name="nickname"
+                      component="div"
+                      render={(msg) => (
+                        <div className="error-message">{msg}</div>
+                      )}
+                    />
+                    {!errors.nickname && nicknameAvailability && (
                       <div
                         className="error-message"
                         style={{
@@ -502,19 +493,17 @@ const SignupPage: React.FC = () => {
                         {nicknameAvailability.message}
                       </div>
                     )}
-                    <ErrorMessage
-                      name="nickname"
-                      component="div"
-                      render={(msg) => (
-                        <div className="error-message">{msg}</div>
-                      )}
-                    />
                   </FormItem>
 
                   {/* 나이 */}
                   <FormItem>
                     <FormLabel htmlFor="age">나이</FormLabel>
-                    <Field type="text" id="age" name="age" />
+                    <Field
+                      type="text"
+                      id="age"
+                      name="age"
+                      placeholder="나이를 입력해주세요"
+                    />
                     <ErrorMessage
                       name="age"
                       component="div"
@@ -551,7 +540,12 @@ const SignupPage: React.FC = () => {
                   {/* 휴대전화 번호 */}
                   <FormItem>
                     <FormLabel htmlFor="phone">휴대전화 번호</FormLabel>
-                    <Field type="text" id="phone" name="phone" />
+                    <Field
+                      type="text"
+                      id="phone"
+                      name="phone"
+                      placeholder="휴대전화 번호를 입력해주세요"
+                    />
                     <ErrorMessage
                       name="phone"
                       component="div"

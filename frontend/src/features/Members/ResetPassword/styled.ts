@@ -38,11 +38,15 @@ export const ResetPasswordPageStyled = styled.div`
   }
 
   .input-container {
+    display: flex;
+    justify-content: center;
     margin-bottom: 15px;
+    width: 100%;
+    /* width: 400px; */
   }
 
   .new-password-input {
-    width: 100%;
+    width: 300px;
     padding: 10px;
     border: 1px solid #ccc; /* Light gray border */
     border-radius: 4px;
@@ -50,7 +54,7 @@ export const ResetPasswordPageStyled = styled.div`
   }
 
   .confirm-password-input {
-    width: 100%;
+    width: 300px;
     padding: 10px;
     border: 1px solid #ccc; /* Light gray border */
     border-radius: 4px;
@@ -75,6 +79,14 @@ export const ResetPasswordPageStyled = styled.div`
 
     &:hover {
       background-color: #d2e4f8; /* Slightly darker blue on hover */
+    }
+    .error-message {
+      font-size: 0.9em;
+      margin-top: 3px;
+      display: block;
+      text-align: left;
+      margin-bottom: 3px;
+      margin-right: 20px;
     }
   }
 `;
