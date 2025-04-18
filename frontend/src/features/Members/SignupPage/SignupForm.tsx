@@ -6,10 +6,9 @@ import { Formik, Form, Field, FormikHelpers, ErrorMessage } from "formik";
 import { Button, Input, notification } from "antd";
 import * as Yup from "yup";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
-import Password from "antd/es/input/Password";
 
 // 회원 정보 데이터 종류 설정
 interface SignupPageValues {
@@ -151,9 +150,6 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  // 비밀번호 일치 확인 변수
-  const [passwordMatchError, setPasswordMatchError] = useState("");
-
   // 닉네임 중복확인 백엔드 요청
   const checkNicknameAvailability = async (nickname: string) => {
     try {
@@ -218,10 +214,8 @@ const SignupPage: React.FC = () => {
       });
 
       router.push("/");
-      setPasswordMatchError("");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setPasswordMatchError("");
         console.error("회원가입 실패:", error.response?.data || error.message);
         setStatus({
           success: false,
@@ -259,7 +253,6 @@ const SignupPage: React.FC = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
             validateOnChange={true}
-            enableReinitialize // 초기값 바뀔수도 있음
           >
             {/* touched: boolean values; 유저의 행동을 주시함*/}
             {/* true: if the user has focused on and then blurred the field */}
@@ -271,49 +264,30 @@ const SignupPage: React.FC = () => {
               touched,
               handleBlur,
               handleChange,
-              setFieldValue,
+              validateField,
+              setFieldTouched,
             }) => {
-              const handleCompletePost = (data: any) => {
-                let fullAddress = data.address;
-                let extraAddress = "";
+              // 비밀번호 일치 확인 변수
+              const [passwordMatchError, setPasswordMatchError] = useState("");
 
-                if (data.addressType === "R") {
-                  if (data.bname !== "") {
-                    extraAddress += data.bname;
-                  }
-                  if (data.buildingName !== "") {
-                    extraAddress +=
-                      extraAddress !== ""
-                        ? `, ${data.buildingName}`
-                        : data.buildingName;
-                  }
-                  fullAddress +=
-                    extraAddress !== "" ? ` (${extraAddress})` : "";
+              useEffect(() => {
+                if (
+                  touched.password &&
+                  touched.confirmPassword &&
+                  values.password === values.confirmPassword &&
+                  !errors.confirmPassword // Ensure there are no validation errors for confirmPassword
+                ) {
+                  setPasswordMatchError("비밀번호가 일치합니다.");
+                } else {
+                  setPasswordMatchError("");
                 }
-
-                setAddress({
-                  mainAddress: fullAddress,
-                  postcode: data.zonecode,
-                });
-                setFieldValue("address", fullAddress);
-                setFieldValue("postcode", data.zonecode);
-                handleCloseModal();
-              };
-
-              // 비밀번호 일치 함수
-              // const handlePasswordMatchCheck = () => {
-              //   if (
-              //     values.password &&
-              //     values.confirmPassword &&
-              //     values.password === values.confirmPassword
-              //   ) {
-              //     setPasswordMatchError("비밀번호가 일치합니다.");
-              //   } else {
-              //     setPasswordMatchError("");
-              //   }
-              // };
-
-              setPasswordMatchError("비밀번호가 일치합니다."); // ADD THIS LINE HERE
+              }, [
+                values.password,
+                values.confirmPassword,
+                touched.password,
+                touched.confirmPassword,
+                errors.confirmPassword,
+              ]);
 
               return (
                 <Form>
@@ -326,10 +300,14 @@ const SignupPage: React.FC = () => {
                         id="userid"
                         name="userid"
                         placeholder="아이디를 입력해주세요"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        as={Input}
+                        onChange={(e: string) => {
                           handleChange(e);
+                          validateField("userid");
                           setUseridAvailability(null);
+                          setFieldTouched("userid", true, false);
                         }}
+                        onBlur={handleBlur}
                       />
                       <Button
                         onClick={() => checkUseridAvailability(values.userid)}
@@ -364,15 +342,13 @@ const SignupPage: React.FC = () => {
                       <Field
                         id="password"
                         name="password"
-                        as={Input.Password}
                         placeholder="비밀번호를 입력해주세요"
+                        as={Input.Password}
                         onBlur={handleBlur}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          console.log(
-                            "Ant Design Input.Password onChange triggered!"
-                          ); // Simple log
-
+                        onChange={(e: string) => {
                           handleChange(e);
+                          validateField("password");
+                          setFieldTouched("password", true, false);
                           // handlePasswordMatchCheck();
                         }}
                         value={values.password}
@@ -389,13 +365,16 @@ const SignupPage: React.FC = () => {
                       비밀번호 확인
                     </FormLabel>
                     <div className="input-with-button-container">
-                      <Input.Password
+                      <Field
                         id="confirmPassword"
                         name="confirmPassword"
                         placeholder="비밀번호를 재입력해 주세요"
+                        as={Input.Password}
                         onBlur={handleBlur}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        onChange={(e: string) => {
                           handleChange(e);
+                          validateField("confirmPassword");
+                          setFieldTouched("confirmPassword", true, false);
                           // handlePasswordMatchCheck();
                         }}
                         value={values.confirmPassword}
@@ -426,6 +405,13 @@ const SignupPage: React.FC = () => {
                       id="name"
                       name="name"
                       placeholder="이름을 입력해주세요"
+                      as={Input}
+                      onChange={(e: string) => {
+                        handleChange(e);
+                        validateField("name");
+                        setFieldTouched("name", true, false); // Mark as touched on change
+                      }}
+                      onBlur={handleBlur} // Keep onBlur for standard Formik behavior
                     />
                     <ErrorMessage
                       name="name"
@@ -439,7 +425,7 @@ const SignupPage: React.FC = () => {
                   {/* 이메일 */}
                   <FormItem>
                     <FormLabel htmlFor="email">이메일</FormLabel>
-                    <Field
+                    <Input
                       type="email"
                       id="email"
                       name="email"
@@ -463,15 +449,18 @@ const SignupPage: React.FC = () => {
                         id="nickname"
                         name="nickname"
                         placeholder="닉네임을 입력해주세요"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        as={Input}
+                        onChange={(e: string) => {
                           handleChange(e);
+                          validateField("nickname");
                           setNicknameAvailability(null);
+                          setFieldTouched("nickname", true, false);
                         }}
+                        onBlur={handleBlur}
                       />
                       <Button
-                        onClick={() =>
-                          checkNicknameAvailability(values.nickname)
-                        }
+                        onClick={() => checkUseridAvailability(values.userid)}
+                        disabled={!!errors.userid}
                       >
                         중복확인
                       </Button>
@@ -503,6 +492,13 @@ const SignupPage: React.FC = () => {
                       id="age"
                       name="age"
                       placeholder="나이를 입력해주세요"
+                      as={Input}
+                      onChange={(e: string) => {
+                        handleChange(e);
+                        validateField("age");
+                        setFieldTouched("age", true, false);
+                      }}
+                      onBlur={handleBlur}
                     />
                     <ErrorMessage
                       name="age"
@@ -545,6 +541,13 @@ const SignupPage: React.FC = () => {
                       id="phone"
                       name="phone"
                       placeholder="휴대전화 번호를 입력해주세요"
+                      as={Input}
+                      onChange={(e: string) => {
+                        handleChange(e);
+                        validateField("phone");
+                        setFieldTouched("phone", true, false);
+                      }}
+                      onBlur={handleBlur}
                     />
                     <ErrorMessage
                       name="phone"
@@ -556,75 +559,15 @@ const SignupPage: React.FC = () => {
                   </FormItem>
 
                   {/* 주소 */}
-                  {/* <FormItem>
-                  <FormLabel htmlFor="address">주소</FormLabel>
-                  <Field type="text" id="address" name="address" />
-                </FormItem>
-                <ErrorMessage
-                  name="address"
-                  component="div"
-                  render={(msg) => <div className="error-message">{msg}</div>}
-                /> */}
                   <FormItem>
                     <FormLabel htmlFor="address">주소</FormLabel>
-                    <div className="address-input-group">
-                      {/* Read-only input to display address & trigger modal */}
-                      <input
-                        type="text"
-                        value={address.mainAddress || ""}
-                        placeholder="주소 검색"
-                        readOnly
-                        onClick={handleOpenModal} // Open modal on click
-                        style={{ cursor: "pointer", flexGrow: 1 }}
-                      />
-                      <Field
-                        type="text"
-                        id="detailAddress"
-                        name="detailAddress"
-                        placeholder="상세주소 입력 (예: 101동 101호)"
-                      />
-                      {/* Read-only postcode */}
-                      <input
-                        type="text"
-                        value={address.postcode || ""}
-                        placeholder="우편번호"
-                        readOnly
-                      />
-                    </div>
-
-                    {/* Editable Detail Address - Managed by Formik */}
-
-                    <Field type="hidden" name="address" />
-                    <Field type="hidden" name="postcode" />
-
-                    {/* Display Formik validation errors */}
-                    <ErrorMessage
-                      name="address"
-                      component="div"
-                      className="error-message"
-                    />
-                    {touched.address && (
-                      <ErrorMessage
-                        name="postcode"
-                        component="div"
-                        className="error-message"
-                      />
-                    )}
-                    <ErrorMessage
-                      name="detailAddress"
-                      component="div"
-                      className="error-message"
-                    />
+                    <Field type="text" id="address" name="address" as={Input} />
                   </FormItem>
-
-                  {/* === Render Modal === */}
-                  {isModalOpen && (
-                    <AddressSearchModal
-                      isOpen={isModalOpen}
-                      onClose={handleCloseModal}
-                      onCompletePost={handleCompletePost}
-                    />
-                  )}
+                  <ErrorMessage
+                    name="address"
+                    component="div"
+                    render={(msg) => <div className="error-message">{msg}</div>}
+                  />
 
                   <Button htmlType="submit" disabled={isSubmitting}>
                     회원가입

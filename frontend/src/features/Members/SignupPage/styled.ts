@@ -55,12 +55,10 @@ export const SignupPageStyled = styled.div`
     input[type="email"],
     input[type="number"],
     select {
-      width: calc(100% - 10px);
+      width: 100%;
       padding: 8px;
       margin-top: 0;
-      border: 1px solid #ddd;
       border-radius: 3px;
-      box-sizing: border-box;
     }
 
     .input-with-button-container {
@@ -91,15 +89,15 @@ export const SignupPageStyled = styled.div`
     }
 
     button[type="submit"] {
-      margin-top: 20px;
       padding: 10px 15px;
       background-color: #d2e4f8; /* Different color for submit button */
       color: black;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      width: 100%; /* Make submit button full width */
+      width: 50%;
       font-weight: bold;
+      margin: 20px 150px;
     }
 
     .gender > div {
@@ -115,6 +113,7 @@ export const SignupPageStyled = styled.div`
 
     /* Style for the error messages */
     .error-message {
+      white-space: nowrap;
       color: red;
       font-size: 0.9em;
       margin-top: 3px;
@@ -124,15 +123,6 @@ export const SignupPageStyled = styled.div`
       margin-bottom: 3px;
       margin-right: 50px;
     }
-  }
-
-  .ant-input-affix-wrapper.ant-input-password {
-    border: none !important; /* Remove default border */
-    border-radius: 0px;
-  }
-
-  .css-dev-only-do-not-override-1261szd.ant-input-affix-wrapper {
-    padding: 0 !important;
   }
 `;
 
