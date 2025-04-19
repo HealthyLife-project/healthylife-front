@@ -8,7 +8,7 @@ export const ChatBoxStyled = styled.div`
     width: 450px;
     height: 500px;
     background-color: #ffffff;
-    //border-radius: 16px;
+    //border-radius: 16px;src/features/ChatBox/Main/styled.ts
     //box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
     z-index: 999;
     display: flex;

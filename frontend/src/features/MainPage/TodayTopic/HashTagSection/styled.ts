@@ -5,37 +5,36 @@ export const HashTagSectionStyled = styled.div`
     width: 100%;
     height: 250px;
     overflow: hidden;
-    border: 1px solid black;
-    border-radius: 20px;
-    padding: 10px;
+    position: relative;
+    padding: 10px 0;
 
     .scroll-track {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      animation: scroll-left 1s linear infinite;
       width: max-content;
+      animation: scroll-left 5s linear infinite;
+      gap: 0 40px;
     }
 
     .hashtag-element {
       flex-shrink: 0;
-      display: flex;
-      min-width: 100px;
+      min-width: 120px;
       height: 40px;
-      border: 1px solid black;
+      display: flex;
       justify-content: center;
       align-items: center;
+      background: #f0f0f0;
+      border: 1px solid #ddd;
       border-radius: 10px;
-      background-color: #f0f0f0;
+      padding: 0 16px;
       white-space: nowrap;
     }
 
     @keyframes scroll-left {
       0% {
-        transform: translateX(0);
+        transform: translateX(100%);
       }
       100% {
-        transform: translateX(-50%);
+        transform: translateX(-100%);
       }
     }
   }
