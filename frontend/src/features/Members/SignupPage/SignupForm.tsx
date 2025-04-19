@@ -22,8 +22,6 @@ interface SignupPageValues {
   gender: "남성" | "여성";
   phone: string;
   address: string;
-  postcode: string;
-  detailAddress: string;
 }
 
 const SignupPage: React.FC = () => {
@@ -41,8 +39,6 @@ const SignupPage: React.FC = () => {
     gender: "남성",
     phone: "",
     address: "",
-    postcode: "",
-    detailAddress: "",
   };
 
   // 휴대전화 번호 형식
@@ -98,8 +94,6 @@ const SignupPage: React.FC = () => {
       .matches(phoneRegExp, "휴대전화 번호를 확인해주세요."),
 
     address: Yup.string().required("주소를 검색해주세요."),
-    postcode: Yup.string().required("우편번호가 필요합니다."),
-    detailAddress: Yup.string().required("상세주소를 입력해주세요."),
   });
 
   // 아이디 중복확인
@@ -166,26 +160,14 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  // 주소
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [address, setAddress] = useState({ mainAddress: "", postcode: "" });
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   // 회원가입 버튼 함수
   const handleSubmit = async (
     values: SignupPageValues,
     { setSubmitting, setStatus }: FormikHelpers<SignupPageValues>
   ) => {
+    setSubmitting(true);
     try {
       console.log("values prior to axios request", values);
-      const fulladdress = `${values.address} ${values.detailAddress} (${values.postcode})`;
       // 전화번호 형식 정리 010-1234-5678, 01012345678, 010 1234 5678 => 01012345678
       const cleanedPhoneNumber = values.phone.replace(/[\s-]/g, "");
 
@@ -199,8 +181,10 @@ const SignupPage: React.FC = () => {
         age: values.age,
         gender: values.gender,
         phone: cleanedPhoneNumber,
-        address: fulladdress,
+        address: values.address,
       };
+
+      console.log("address", signupData.address);
       console.log("signupData prior to axios request", signupData);
 
       const response = await api.post("/user/signup", signupData);
@@ -266,7 +250,15 @@ const SignupPage: React.FC = () => {
               handleChange,
               validateField,
               setFieldTouched,
+              setFieldValue,
             }) => {
+              console.log("Formik State:", {
+                isSubmitting,
+                values,
+                errors,
+                touched,
+              });
+
               // 비밀번호 일치 확인 변수
               const [passwordMatchError, setPasswordMatchError] = useState("");
 
@@ -409,9 +401,9 @@ const SignupPage: React.FC = () => {
                       onChange={(e: string) => {
                         handleChange(e);
                         validateField("name");
-                        setFieldTouched("name", true, false); // Mark as touched on change
+                        setFieldTouched("name", true, false);
                       }}
-                      onBlur={handleBlur} // Keep onBlur for standard Formik behavior
+                      onBlur={handleBlur}
                     />
                     <ErrorMessage
                       name="name"
@@ -425,11 +417,18 @@ const SignupPage: React.FC = () => {
                   {/* 이메일 */}
                   <FormItem>
                     <FormLabel htmlFor="email">이메일</FormLabel>
-                    <Input
+                    <Field
                       type="email"
                       id="email"
                       name="email"
                       placeholder="이메일을 입력해주세요"
+                      as={Input}
+                      onChange={(e: string) => {
+                        handleChange(e);
+                        validateField("email");
+                        setFieldTouched("email", true, false);
+                      }}
+                      onBlur={handleBlur}
                     />
                     <ErrorMessage
                       name="email"
@@ -459,8 +458,10 @@ const SignupPage: React.FC = () => {
                         onBlur={handleBlur}
                       />
                       <Button
-                        onClick={() => checkUseridAvailability(values.userid)}
-                        disabled={!!errors.userid}
+                        onClick={() =>
+                          checkNicknameAvailability(values.nickname)
+                        }
+                        disabled={!!errors.nickname}
                       >
                         중복확인
                       </Button>
@@ -561,7 +562,24 @@ const SignupPage: React.FC = () => {
                   {/* 주소 */}
                   <FormItem>
                     <FormLabel htmlFor="address">주소</FormLabel>
-                    <Field type="text" id="address" name="address" as={Input} />
+                    <Field
+                      type="text"
+                      id="address"
+                      name="address"
+                      as={Input}
+                      onChange={(e: string) => {
+                        handleChange(e);
+                        validateField("address");
+                        setFieldTouched("address", true, false);
+                      }}
+                      onClick={() => {
+                        new window.daum.Postcode({
+                          oncomplete: function (data: any) {
+                            setFieldValue("address", data.address);
+                          },
+                        }).open();
+                      }}
+                    />
                   </FormItem>
                   <ErrorMessage
                     name="address"

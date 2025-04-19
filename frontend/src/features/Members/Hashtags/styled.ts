@@ -8,14 +8,18 @@ export const HashtagFormStyled = styled.div`
 `;
 
 interface StyledHashtagButtonProps {
-  toggled: boolean;
+  $toggled: boolean;
 }
 
-export const StyledHashtagButton = styled(Button)<StyledHashtagButtonProps>`
+export const StyledHashtagButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== "$toggled",
+})<StyledHashtagButtonProps>`
+  border: none;
+  padding: 8px 16px;
+  background-color: ${(props) => (props.$toggled ? "#E6E6E6" : "#F7F6F4")};
+  color: black;
+  cursor: pointer;
+  border-radius: 4px;
   margin-right: 8px;
   margin-bottom: 8px;
-  background-color: ${(tags) => (tags.toggled ? "#E6E6E6" : "#F7F6F4")};
-  color: black;
-
-  /* You can add other styles for the button here as well */
 `;

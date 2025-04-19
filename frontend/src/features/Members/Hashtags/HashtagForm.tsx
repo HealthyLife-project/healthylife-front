@@ -137,32 +137,23 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
     <>
       <div>
         <HashtagFormStyled>
-          {Object.keys(groupedTags).map((category) => (
-            <div key={category} style={{ marginBottom: "20px" }}>
-              <h3>카테고리: {category}</h3>
-              {groupedTags[category].map((hashtag) => (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {Object.values(groupedTags)
+              .flat()
+              .map((hashtag) => (
                 <StyledHashtagButton
                   className="hashtags"
                   key={hashtag.id}
                   onClick={() =>
                     handleToggle(hashtag.id, hashtag.hash, hashtag.categoryid)
                   }
-                  toggled={toggledStates[hashtag.id] ? true : false}
-                  // style={{
-                  //   marginRight: "8px",
-                  //   marginBottom: "8px",
-                  //   backgroundColor: toggledStates[hashtag.id]
-                  //     ? "green"
-                  //     : "red",
-                  //   color: "white",
-                  // }}
+                  $toggled={!!toggledStates[hashtag.id]}
                 >
                   {hashtag.hash}
                 </StyledHashtagButton>
               ))}
-            </div>
-          ))}
-          <div>
+          </div>
+          <div style={{ marginTop: "20px" }}>
             <Button
               className="registerHashtags"
               htmlType="submit"

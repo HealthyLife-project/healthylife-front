@@ -89,4 +89,29 @@ export const ResetPasswordPageStyled = styled.div`
       margin-right: 20px;
     }
   }
+
+  @media (max-width: 500px) {
+    form {
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+
+    .new-password-input,
+    .confirm-password-input {
+      width: 100%;
+      font-size: 14px;
+    }
+
+    button[type="submit"] {
+      font-size: 14px;
+      padding: 10px 16px;
+    }
+  }
 `;

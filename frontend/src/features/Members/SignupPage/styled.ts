@@ -1,5 +1,25 @@
 import styled from "styled-components";
 
+export const FormItem = styled.div`
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: center;
+  padding: 10px 15px;
+  /* border-bottom: 1px solid #dcdcdc; */
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+export const FormLabel = styled.label`
+  width: 150px;
+  margin-right: 10px;
+  text-align: left;
+  padding-right: 10px;
+  margin-bottom: 0;
+`;
+
 export const SignupPageStyled = styled.div`
   .signup-page-container {
     display: flex;
@@ -124,24 +144,51 @@ export const SignupPageStyled = styled.div`
       margin-right: 50px;
     }
   }
-`;
 
-export const FormItem = styled.div`
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  align-items: center;
-  padding: 10px 15px;
-  /* border-bottom: 1px solid #dcdcdc; */
+  @media (max-width: 768px) {
+    .signup-page-container {
+      width: 95%;
+      padding: 15px;
+    }
 
-  &:last-child {
-    border-bottom: none;
+    ${FormItem} {
+      grid-template-columns: 1fr;
+      padding: 8px;
+    }
+
+    ${FormLabel} {
+      width: auto;
+      padding-right: 0;
+      margin-bottom: 5px;
+    }
+
+    .input-with-button-container {
+      flex-direction: column;
+
+      input,
+      button {
+        width: 100%;
+        margin: 5px 0;
+      }
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      margin: 20px 0;
+    }
   }
-`;
 
-export const FormLabel = styled.label`
-  width: 150px;
-  margin-right: 10px;
-  text-align: left;
-  padding-right: 10px;
-  margin-bottom: 0;
+  @media (max-width: 480px) {
+    .signup-page-container {
+      padding: 10px;
+    }
+
+    h1 {
+      font-size: 1.5em;
+    }
+
+    h3 {
+      font-size: 1em;
+    }
+  }
 `;
