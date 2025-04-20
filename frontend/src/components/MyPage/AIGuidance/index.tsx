@@ -26,7 +26,9 @@ const AIGuidance = () => {
   async function airun() {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: `몸무게가 ${weight}kg이고 키가 ${height}인 야외활동을 좋아하는 나이가 ${age}세인 ${gender}의 운동 루틴을 추천해줘 참고로 100자 이내로 작성해줘`,
+      contents: `몸무게가 ${weight}kg이고 키가 ${height}인 야외활동을 좋아하는 나이가 ${age}세인 ${gender}의 운동 루틴을 추천해줘. 
+      참고로 100자 이내로 작성해줘. 
+      만약에 ${weight},${height},${age},${gender} 중 하나라도 입력이 안되어 있으면 해당하는 요소 값이 없다고 띄어줘`,
     });
     //console.log(response.text);
     const text = response.text;

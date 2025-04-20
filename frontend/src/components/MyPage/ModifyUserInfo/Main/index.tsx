@@ -21,12 +21,20 @@ const ModifyUserInfo = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("Content of the modal");
-
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [id, setId] = useState(tokenList?.id);
   const [premium, setPremium] = useState();
 
   useEffect(() => {
+    setUserName(tokenList?.username);
+    setEmail(tokenList?.email);
+    setPhone(tokenList?.phone);
+    setId(tokenList?.id);
     setPremium(tokenList?.premium);
   }, []);
+
   //모달 열기
   const showPayModal = () => {
     const MySwal = withReactContent(Swal);
@@ -54,7 +62,6 @@ const ModifyUserInfo = () => {
 
   //모달 취소 버튼
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
@@ -77,9 +84,10 @@ const ModifyUserInfo = () => {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        footer={null}
         width={500}
       >
-        <Pay />
+        <Pay id={id} userName={userName} phone={phone} email={email} />
       </Modal>
     </ModifyUserInfoStyle>
   );

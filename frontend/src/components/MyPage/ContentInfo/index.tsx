@@ -72,7 +72,7 @@ const ContentInfo = (props: {
       phone: phone || "",
       gender: gender || "",
     },
-    enableReinitialize: true,
+    enableReinitialize: true, //state 값 update
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
       console.log("values", values);

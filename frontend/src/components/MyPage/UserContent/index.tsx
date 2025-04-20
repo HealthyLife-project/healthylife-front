@@ -4,10 +4,6 @@ import api from "@/util/chek";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import Image from "next/image";
-
-//image -> 이후 back에서 가져오기
-import userimage from "../../../assets/images/usericon.png";
 
 //Component
 import ContentInfo from "../ContentInfo";

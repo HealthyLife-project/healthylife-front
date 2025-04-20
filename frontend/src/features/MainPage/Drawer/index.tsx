@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { DrawerStyled } from "./styled";
+import { DrawerStyled, theme } from "./styled";
 import { useRouter } from "next/router";
 import api from "@/util/chek";
 import Swal from "sweetalert2";
@@ -12,7 +12,7 @@ import { setTheme, selectTheme } from "@/redux/theme";
 
 //antd
 import type { MenuProps } from "antd";
-import { Button, Segmented, Menu } from "antd";
+import { Button, Segmented, Menu, ConfigProvider } from "antd";
 import {
   MoonOutlined,
   SunOutlined,
@@ -53,7 +53,7 @@ const DrawerContainer = () => {
     api.get(`/chat/person/${id}`).then((res) => {
       setPersonList(res.data);
       chatlist.push(res.data);
-      console.log("res person", res.data);
+      //console.log("res person", res.data);
     });
 
     console.log("chat", petlist);
@@ -70,9 +70,9 @@ const DrawerContainer = () => {
           type: "group",
           children: petlist.map((pet: any, index: number) => ({
             key: `pet-${index}`,
-            label: pet.roomid,
+            label: pet.title,
             onClick: () => {
-              console.log("Pet chat clicked:", pet);
+              //console.log("Pet chat clicked:", pet);
             },
           })),
         },
@@ -83,9 +83,9 @@ const DrawerContainer = () => {
           type: "group",
           children: personlist.map((person: any, index: number) => ({
             key: `person-${index}`,
-            label: person.roomid,
+            label: person.title,
             onClick: () => {
-              console.log("Pet chat clicked:", person);
+              //console.log("Pet chat clicked:", person);
             },
           })),
         },
@@ -151,15 +151,17 @@ const DrawerContainer = () => {
       <div onClick={openMyPage} className="mypage-router">
         마이페이지
       </div>
-      <div className="mypage-router">
-        <Menu
-          onClick={onClick}
-          style={{ width: 256 }}
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
-          mode="inline"
-          items={items}
-        />
+      <div className="mypage-router-menu">
+        <ConfigProvider theme={theme}>
+          <Menu
+            onClick={onClick}
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["sub1"]}
+            mode="inline"
+            items={items}
+            className="menu"
+          />
+        </ConfigProvider>
       </div>
       <div className="main-bottom">
         <Button className="main-logout" onClick={handleLogout}>

@@ -7,6 +7,7 @@ import { RootState } from "@/redux/store";
 import { Button, Drawer, Input } from "antd";
 //Component
 import DrawerContainer from "@/features/MainPage/Drawer";
+import DrawerHeader from "@/features/MainPage/DrawerHeader";
 
 interface UserType {
   name: string;
@@ -20,15 +21,16 @@ interface TokenState {
 
 //헤더 컴포넌트
 const Header = () => {
+  //변수 선언
+  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
+  const router = useRouter();
+
   //useState
   const [isLogin, setIsLogin] = useState(false); //로그인 상태 확인
   const [name, setname] = useState(""); //로그인한 유저 이름 저장
   const [userid, setUserid] = useState(""); //소셜 로그인을 한 유저 아이디
   const [open, setOpen] = useState(false); //drawer 여부 확인
-
-  //변수 선언
-  const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
-  const router = useRouter();
+  const [id, setId] = useState(tokenList?.id);
 
   //로그인 정보 확인 - store용
   useEffect(() => {
@@ -82,7 +84,11 @@ const Header = () => {
                 </span>
                 <span className="user-name-sub">님 환영합니다</span>
               </div>
-              <Drawer title={name} onClose={onClose} open={open}>
+              <Drawer
+                title={<DrawerHeader name={name} id={id} />}
+                onClose={onClose}
+                open={open}
+              >
                 <DrawerContainer />
               </Drawer>
             </>

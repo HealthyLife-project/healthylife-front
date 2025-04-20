@@ -65,8 +65,8 @@ export const ContentInfoStyle = styled.div`
       width: 100%;
 
       .modify-form {
-        width: 100%;
         display: flex;
+        width: 100%;
         flex-direction: column;
 
         .user-info {

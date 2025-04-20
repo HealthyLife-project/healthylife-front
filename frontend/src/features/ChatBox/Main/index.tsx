@@ -38,7 +38,7 @@ type ChatBoxLocal = {
 const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //변수 선언
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
-  //console.log("tolen", tokenList);
+  const [isFetchingMessages, setIsFetchingMessages] = useState(false); //무한 스크롤 시 스크롤 위치 변하지 않게 유지하기 위한 변수
 
   //useState
   const [username, setUsername] = useState(""); //유저 이름
@@ -95,10 +95,11 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //채팅입력 시 밑에서 부터 스크롤
   useEffect(() => {
     const container = document.querySelector(".content-srcoll");
-    if (container) {
+
+    if (container && !isFetchingMessages) {
       container.scrollTop = container.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isFetchingMessages]);
 
   //방 입장하기
   const joinRoom = (chatData: ChatBoxLocal) => {
@@ -169,8 +170,14 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
   const fetchPreviousMessages = () => {
     if (!chatlocal || !userid) return;
-
+    setIsFetchingMessages(true);
     setPageCnt(pagecnt + 1);
+
+    const container = document.querySelector(".content-srcoll"); //스크롤 컨테이너
+    if (!container) return;
+
+    const previousScrollHeight = container.scrollHeight;
+    const previousScrollTop = container.scrollTop;
 
     //메시지 조회 후 가져오기 (무한 스크롤)
     api
@@ -185,10 +192,19 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         if (newMessages && newMessages.length > 0) {
           setMessages((prev) => [...newMessages, ...prev]); // 이전 메시지들을 위에 붙이기
           setPageCnt(pagecnt); // 페이지 수 증가
+
+          setTimeout(() => {
+            const newScrollHeight = container.scrollHeight;
+            container.scrollTop =
+              newScrollHeight - previousScrollHeight + previousScrollTop;
+          }, 0);
         }
       })
       .catch((error) => {
         console.error("이전 메시지 불러오기 실패", error);
+      })
+      .finally(() => {
+        setIsFetchingMessages(false); // 무한 스크롤 종료
       });
   };
 

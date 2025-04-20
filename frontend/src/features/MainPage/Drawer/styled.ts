@@ -10,6 +10,15 @@ export const DrawerStyled = styled.div`
 
     .mypage-router {
       cursor: pointer;
+      width: 100%;
+      padding-left: 24px;
+    }
+
+    .mypage-router-menu {
+      .menu {
+        width: 100%;
+        border: none;
+      }
     }
 
     .main-bottom {
@@ -31,3 +40,14 @@ export const DrawerStyled = styled.div`
     }
   }
 `;
+
+export const theme = {
+  token: {
+    // Seed Token
+    // Alias Token
+
+    components: {
+      Menu: {},
+    },
+  },
+};

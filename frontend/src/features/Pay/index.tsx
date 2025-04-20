@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
+import { Button } from "antd";
+import { PayStyle } from "./styled";
 
 // 환경변수로 설정된 클라이언트 키
 const clientKey: string = process.env.NEXT_PUBLIC_TOSS_CLIENTKEY!;
@@ -11,7 +13,14 @@ type AmountType = {
   value: number;
 };
 
-export default function CheckoutPage() {
+export default function CheckoutPage(props: {
+  id: number;
+  userName: string;
+  phone: string;
+  email: string;
+}) {
+  const { id, userName, phone, email } = props;
+
   const [amount, setAmount] = useState<AmountType>({
     currency: "KRW",
     value: 100,
@@ -72,13 +81,13 @@ export default function CheckoutPage() {
 
     try {
       await widgets.requestPayment({
-        orderId: "sdfsffsf",
-        orderName: "토스 티셔츠 외 2건",
+        orderId: `${id}`,
+        orderName: "구독",
         successUrl: window.location.origin + "/success",
         failUrl: window.location.origin + "/fail",
-        customerEmail: "customer123@gmail.com",
-        customerName: "김토스",
-        customerMobilePhone: "01012341234",
+        customerEmail: `${email}`,
+        customerName: `${userName}`,
+        customerMobilePhone: `${phone}`,
       });
     } catch (error) {
       console.error("결제 중 오류 발생:", error);
@@ -86,19 +95,27 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="wrapper">
-      <div className="box_section">
-        {/* 결제 UI */}
-        <div id="payment-method" />
+    <PayStyle>
+      <div className="wrapper">
+        <div className="box_section">
+          {/* 결제 UI */}
+          <div id="payment-method" />
 
-        {/* 이용약관 UI */}
-        <div id="agreement" />
+          {/* 이용약관 UI */}
+          <div id="agreement" />
 
-        {/* 결제 버튼 */}
-        <button className="button" disabled={!ready} onClick={handlePayment}>
-          결제하기
-        </button>
+          {/* 결제 버튼 */}
+          <div className="pay-btn">
+            <Button
+              className="button"
+              disabled={!ready}
+              onClick={handlePayment}
+            >
+              결제하기
+            </Button>
+          </div>
+        </div>
       </div>
-    </div>
+    </PayStyle>
   );
 }
