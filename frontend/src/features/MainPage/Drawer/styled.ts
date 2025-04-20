@@ -8,12 +8,6 @@ export const DrawerStyled = styled.div`
     flex-direction: column;
     gap: 10px;
 
-    .mypage-router {
-      cursor: pointer;
-      width: 100%;
-      padding-left: 24px;
-    }
-
     .mypage-router-menu {
       .menu {
         width: 100%;

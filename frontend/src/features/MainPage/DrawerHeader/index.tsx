@@ -22,9 +22,16 @@ const DrawerHeader = (props: { name: string; id: number }) => {
     router.push(`/hashtag/${id}`);
   };
 
+  //마이페이지 이동
+  const mypage = () => {
+    router.push("/mypage");
+  };
+
   return (
     <DrawerHeaderStyle className={clsx("main-wrap")}>
-      <div>{name}</div>
+      <div onClick={mypage} className="mypage-router">
+        {name}
+      </div>
       <div className="heart-img" onClick={hashtag}>
         <img className="imgstyle" src={heart.src} alt="heart" />
       </div>

@@ -93,10 +93,6 @@ const DrawerContainer = () => {
     },
   ];
 
-  //마이페이지 이동
-  const openMyPage = () => {
-    router.push("/mypage");
-  };
   // 로그아웃 버튼
   function handleLogout() {
     const MySwal = withReactContent(Swal);
@@ -148,9 +144,6 @@ const DrawerContainer = () => {
 
   return (
     <DrawerStyled className={clsx("main-wrap")}>
-      <div onClick={openMyPage} className="mypage-router">
-        마이페이지
-      </div>
       <div className="mypage-router-menu">
         <ConfigProvider theme={theme}>
           <Menu
