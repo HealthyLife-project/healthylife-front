@@ -51,15 +51,6 @@ const UserContent = () => {
     });
   }, [id]);
 
-  //해당 유저에 해당하는 해시태그
-  // axios({
-  //   method: "get",
-  //   url: `http://localhost:5001/hashtag/hash/7`,
-  // }).then((res) => {
-  //   //console.log(res.data)
-  //   //setHashTag(res.data);
-  // });
-
   if (!tokenList?.id) {
     return <div></div>;
   }

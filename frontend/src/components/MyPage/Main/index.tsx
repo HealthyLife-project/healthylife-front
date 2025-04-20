@@ -23,7 +23,7 @@ const MyPageMain = () => {
 
   //로그인 확인
   useEffect(() => {
-    const isLogin = checkLogin(tokenList);
+    checkLogin(tokenList);
   }, [tokenList]);
 
   //카테고리

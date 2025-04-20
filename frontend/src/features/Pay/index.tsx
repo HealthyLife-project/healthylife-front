@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { Button } from "antd";
 import { PayStyle } from "./styled";
+import uuid from "react-uuid";
 
 // 환경변수로 설정된 클라이언트 키
 const clientKey: string = process.env.NEXT_PUBLIC_TOSS_CLIENTKEY!;
@@ -81,7 +82,7 @@ export default function CheckoutPage(props: {
 
     try {
       await widgets.requestPayment({
-        orderId: `${id}`,
+        orderId: uuid(),
         orderName: "구독",
         successUrl: window.location.origin + "/success",
         failUrl: window.location.origin + "/fail",
