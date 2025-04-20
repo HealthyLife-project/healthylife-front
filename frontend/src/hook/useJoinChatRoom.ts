@@ -12,6 +12,7 @@ export default function useJoinChatRoom({
   urlstr,
   username,
 }: UseJoinChatRoomProps) {
+  console.log("uer", urlstr, username);
   const router = useRouter();
   const tokenList = useSelector((state: RootState) => state.token.tokenList);
 

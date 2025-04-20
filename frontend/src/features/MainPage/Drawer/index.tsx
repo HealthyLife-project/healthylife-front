@@ -23,6 +23,9 @@ import {
 import { useEffect, useState } from "react";
 import { RootState } from "@/redux/store";
 
+//util
+import { joinChatRoom } from "@/util/joinroom";
+
 type MenuItem = Required<MenuProps>["items"][number];
 
 //Drawer 컴포넌트
@@ -35,6 +38,7 @@ const DrawerContainer = () => {
 
   //useState
   const [id, setId] = useState(tokenList?.id);
+  const [username, setUserName] = useState("");
   const [petlist, setPetlist] = useState([]); //사용자가 속해있는 pet 채팅방 리스트
   const [personlist, setPersonList] = useState([]); //사용자가 속해있는 person 채팅방 리스트
   const chatlist: any[] = [];
@@ -44,7 +48,7 @@ const DrawerContainer = () => {
     api.get(`/chat/pet/${id}`).then((res) => {
       let pet_data = res.data;
 
-      console.log("res pet", pet_data);
+      //console.log("res pet", pet_data);
 
       setPetlist(pet_data);
       //chatlist.push(res.data);
@@ -55,10 +59,11 @@ const DrawerContainer = () => {
       chatlist.push(res.data);
       //console.log("res person", res.data);
     });
-
-    console.log("chat", petlist);
   }, [tokenList?.id]);
 
+  useEffect(() => {
+    setUserName(tokenList?.name);
+  }, [tokenList]);
   const items: MenuItem[] = [
     {
       key: "sub1",
@@ -72,7 +77,15 @@ const DrawerContainer = () => {
             key: `pet-${index}`,
             label: pet.title,
             onClick: () => {
-              //console.log("Pet chat clicked:", pet);
+              console.log("Pet chat clicked:", pet);
+              joinChatRoom({
+                urlstr: "pet",
+                record: pet.roomid,
+                title: pet.title,
+                userId: tokenList?.id,
+                username,
+                router,
+              });
             },
           })),
         },
@@ -85,7 +98,14 @@ const DrawerContainer = () => {
             key: `person-${index}`,
             label: person.title,
             onClick: () => {
-              //console.log("Pet chat clicked:", person);
+              joinChatRoom({
+                urlstr: "pet",
+                record: person.roomid,
+                title: person.title,
+                userId: tokenList?.id,
+                username,
+                router,
+              });
             },
           })),
         },

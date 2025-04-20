@@ -11,9 +11,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import socket from "@/util/socket"; //웹 소켓 연결
 
+//util
+import { joinChatRoom } from "@/util/joinroom";
+
 //hook
 import useCheckLoginAlert from "@/hook/useCheckLoginAlert ";
-import useJoinChatRoom from "@/hook/useJoinChatRoom";
+
 interface DataType {
   key: string;
   title: string;
@@ -52,7 +55,6 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
 
   //hook
   const checkLogin = useCheckLoginAlert();
-  const joinroom_hook = useJoinChatRoom({ urlstr, username });
 
   //채팅방 목록 리스트
   const [data, setData] = useState<DataType[]>([]);
@@ -80,8 +82,17 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
       router.push("/mypage");
       return;
     }
+    console.log("dsf", selectedRecord);
+
     if (selectedRecord) {
-      joinroom_hook(selectedRecord);
+      joinChatRoom({
+        urlstr,
+        record: selectedRecord?.key,
+        title: selectedRecord?.title,
+        userId: tokenList?.id,
+        username,
+        router,
+      });
     }
   };
 
@@ -112,7 +123,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         columns={columns}
         dataSource={search.length > 0 ? search : data}
         onRow={(record, rowIndex) => {
-          //console.log(record);
+          console.log(record);
           return {
             onClick: () => {
               //console.log("클릭된 행:", record);

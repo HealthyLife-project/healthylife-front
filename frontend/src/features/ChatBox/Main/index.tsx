@@ -116,10 +116,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       });
 
       setJoined(true); // 채팅방 생성
-      //console.log("room id", chatData);
-      //console.log("type",ChatBox)
-      // const roomid_num:number = chatData.roomid
-      // setRoomid(roomid_num?);
 
       //입장 시 이전 내용
       api
