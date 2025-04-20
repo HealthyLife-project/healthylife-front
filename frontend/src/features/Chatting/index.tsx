@@ -10,8 +10,10 @@ import { io, Socket } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import socket from "@/util/socket"; //웹 소켓 연결
-import useCheckLoginAlert from "@/hook/useCheckLoginAlert ";
 
+//hook
+import useCheckLoginAlert from "@/hook/useCheckLoginAlert ";
+import useJoinChatRoom from "@/hook/useJoinChatRoom";
 interface DataType {
   key: string;
   title: string;
@@ -43,7 +45,6 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
 
   //useState
-  //const [isModalComponentOpen, setIsModalComponentOpen] = useState(false); //모달 컴포넌트 open 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
   const [username, setUserName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // 채팅방 open 유무
@@ -51,6 +52,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
 
   //hook
   const checkLogin = useCheckLoginAlert();
+  const joinroom_hook = useJoinChatRoom({ urlstr, username });
 
   //채팅방 목록 리스트
   const [data, setData] = useState<DataType[]>([]);
@@ -78,43 +80,9 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
       router.push("/mypage");
       return;
     }
-
-    api
-      .post(`/chat/${urlstr}/validate`, {
-        roomid: Number(selectedRecord?.key),
-        userid: Number(tokenList?.id),
-      })
-      .then((res) => {
-        //console.log("Res chatting", res.data);
-        //이미 채팅 있는지 확인 후 만약 채팅 내용이 있으면 추가 내용 보기
-        if (res.data.result) {
-          //사용자 정의 이벤트 실행 - _app.tsx에서 실행 localstroage에서 title 값 넘김
-          const event = new CustomEvent("openChat", {
-            detail: {
-              title: selectedRecord?.title,
-              roomid: Number(selectedRecord?.key),
-              category: urlstr,
-              boolean: res.data,
-            },
-          });
-
-          //해당 이벤트 실행
-          window.dispatchEvent(event);
-        } else {
-          //처음 입장한 경우
-
-          //사용자 정의 이벤트 실행 - _app.tsx에서 실행
-          const event = new CustomEvent("openChat", {
-            detail: {
-              title: selectedRecord?.title,
-              roomid: Number(selectedRecord?.key),
-              category: urlstr,
-              boolean: res.data,
-            },
-          });
-          window.dispatchEvent(event);
-        }
-      });
+    if (selectedRecord) {
+      joinroom_hook(selectedRecord);
+    }
   };
 
   //모달 닫기
