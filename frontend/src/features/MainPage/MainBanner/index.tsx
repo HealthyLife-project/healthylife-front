@@ -32,7 +32,7 @@ const MainBanner = () => {
 
   useEffect(() => {
     api.get("/ad/getAd").then((res) => {
-      console.log("res", res.data);
+      console.log("banenr res", res.data);
 
       setBannerImg(res.data);
     });

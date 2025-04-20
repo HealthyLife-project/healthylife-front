@@ -5,7 +5,7 @@ export const ChatBoxStyled = styled.div`
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 450px;
+    width: 400px;
     height: 500px;
     background-color: #ffffff;
     z-index: 999;
@@ -33,6 +33,10 @@ export const ChatBoxStyled = styled.div`
       justify-content: space-between;
       align-items: center;
       height: 40px;
+
+      .arrow-back {
+        cursor: pointer;
+      }
 
       .menu {
         display: flex;
@@ -71,7 +75,7 @@ export const ChatBoxStyled = styled.div`
     .content-div {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      //justify-content: space-between;
       width: 100%;
       background-color: #f7f9fb;
       height: 450px;
@@ -96,10 +100,37 @@ export const ChatBoxStyled = styled.div`
 
           .chat-content {
             display: flex;
-            background-color: white;
+            flex-direction: row;
             width: 100%;
-            padding: 10px 5px;
-            border-radius: 15px;
+
+            .other-name {
+              padding: 10px 5px;
+              padding-right: 10px;
+            }
+            .other-content {
+              padding: 10px 15px;
+              background-color: white;
+              border-radius: 15px;
+            }
+          }
+
+          .user-content {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            text-align: right;
+            justify-content: flex-end;
+
+            .other-name {
+              padding: 10px 5px;
+              padding-right: 10px;
+            }
+            .other-content {
+              padding: 10px 15px;
+              background-color: white;
+              border-radius: 15px;
+              margin-left: auto;
+            }
           }
         }
       }

@@ -46,7 +46,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [userNickname, setNickname] = useState(""); //유저 닉네임
   const [message, setMessage] = useState(""); //보낸 메시지
   const [messages, setMessages] = useState<
-    { userNickname: string; message: string; aopen?: string }[]
+    { userNickname: string; message: string; aopen?: string; userid: number }[]
   >([]); //메시지 전체
   const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
   const [room, setRoom] = useState(title); //방 이름
@@ -55,7 +55,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [isChatListOpen, setIsChatListOpen] = useState(false);
   const [chatList, setChatList] = useState<ChatBoxLocal[]>([]);
   const [pagecnt, setPageCnt] = useState(1);
-  //const [roomid, setRoomid] = useState();
 
   //useEffect
   useEffect(() => {
@@ -66,7 +65,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     //console.log("입장여부 확인", socket.connected);
 
     socket.on("receiveMessage", (data) => {
-      console.log("받은메세지", data);
+      //console.log("받은메세지", data);
       setMessages((prev) => [...prev, data]);
     });
 
@@ -117,7 +116,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       });
 
       setJoined(true); // 채팅방 생성
-      console.log("room id", chatData);
+      //console.log("room id", chatData);
       //console.log("type",ChatBox)
       // const roomid_num:number = chatData.roomid
       // setRoomid(roomid_num?);
@@ -129,12 +128,12 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           userid: Number(tokenList?.id),
         })
         .then((res: any) => {
-          console.log("joinroom", res.data);
+          //console.log("joinroom", res.data);
           //setMessages(res.data);
         });
 
       //채팅방 입력 시 이전 내용 불러오기
-      console.log("user", chatData.roomid, userid, pagecnt);
+      //console.log("user", chatData.roomid, userid, pagecnt);
       api
         .post(`/chat/${chatData.category}/getMessage`, {
           roomid: chatData.roomid,
@@ -143,7 +142,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           limit: 10,
         })
         .then((res) => {
-          console.log("res", res.data);
+          //console.log("res", res.data);
         });
     }
   };
@@ -210,7 +209,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
   //메시지 보내기
   const sendMessage = () => {
-    console.log("chat  :", room, userNickname, message);
+    //console.log("chat  :", room, userNickname, message);
     if (message.trim()) {
       const roomid = `${chatlocal?.roomid}-${chatlocal?.category}`;
       socket.emit("sendMessage", { roomid, userNickname, message });
@@ -237,14 +236,14 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         roomid: chatlocal?.roomid,
       };
 
-      console.log("chat data", arr);
+      //console.log("chat data", arr);
 
       //db 저장 요청
       api
         .post(`/chat/${chatlocal?.category}/saveMessage`, arr)
         .then((res) => {
           //console.log("REs", res.data);
-          console.log("백엔드 저장 완료", res.data);
+          //console.log("백엔드 저장 완료", res.data);
         })
         .catch((error: string) => {
           //console.log("백엔드 저장 실패", error);
@@ -280,7 +279,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         },
       })
       .then((res) => {
-        console.log("요청 성공");
+        //console.log("요청 성공");
 
         MySwal.fire({
           title: "체팅방을 나가실 건가요?",
@@ -311,7 +310,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     <>
       <ChatBoxStyled className={clsx("main-wrap")}>
         <div className="title">
-          <span onClick={showDrawer}>
+          <span onClick={showDrawer} className="arrow-back">
             <img src={arrowback.src} alt="arrow-back" />
           </span>
 
@@ -338,13 +337,19 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           <div className="content-srcoll">
             <div className="content">
               {messages.map((msg, index) =>
-                msg.aopen ? (
+                msg.aopen ? ( // 새로 입장한 경우
                   <p key={index}>
                     <strong>{msg.aopen}</strong>
                   </p>
+                ) : Number(msg.userid) === Number(userid) ? (
+                  <div className="user-content" key={index}>
+                    <div className="other-content">{msg.message}</div>
+                    <div className="other-name">{msg.userNickname}</div>
+                  </div>
                 ) : (
                   <div className="chat-content" key={index}>
-                    <strong>{msg.userNickname}: </strong> {msg.message}
+                    <div className="other-name">{msg.userNickname}</div>
+                    <div className="other-content">{msg.message}</div>
                   </div>
                 )
               )}
