@@ -19,16 +19,19 @@ export function SuccessPage() {
   }, []);
 
   // 서버로 승인 요청
-  api
-    .get(`/user/premium/${id}`)
-    .then((res) => {
-      //console.log("res", res.data);
-      openNotificationWithIcon("success", "결제에 성공했습니다.");
-      router.push("/");
-    })
-    .catch((error: string) => {
-      console.log("결제 성공 후 백엔드 수정 요청 error", error);
-    });
+  useEffect(() => {
+    const id = tokenList?.id;
+    if (!id) return;
+    api
+      .get(`/user/premium/${id}`)
+      .then((res) => {
+        openNotificationWithIcon("success", "결제에 성공했습니다.");
+        router.push("/");
+      })
+      .catch((error: string) => {
+        console.log("결제 성공 후 백엔드 수정 요청 error", error);
+      });
+  }, [tokenList]);
 
   return <div> {contextHolder}</div>;
 }

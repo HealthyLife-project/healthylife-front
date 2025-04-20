@@ -85,7 +85,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         userid: Number(tokenList?.id),
       })
       .then((res) => {
-        console.log("Res chatting", res.data);
+        //console.log("Res chatting", res.data);
         //이미 채팅 있는지 확인 후 만약 채팅 내용이 있으면 추가 내용 보기
         if (res.data.result) {
           //사용자 정의 이벤트 실행 - _app.tsx에서 실행 localstroage에서 title 값 넘김
@@ -130,7 +130,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
       .then((res) => {
         //테이블 리스트 넣기
         const convertedData = convertChatList(res.data);
-        console.log("convertedData", convertedData);
+        //console.log("convertedData", convertedData);
         setData(convertedData);
       })
       .catch((error: string) => {
