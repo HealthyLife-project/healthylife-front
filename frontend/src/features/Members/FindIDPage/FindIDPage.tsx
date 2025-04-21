@@ -15,19 +15,14 @@ export default function FindIDPage() {
     phone: "",
   };
 
-  const phoneRegExp =
-    // /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-    /^(010-\d{4}-\d{4}|010\d{8}|010 \d{4} \d{4})$/;
+  const phoneRegExp = /^(010-\d{4}-\d{4}|010\d{8}|010 \d{4} \d{4})$/;
 
   const validationSchema: Yup.ObjectSchema<FormData> = Yup.object().shape({
     phone: Yup.string()
       .required("휴대전화 번호를 입력해주세요.")
-      // .matches(phoneRegExp, "휴대전화 번호를 확인해주세요."),
       .matches(phoneRegExp, "휴대전화 번호 형식을 확인해주세요."),
   });
 
-  // const [foundID, setFoundID] = useState<string | null>(null);
-  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [foundID, setFoundID] = useState<{
     result: boolean;
     message: string;
@@ -42,11 +37,9 @@ export default function FindIDPage() {
   ) => {
     try {
       const formatPhoneNumber = data.phone.replace(/[- ]/g, "");
-      console.log("Sending phone number:", data.phone);
       const response = await api.post("/user/findID", {
         phone: formatPhoneNumber,
       });
-      console.log(response);
       setFoundID(response.data);
     } catch (error: any) {
       console.error("Error finding ID:", error);
@@ -64,8 +57,6 @@ export default function FindIDPage() {
     data: FormData,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    console.log("Submitted phone number:", data.phone); // Log on submit
-    console.log("submitted number", phoneNumber);
     setSubmitting(true);
     findIDRequest(data, setSubmitting);
   };
@@ -84,9 +75,6 @@ export default function FindIDPage() {
           >
             {({
               isSubmitting,
-              values,
-              errors,
-              touched,
               handleBlur,
               handleChange,
               validateField,

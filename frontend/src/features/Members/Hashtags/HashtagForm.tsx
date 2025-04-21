@@ -38,7 +38,6 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
     const hashtagRequest = async () => {
       try {
         const response = await api.get("/hashtag/allhash");
-        // console.log("hashtag Form response", response);
         setTags(response.data);
       } catch (error: any) {
         console.error(error);
@@ -100,6 +99,7 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
         description: "2개 이상의 해시태그를 선택해 주세요.",
         duration: 3,
       });
+      return;
     }
 
     try {
@@ -107,14 +107,11 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
         hashtag: item.hash,
         category: item.categoryid,
       }));
-
-      // console.log({ userid, hashtagsAndCategories });
       const response = await api.post("/hashtag/selectedTags", {
         userid: userid,
         hashtagsAndCategories: hashtagsAndCategories,
       });
 
-      console.log("해시태그 제출 성공", response.data);
       notification.success({
         message: ":)",
         description: "해시태그 등록에 성공하였습니다.",

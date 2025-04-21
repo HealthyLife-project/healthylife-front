@@ -1,5 +1,4 @@
 import { SignupPageStyled, FormItem, FormLabel } from "./styled";
-import AddressSearchModal from "../AddressSearch/AddressSearchModal";
 
 import React from "react";
 import { Formik, Form, Field, FormikHelpers, ErrorMessage } from "formik";
@@ -114,8 +113,6 @@ const SignupPage: React.FC = () => {
       const response = await api.get(`/user/finduser/${userid}`);
       const { result, message } = response.data;
       setUseridAvailability({ result, message });
-      console.log("useridAvailability updated:", { result, message });
-      console.log("userid response data", response.data);
     } catch (error: any) {
       console.error("Error checking user ID:", error);
       if (
@@ -127,19 +124,11 @@ const SignupPage: React.FC = () => {
           result: false,
           message: error.response.data.message,
         });
-        console.log("useridAvailability updated (error):", {
-          result: false,
-          message: error.response.data.message,
-        });
       } else {
         setUseridAvailability({
           result: false,
           message: error.response.data.message,
         }); // Default error message
-        console.log("useridAvailability updated (error - generic):", {
-          result: false,
-          message: error.response.data.message,
-        });
       }
     }
   };
@@ -148,8 +137,6 @@ const SignupPage: React.FC = () => {
   const checkNicknameAvailability = async (nickname: string) => {
     try {
       const response = await api.get(`/user/findnickname/${nickname}`);
-
-      console.log("response nickname", response.data);
       setNicknameAvailability(response.data);
     } catch (error) {
       console.error("Error checking nickname:", error);
@@ -167,7 +154,6 @@ const SignupPage: React.FC = () => {
   ) => {
     setSubmitting(true);
     try {
-      console.log("values prior to axios request", values);
       // 전화번호 형식 정리 010-1234-5678, 01012345678, 010 1234 5678 => 01012345678
       const cleanedPhoneNumber = values.phone.replace(/[\s-]/g, "");
 
@@ -183,12 +169,7 @@ const SignupPage: React.FC = () => {
         phone: cleanedPhoneNumber,
         address: values.address,
       };
-
-      console.log("address", signupData.address);
-      console.log("signupData prior to axios request", signupData);
-
       const response = await api.post("/user/signup", signupData);
-      console.log("response.data", response.data); // Log response from backend
       setStatus({ success: true, message: "회원가입 성공!" }); // Set success message
 
       notification.success({
@@ -252,13 +233,6 @@ const SignupPage: React.FC = () => {
               setFieldTouched,
               setFieldValue,
             }) => {
-              console.log("Formik State:", {
-                isSubmitting,
-                values,
-                errors,
-                touched,
-              });
-
               // 비밀번호 일치 확인 변수
               const [passwordMatchError, setPasswordMatchError] = useState("");
 
@@ -267,7 +241,7 @@ const SignupPage: React.FC = () => {
                   touched.password &&
                   touched.confirmPassword &&
                   values.password === values.confirmPassword &&
-                  !errors.confirmPassword // Ensure there are no validation errors for confirmPassword
+                  !errors.confirmPassword
                 ) {
                   setPasswordMatchError("비밀번호가 일치합니다.");
                 } else {
@@ -566,6 +540,7 @@ const SignupPage: React.FC = () => {
                       type="text"
                       id="address"
                       name="address"
+                      placeholder="주소를 검색해 주세요."
                       as={Input}
                       onChange={(e: string) => {
                         handleChange(e);

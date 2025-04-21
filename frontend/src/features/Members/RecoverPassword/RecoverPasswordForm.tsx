@@ -3,8 +3,6 @@ import { RecoverPasswordPageStyled } from "./styled";
 import { Input, notification } from "antd";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 
 export default function RecoverPasswordPage() {
   const [passwordRecoveryEmailError, setPasswordRecoveryEmailError] =
@@ -13,10 +11,7 @@ export default function RecoverPasswordPage() {
   const router = useRouter();
 
   const sendPasswordRecoveryEmail = async (email: string) => {
-    setPasswordRecoveryEmailError(null); // Clear any previous errors
-    console.log("sendpasswordrecovery email");
-    console.log(email);
-    // router.push("/forgot-password/password-recovery-feedback");
+    setPasswordRecoveryEmailError(null);
 
     // 비밀번호 재설정 요청 이메일로
     try {
@@ -24,7 +19,6 @@ export default function RecoverPasswordPage() {
         email: email,
       });
       // if successful result: true else result: false
-      console.log("이메일로 링크 보내기:", response);
       if (response.data.id) {
         router.push("/forgot-password/password-recovery-feedback");
       } else {
@@ -36,7 +30,7 @@ export default function RecoverPasswordPage() {
       }
     } catch (error: any) {
       console.error("Error sending password recovery email:", error);
-      setPasswordRecoveryEmailError(error); // Set the error state
+      setPasswordRecoveryEmailError(error);
     }
   };
 
