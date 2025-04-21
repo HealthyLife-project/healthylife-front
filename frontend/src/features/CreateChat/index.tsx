@@ -61,19 +61,8 @@ const CreateChat = () => {
           title: values.title,
         })
         .then((res) => {
-          //console.log("res", res.data);
+          //console.log("res", res.data.roomData.id);
           alert("채팅방 생성 성공!");
-
-          localStorage.setItem(
-            "ChatBox",
-            JSON.stringify({
-              boolean: false,
-              roomid: res.data.roomData.id,
-              title: values.title,
-              category: category,
-              isOpen: true,
-            })
-          );
 
           setChatTitle(values.title);
           setIsModalOpen(true);
@@ -81,9 +70,11 @@ const CreateChat = () => {
           //사용자 정의 이벤트 실행 - _app.tsx에서 실행 localstroage에서 title 값 넘김
           const event = new CustomEvent("openChat", {
             detail: {
+              boolean: false,
+              roomid: res.data.roomData.id,
               title: values.title,
-              //roomid: Number(selectedRecord?.key),
               category: category,
+              isOpen: true,
             },
           });
 
