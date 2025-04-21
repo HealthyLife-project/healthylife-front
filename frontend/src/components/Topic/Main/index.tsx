@@ -8,21 +8,22 @@ import TopicTitle from "../TopicTitle";
 
 //list
 import { title_lst } from "./datalist";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import api from "@/util/chek";
+import ImageElement from "../ImageElement";
 
 //today topic, news main 컴포넌트
 const TopicMain = () => {
   //변수 선언
   const router = useRouter();
-
+  const [hash, setHash] = useState([""]);
   useEffect(() => {
     api.get("/hashtag/most").then((res) => {
       const tagname = res.data
         .filter((item: { hashtag: string }) => item.hashtag)
         .map((item: { hashtag: string }) => item.hashtag);
-
-      console.log("tagname", tagname);
+      setHash(tagname);
+      //console.log("tagname", tagname);
     });
   }, []);
 
@@ -34,7 +35,13 @@ const TopicMain = () => {
           {index === 0 ? (
             <div className="topic-section">
               <div className="today-img">
-                <TopicElement />
+                <ImageElement hash={hash[0]} />
+              </div>
+              <div className="today-img">
+                <ImageElement hash={hash[1]} />
+              </div>
+              <div className="today-img">
+                <ImageElement hash={hash[2]} />
               </div>
             </div>
           ) : (
