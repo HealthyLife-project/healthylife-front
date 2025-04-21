@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const HashTagSectionStyled = styled.div`
   &.main-wrap {
     width: 100%;
-    height: 250px;
+    height: 100%;
     overflow: hidden;
     position: relative;
 
