@@ -207,9 +207,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const sendMessage = () => {
     //console.log("chat  :", room, userNickname, message);
     if (message.trim()) {
-      const roomid = `${chatlocal?.roomid}-${chatlocal?.category}`;
-      socket.emit("sendMessage", { roomid, userNickname, message });
-      //console.log("loca", chatlocal);
       const today = new Date();
 
       const formatDate = (date: Date) => {
@@ -223,6 +220,16 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
         return `${yyyy}.${mm}.${dd} ${hh}:${min}:${sec}`;
       };
+
+      const roomid = `${chatlocal?.roomid}-${chatlocal?.category}`;
+      socket.emit("sendMessage", {
+        roomid,
+        userNickname,
+        message,
+        userid,
+        time: formatDate(today),
+      });
+      //console.log("loca", chatlocal);
 
       let arr = {
         text: message,
