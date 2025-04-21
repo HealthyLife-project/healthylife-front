@@ -1,4 +1,3 @@
-// hooks/useCheckLoginAlert.ts
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Swal from "sweetalert2";

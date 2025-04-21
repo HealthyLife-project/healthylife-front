@@ -4,12 +4,10 @@ export const DrawerStyled = styled.div`
   &.main-wrap {
     position: fixed;
     bottom: 20px;
-    right: 470px;
-    width: 220px;
+    right: 420px;
+    width: 180px;
     height: 500px;
     background-color: #ffffff;
-    //border-radius: 16px;
-    //box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
     z-index: 9998;
     display: flex;
     flex-direction: column;

@@ -1,14 +1,32 @@
 import clsx from "clsx";
-import { DrawerStyled } from "./styled";
+import { DrawerStyled, theme } from "./styled";
 import { useRouter } from "next/router";
-import { Button, Segmented } from "antd";
 import api from "@/util/chek";
-import { useDispatch, useSelector } from "react-redux";
-import { setTokenList } from "@/redux/redux";
-import { MoonOutlined, SunOutlined } from "@ant-design/icons";
-import { setTheme, selectTheme } from "@/redux/theme";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { setTokenList } from "@/redux/redux";
+import { setTheme, selectTheme } from "@/redux/theme";
+
+//antd
+import type { MenuProps } from "antd";
+import { Button, Segmented, Menu, ConfigProvider } from "antd";
+import {
+  MoonOutlined,
+  SunOutlined,
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { RootState } from "@/redux/store";
+
+//util
+import { joinChatRoom } from "@/util/joinroom";
+
+type MenuItem = Required<MenuProps>["items"][number];
 
 //Drawer 컴포넌트
 const DrawerContainer = () => {
@@ -16,11 +34,85 @@ const DrawerContainer = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const theme = useSelector(selectTheme);
+  const tokenList = useSelector((state: RootState) => state.token.tokenList);
 
-  //마이페이지 이동
-  const openMyPage = () => {
-    router.push("/mypage");
-  };
+  //useState
+  const [id, setId] = useState(tokenList?.id);
+  const [username, setUserName] = useState("");
+  const [petlist, setPetlist] = useState([]); //사용자가 속해있는 pet 채팅방 리스트
+  const [personlist, setPersonList] = useState([]); //사용자가 속해있는 person 채팅방 리스트
+  const chatlist: any[] = [];
+
+  //useEffect
+  useEffect(() => {
+    //
+    api.get(`/chat/pet/${id}`).then((res) => {
+      let pet_data = res.data;
+      //console.log("res pet", pet_data);
+
+      setPetlist(pet_data);
+      //chatlist.push(res.data);
+    });
+
+    api.get(`/chat/person/${id}`).then((res) => {
+      setPersonList(res.data);
+      chatlist.push(res.data);
+      //console.log("res person", res.data);
+    });
+  }, [tokenList?.id]);
+
+  useEffect(() => {
+    setUserName(tokenList?.name);
+  }, [tokenList]);
+  const items: MenuItem[] = [
+    {
+      key: "sub1",
+      label: "채팅방 목록",
+      children: [
+        {
+          key: "g1",
+          label: "Pet",
+          type: "group",
+          children: petlist.map((pet: any, index: number) => ({
+            key: `pet-${index}`,
+            label: pet.title,
+            onClick: () => {
+              //console.log("Pet chat clicked:", pet);
+              joinChatRoom({
+                urlstr: "pet",
+                record: pet.roomid,
+                title: pet.title,
+                userId: tokenList?.id,
+                username,
+                router,
+              });
+            },
+          })),
+        },
+
+        {
+          key: "g2",
+          label: "Person",
+          type: "group",
+          children: personlist.map((person: any, index: number) => ({
+            key: `person-${index}`,
+            label: person.title,
+            onClick: () => {
+              joinChatRoom({
+                urlstr: "pet",
+                record: person.roomid,
+                title: person.title,
+                userId: tokenList?.id,
+                username,
+                router,
+              });
+            },
+          })),
+        },
+      ],
+    },
+  ];
+
   // 로그아웃 버튼
   function handleLogout() {
     const MySwal = withReactContent(Swal);
@@ -60,18 +152,30 @@ const DrawerContainer = () => {
     });
   }
 
-  //onChange
+  //다크모드 설정
   const onChange = (e: string) => {
-    //console.log("onChange", e);
     dispatch(setTheme(e as "light" | "dark"));
+  };
+
+  //채팅방목록 클릭 이벤트
+  const onClick: MenuProps["onClick"] = (e) => {
+    console.log("click ", e);
   };
 
   return (
     <DrawerStyled className={clsx("main-wrap")}>
-      <div onClick={openMyPage} className="mypage-router">
-        마이페이지
+      <div className="mypage-router-menu">
+        <ConfigProvider theme={theme}>
+          <Menu
+            onClick={onClick}
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["sub1"]}
+            mode="inline"
+            items={items}
+            className="menu"
+          />
+        </ConfigProvider>
       </div>
-      <div className="mypage-router">채팅방 목록</div>
       <div className="main-bottom">
         <Button className="main-logout" onClick={handleLogout}>
           로그아웃

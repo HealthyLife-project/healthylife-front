@@ -1,6 +1,6 @@
 import { ContentInfoStyle } from "./styled"; //스타일
 import clsx from "clsx";
-import { Input, Button, notification, Radio } from "antd";
+import { Input, Button, notification, Radio, Tooltip } from "antd";
 import { useFormik } from "formik";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
@@ -11,12 +11,7 @@ import { openNotificationWithIcon } from "@/util/notification";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import router from "next/router";
-
-declare global {
-  interface Window {
-    daum: any;
-  }
-}
+import { QuestionCircleFilled } from "@ant-design/icons";
 
 //마이페이지 > 개인정보 > 내용 컴포넌트
 const ContentInfo = (props: {
@@ -56,6 +51,12 @@ const ContentInfo = (props: {
     { label: "여성", value: "female" },
   ];
 
+  const text = (title: string) => {
+    if (title === "name") {
+      return "2글자 이상 입력해 주세요";
+    }
+  };
+
   useEffect(() => {
     setId(tokenList?.id);
   }, []);
@@ -71,7 +72,7 @@ const ContentInfo = (props: {
       phone: phone || "",
       gender: gender || "",
     },
-    enableReinitialize: true,
+    enableReinitialize: true, //state 값 update
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
       console.log("values", values);
@@ -126,7 +127,17 @@ const ContentInfo = (props: {
         {contextHolder}
         <div className="user-info">
           <div className="info-group">
-            <span className="info-title">이름</span>
+            <div>
+              <span className="info-title">이름</span>
+              <Tooltip
+                placement="right"
+                title={text("name")}
+                className="tooltip"
+              >
+                <QuestionCircleFilled />
+              </Tooltip>
+            </div>
+
             <Input
               name="name"
               className="info-input"
@@ -201,11 +212,12 @@ const ContentInfo = (props: {
                 onChange={modifyFormik.handleChange}
                 value={modifyFormik.values.address}
                 onClick={() => {
-                  new window.daum.Postcode({
-                    oncomplete: function (data: any) {
-                      modifyFormik.setFieldValue("address", data.address);
-                    },
-                  }).open();
+                  window.daum?.Postcode &&
+                    new window.daum.Postcode({
+                      oncomplete: function (data: any) {
+                        modifyFormik.setFieldValue("address", data.address);
+                      },
+                    }).open();
                 }}
               />
             </span>
