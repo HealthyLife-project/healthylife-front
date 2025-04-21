@@ -31,13 +31,11 @@ const MainBanner = () => {
   const [bannerimg, setBannerImg] = useState<AdBanner[]>([]);
 
   useEffect(() => {
+    //관리자 페이지에서 이미지 요청
     api.get("/ad/getAd").then((res) => {
-      console.log("banenr res", res.data);
-
+      //console.log("banenr res", res.data[1].imgsrc);
       setBannerImg(res.data);
     });
-
-    console.log(bannerimg);
   }, []);
 
   return (
@@ -52,13 +50,40 @@ const MainBanner = () => {
         >
           <SwiperSlide>
             <img
-              src={process.env.NEXT_PUBLIC_ORIGIN_URL + bannerimg[0]?.imgsrc}
-              alt=""
+              className="imgstyle"
+              src={
+                process.env.NEXT_PUBLIC_ORIGIN_URL + "/" + bannerimg[0]?.imgsrc
+              }
+              alt="bannner-1"
             />
           </SwiperSlide>
-          <SwiperSlide>Slide 2</SwiperSlide>
-          <SwiperSlide>Slide 3</SwiperSlide>
-          <SwiperSlide>Slide 4</SwiperSlide>
+          <SwiperSlide>
+            <img
+              className="imgstyle"
+              src={
+                process.env.NEXT_PUBLIC_ORIGIN_URL + "/" + bannerimg[1]?.imgsrc
+              }
+              alt="bannner-2"
+            />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img
+              className="imgstyle"
+              src={
+                process.env.NEXT_PUBLIC_ORIGIN_URL + "/" + bannerimg[2]?.imgsrc
+              }
+              alt="bannner-3"
+            />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img
+              className="imgstyle"
+              src={
+                process.env.NEXT_PUBLIC_ORIGIN_URL + "/" + bannerimg[3]?.imgsrc
+              }
+              alt="bannner-4"
+            />
+          </SwiperSlide>
         </Swiper>
       </div>
     </MainBannerStyled>

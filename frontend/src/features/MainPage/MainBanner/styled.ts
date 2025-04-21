@@ -6,11 +6,22 @@ export const MainBannerStyled = styled.div`
     margin-top: 10px;
 
     .swiper {
-      height: 200px;
+      width: 100%;
+      height: 300px;
       border-radius: 20px;
-      padding: 10px;
-      border: 1px solid black;
       cursor: pointer;
+      aspect-ratio: 16 / 9;
+
+      .imgstyle {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .swiper {
+      aspect-ratio: 4 / 3;
     }
   }
 `;

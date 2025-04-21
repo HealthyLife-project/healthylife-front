@@ -9,7 +9,7 @@ const usePremium = () => {
   const MySwal = withReactContent(Swal);
 
   return (tokenList: any) => {
-    if (!tokenList.premiun) {
+    if (tokenList.premiun === 0) {
       MySwal.fire({
         icon: "error",
         title: "프리미엄 회원만 사용이 가능합니다.",

@@ -6,26 +6,26 @@ export const HashTagSectionStyled = styled.div`
     height: 250px;
     overflow: hidden;
     position: relative;
-    padding: 10px 0;
 
-    .scroll-track {
+    .scroll-track-1 {
       display: flex;
       width: max-content;
-      animation: scroll-left 5s linear infinite;
-      gap: 0 40px;
+      gap: 30px;
+      margin: 20px 0px;
+      animation: scroll-left 10s linear infinite;
     }
 
     .hashtag-element {
       flex-shrink: 0;
       min-width: 120px;
-      height: 40px;
+      height: 45px;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #f0f0f0;
       border: 1px solid #ddd;
       border-radius: 10px;
       padding: 0 16px;
+      font-size: 14px;
       white-space: nowrap;
     }
 

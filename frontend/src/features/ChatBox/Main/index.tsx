@@ -65,7 +65,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     //console.log("입장여부 확인", socket.connected);
 
     socket.on("receiveMessage", (data) => {
-      //console.log("받은메세지", data);
+      console.log("받은메세지", data);
       setMessages((prev) => [...prev, data]);
     });
 
@@ -77,9 +77,10 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       socket.off("receiveMessage");
       socket.off("userList");
     };
-  }, [userNickname]);
+  }, [tokenList]);
 
   useEffect(() => {
+    if (!username || !room) return;
     const chatBox = localStorage.getItem("ChatBox");
 
     setChatLocal(JSON.parse(chatBox!));
@@ -124,7 +125,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           userid: Number(tokenList?.id),
         })
         .then((res: any) => {
-          //console.log("joinroom", res.data);
+          console.log("joinroom", res.data);
           //setMessages(res.data);
         });
 
@@ -138,7 +139,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           limit: 10,
         })
         .then((res) => {
-          //console.log("res", res.data);
+          console.log("getmessage res", res.data);
         });
     }
   };
@@ -341,9 +342,9 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
             <div className="content">
               {messages.map((msg, index) =>
                 msg.aopen ? ( // 새로 입장한 경우
-                  <p key={index}>
+                  <div className="user-come" key={index}>
                     <strong>{msg.aopen}</strong>
-                  </p>
+                  </div>
                 ) : Number(msg.userid) === Number(userid) ? (
                   //현재 유저가 입력한 내용 위치
                   <div className="user-content" key={index}>
