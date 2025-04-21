@@ -1,12 +1,20 @@
 import styled from "styled-components";
-import { Button } from "antd";
 
 export const HashtagFormStyled = styled.div`
   .registerHashtags {
     background-color: #d2e4f8;
   }
-`;
 
+  .hashtags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .submit-container {
+    margin-top: 20px;
+  }
+`;
 interface StyledHashtagButtonProps {
   $toggled: boolean;
 }

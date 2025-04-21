@@ -1,257 +1,155 @@
-import { ResetPasswordPageStyled } from "./styled";
+import { ResetPasswordPageStyled } from "./styled"; // Assuming you're importing the styled component
+import { Input, notification } from "antd";
 import api from "@/util/chek";
-import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Input, Button, Space, Spin, Typography, notification } from "antd";
+import { useEffect, useState } from "react";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage, FormikProps } from "formik";
 
-const { Title } = Typography;
-
-// Yup Schema for Reset Password
+// Yup schema for password reset
 const ResetPasswordSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(8, "비밀번호는 최소 8자 이상이어야 합니다")
-    .max(16, "비밀번호는 최대 16자 이하이어야 합니다")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[a-zA-Z\d!@#$%^&*()]+$/,
-      "비밀번호는 영문 대소문자, 숫자, 특수 문자를 포함해야 합니다."
-    )
-    .required("새로운 비밀번호는 필수입니다"),
-  password2: Yup.string()
-    .oneOf([Yup.ref("password")], "새로운 비밀번호가 일치하지 않습니다")
-    .required("새로운 비밀번호 확인은 필수입니다"),
+  newPassword: Yup.string()
+    .nullable()
+    .min(6, "비밀번호는 6자 이상이어야 합니다.")
+    .required("새 비밀번호를 입력해 주세요."),
+  confirmPassword: Yup.string()
+    .nullable()
+    .oneOf([Yup.ref("newPassword"), null], "비밀번호가 일치하지 않습니다.")
+    .required("비밀번호 확인을 입력해 주세요."),
 });
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const [userid, setUserId] = useState<string | null>();
-  const { id } = router.query;
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [passwordResetError, setPasswordResetError] = useState<string | null>(
-    null
-  );
+  const [passwordMatchMessage, setPasswordMatchMessage] = useState("");
 
-  useEffect(() => {
-    if (typeof id === "string") {
-      setUserId(id);
-    }
-  }, [id]);
-
-  const resetUserPassword = async (
-    currentUserId: string,
-    newPassword: string,
-    confirmPassword: string
-  ) => {
-    setLoading(true);
-    setPasswordResetError(null);
+  const sendPasswordResetRequest = async (newPassword: string) => {
+    // Password reset request API call
     try {
-      if (newPassword !== confirmPassword) {
-        setPasswordResetError("비밀번호가 일치 하지 않습니다.");
-        return;
-      }
-      // 비밀번호 재설정 api
-      const passwordData = {
-        userid: currentUserId,
-        password: newPassword,
-        passwordCheck: confirmPassword,
-      };
-      const response = await api.post("/user/update/password", passwordData);
-      const { result, message } = response.data;
-      if (result) {
-        notification.success({
-          // Success notification
-          message: "비밀번호 변경 완료",
-          description:
-            "비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.",
-          duration: 3, // Display for 3 seconds
-        });
+      const response = await api.post("/user/resetPassword", {
+        newPassword: newPassword,
+      });
+      if (response.data.result) {
         router.push("/login");
-      } else if (!result) {
-        setPasswordResetError(message);
-        notification.error({
-          // Error notification
-          message: "비밀번호 변경 실패",
-          description:
-            message || "비밀번호 변경에 실패했습니다. 다시 시도해주세요.",
-          duration: 5, // Display for 5 seconds
-        });
       } else {
-        setPasswordResetError(message);
         notification.error({
-          // Error notification
-          message: "비밀번호 변경 실패",
-          description:
-            message || "비밀번호 변경에 실패했습니다. 다시 시도해주세요.",
-          duration: 5, // Display for 5 seconds
+          message: ":(",
+          description: "비밀번호 재설정에 실패했습니다.",
+          duration: 3,
         });
       }
     } catch (error: any) {
       console.error("Error resetting password:", error);
-      setPasswordResetError("Failed to reset password.");
-      notification.error({
-        // Error notification for network or other errors
-        message: "오류 발생",
-        description:
-          "비밀번호 변경 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        duration: 5,
-      });
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div
-        style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}
-      >
-        <Spin />
-      </div>
-    );
-  }
-
-  if (passwordResetError) {
-    return (
-      <div
-        style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}
-      >
-        <div>
-          <Title level={2}>비밀번호 재설정</Title>
-          <p
-            style={{
-              color: "red",
-              display: "flex",
-              justifyContent: "center",
-              textAlign: "center",
-            }}
-          >
-            {passwordResetError}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!userid) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "4rem 0",
-          textAlign: "center",
-        }}
-      >
-        <div>
-          <Title level={2}>비밀번호 재설정</Title>
-          <p>
-            사용자 식별 정보를 확인할 수 없습니다. 유효한 비밀번호 재설정 링크를
-            다시 한번 확인하여 주시기 바랍니다.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <ResetPasswordPageStyled>
-      <div>
-        <h1>비밀번호 재설정</h1>
-        <p>새로운 비밀번호를 아래에 입력해주세요.</p>
-        <Formik
-          initialValues={{
-            password: "",
-            password2: "",
-          }}
-          validationSchema={ResetPasswordSchema}
-          onSubmit={(values) => {
-            resetUserPassword(userid!, values.password, values.password2);
-          }}
-        >
-          {(
-            formikProps: FormikProps<{ password: string; password2: string }>
-          ) => (
-            <Form>
-              <div className="reset-password-container">
-                <div className="input-container">
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ textAlign: "center" }}
-                  >
-                    {passwordResetError && (
-                      <p style={{ color: "red" }}>{passwordResetError}</p>
-                    )}
-                    {/*  비밀번호 입력창 + 오류메시지 */}
-                    <Field
-                      type="password"
-                      name="password"
-                      placeholder="새로운 비밀번호"
-                      as={Input.Password}
-                      className="new-password-input"
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      render={(msg) => (
-                        <div className="error-message" style={{ color: "red" }}>
-                          {msg}
-                        </div>
-                      )}
-                    />
-                    {/* 비밀번호 확인 입력창 + 오류메시지 */}
-                    <Field
-                      type="password"
-                      name="password2"
-                      placeholder="새로운 비밀번호 재입력"
-                      as={Input.Password}
-                      className="confirm-password-input"
-                    />
-                    <ErrorMessage
-                      name="password2"
-                      component="div"
-                      render={(msg) => (
-                        <div className="error-message" style={{ color: "red" }}>
-                          {msg}
-                        </div>
-                      )}
-                    />
-                    {formikProps.touched.password &&
-                      formikProps.touched.password2 &&
-                      !formikProps.errors.password &&
-                      !formikProps.errors.password2 &&
-                      formikProps.values.password !== "" &&
-                      formikProps.values.password ===
-                        formikProps.values.password2 && (
-                        <div
-                          className="error-message"
-                          style={{ color: "green" }}
-                        >
-                          비밀번호가 일치합니다
-                        </div>
-                      )}
-                  </Space>
-                </div>
+      <h1>비밀번호 재설정</h1>
+      <p>새로운 비밀번호를 입력하여 비밀번호를 재설정하세요.</p>
+      <Formik
+        initialValues={{ newPassword: "", confirmPassword: "" }}
+        validationSchema={ResetPasswordSchema}
+        validateOnChange={true}
+        validateOnBlur={true}
+        onSubmit={(values, { setSubmitting }) => {
+          sendPasswordResetRequest(values.newPassword);
+          setSubmitting(false);
+        }}
+      >
+        {({
+          isSubmitting,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          setFieldTouched,
+          validateField,
+          values,
+        }) => {
+          useEffect(() => {
+            if (
+              touched.newPassword &&
+              touched.confirmPassword &&
+              values.newPassword === values.confirmPassword &&
+              !errors.confirmPassword
+            ) {
+              setPasswordMatchMessage("비밀번호가 일치합니다.");
+            } else {
+              setPasswordMatchMessage("");
+            }
+          }, [
+            values.newPassword,
+            values.confirmPassword,
+            touched.newPassword,
+            touched.confirmPassword,
+            errors.confirmPassword,
+          ]);
+          return (
+            <Form className="reset-password-container">
+              <div className="input-container">
+                <Input
+                  type="password"
+                  name="newPassword"
+                  placeholder="새 비밀번호"
+                  className={`new-password-input ${
+                    touched.newPassword && errors.newPassword
+                      ? "input-error"
+                      : ""
+                  }`}
+                  value={values.newPassword}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setFieldTouched("newPassword", true, false);
+                    validateField("newPassword");
+                  }}
+                  onBlur={handleBlur}
+                  aria-label="New Password"
+                />
+                {touched.newPassword && errors.newPassword && (
+                  <div className="error-message">{errors.newPassword}</div>
+                )}
+              </div>
 
-                <div className="button-container">
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    disabled={formikProps.isSubmitting}
-                    loading={loading}
-                  >
-                    비밀번호 변경
-                  </Button>
-                </div>
-                {/* </Space> */}
+              <div className="input-container">
+                <Input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="비밀번호 확인"
+                  className={`confirm-password-input ${
+                    touched.confirmPassword && errors.confirmPassword
+                      ? "input-error"
+                      : ""
+                  }`}
+                  value={values.confirmPassword}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setFieldTouched("confirmPassword", true, false);
+                    validateField("confirmPassword");
+                  }}
+                  onBlur={handleBlur}
+                  aria-label="Confirm Password"
+                />
+                {touched.confirmPassword && errors.confirmPassword && (
+                  <div className="error-message">{errors.confirmPassword}</div>
+                )}
+                {passwordMatchMessage && (
+                  <div className="success-message">{passwordMatchMessage}</div>
+                )}
+              </div>
+
+              <div className="button-container">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  aria-label="Submit Password Reset Request"
+                >
+                  비밀번호 재설정
+                </button>
               </div>
             </Form>
-          )}
-        </Formik>
-      </div>
+          );
+        }}
+      </Formik>
     </ResetPasswordPageStyled>
   );
 }
