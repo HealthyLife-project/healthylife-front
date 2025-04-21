@@ -67,6 +67,8 @@ const CreateChat = () => {
           localStorage.setItem(
             "ChatBox",
             JSON.stringify({
+              boolean: false,
+              roomid: res.data.roomData.id,
               title: values.title,
               category: category,
               isOpen: true,

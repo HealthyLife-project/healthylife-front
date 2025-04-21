@@ -31,6 +31,7 @@ export default function useJoinChatRoom({
 
       const event = new CustomEvent("openChat", {
         detail: {
+          isOpen: true,
           title: selectedRecord.title,
           roomid: Number(selectedRecord.key),
           category: urlstr,
