@@ -67,10 +67,6 @@ export default function LoginPage() {
     window.location.href = `${process.env.NEXT_PUBLIC_ORIGIN_URL}/auth/google`;
   }
 
-  function handleResetPassword() {
-    router.push("/forgot-password/reset-password");
-  }
-
   //enter 시 로그인 실행
   const activeEnter = (e: any) => {
     if (e.key === "Enter") {
@@ -112,7 +108,9 @@ export default function LoginPage() {
             </button>
           </div>
           <div className="login-sub-container">
-            <div>아이디 찾기</div>
+            <div className="find-ID">
+              <Link href="/findID">아이디 찾기</Link>
+            </div>
 
             <div className="recover-password">
               <Link href="/forgot-password/recover-password">

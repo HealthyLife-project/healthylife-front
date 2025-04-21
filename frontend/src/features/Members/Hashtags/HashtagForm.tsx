@@ -38,7 +38,6 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
     const hashtagRequest = async () => {
       try {
         const response = await api.get("/hashtag/allhash");
-        // console.log("hashtag Form response", response);
         setTags(response.data);
       } catch (error: any) {
         console.error(error);
@@ -100,6 +99,7 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
         description: "2개 이상의 해시태그를 선택해 주세요.",
         duration: 3,
       });
+      return;
     }
 
     try {
@@ -107,14 +107,11 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
         hashtag: item.hash,
         category: item.categoryid,
       }));
-
-      // console.log({ userid, hashtagsAndCategories });
       const response = await api.post("/hashtag/selectedTags", {
         userid: userid,
         hashtagsAndCategories: hashtagsAndCategories,
       });
 
-      console.log("해시태그 제출 성공", response.data);
       notification.success({
         message: ":)",
         description: "해시태그 등록에 성공하였습니다.",
@@ -137,32 +134,23 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
     <>
       <div>
         <HashtagFormStyled>
-          {Object.keys(groupedTags).map((category) => (
-            <div key={category} style={{ marginBottom: "20px" }}>
-              <h3>카테고리: {category}</h3>
-              {groupedTags[category].map((hashtag) => (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {Object.values(groupedTags)
+              .flat()
+              .map((hashtag) => (
                 <StyledHashtagButton
                   className="hashtags"
                   key={hashtag.id}
                   onClick={() =>
                     handleToggle(hashtag.id, hashtag.hash, hashtag.categoryid)
                   }
-                  toggled={toggledStates[hashtag.id] ? true : false}
-                  // style={{
-                  //   marginRight: "8px",
-                  //   marginBottom: "8px",
-                  //   backgroundColor: toggledStates[hashtag.id]
-                  //     ? "green"
-                  //     : "red",
-                  //   color: "white",
-                  // }}
+                  $toggled={!!toggledStates[hashtag.id]}
                 >
                   {hashtag.hash}
                 </StyledHashtagButton>
               ))}
-            </div>
-          ))}
-          <div>
+          </div>
+          <div style={{ marginTop: "20px" }}>
             <Button
               className="registerHashtags"
               htmlType="submit"

@@ -2,11 +2,9 @@ import { ResetPasswordPageStyled } from "./styled";
 import api from "@/util/chek";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Input, Button, Space, Spin, Typography, notification } from "antd"; // Importing Ant Design components
-import { current } from "@reduxjs/toolkit";
-import { data } from "react-router-dom";
+import { Input, Button, Space, Spin, Typography, notification } from "antd";
 import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage, FormikProps } from "formik"; // Added
+import { Formik, Form, Field, ErrorMessage, FormikProps } from "formik";
 
 const { Title } = Typography;
 
@@ -54,10 +52,6 @@ export default function ResetPasswordPage() {
         setPasswordResetError("비밀번호가 일치 하지 않습니다.");
         return;
       }
-      console.log("prior to post request", {
-        userid: currentUserId,
-        password: newPassword,
-      });
       // 비밀번호 재설정 api
       const passwordData = {
         userid: currentUserId,
@@ -65,10 +59,8 @@ export default function ResetPasswordPage() {
         passwordCheck: confirmPassword,
       };
       const response = await api.post("/user/update/password", passwordData);
-      console.log("userid, password", currentUserId, newPassword);
       const { result, message } = response.data;
       if (result) {
-        console.log("Password reset successful:", response);
         notification.success({
           // Success notification
           message: "비밀번호 변경 완료",
@@ -78,7 +70,6 @@ export default function ResetPasswordPage() {
         });
         router.push("/login");
       } else if (!result) {
-        console.log("response.data.message", response);
         setPasswordResetError(message);
         notification.error({
           // Error notification

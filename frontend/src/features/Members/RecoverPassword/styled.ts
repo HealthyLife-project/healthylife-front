@@ -82,4 +82,31 @@ export const RecoverPasswordPageStyled = styled.div`
       text-decoration: underline;
     }
   }
+
+  @media (max-width: 768px) {
+    form {
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+
+    .email-input {
+      font-size: 14px;
+    }
+
+    button[type="submit"] {
+      font-size: 14px;
+      padding: 10px 16px;
+    }
+
+    a {
+      font-size: 13px;
+    }
+  }
 `;

@@ -6,8 +6,6 @@ import { RootState } from "@/redux/store";
 import HashtagForm from "@/features/Members/Hashtags/HashtagForm";
 
 const HashtagsModal = () => {
-  // const router = useRouter();
-
   const store = useSelector((state: RootState) => state.token.tokenList);
   const idNum = store?.id;
   // const userID = store.userid;
@@ -25,8 +23,6 @@ const HashtagsModal = () => {
   const validateUserHashtags = async () => {
     try {
       const response = await api.get(`/hashtag/validate/${idNum}`);
-      // response.data.result (true/false)
-      // console.log("hashtagmodal", response.data.result);
 
       if (response.data.result === true) {
         setIsModalOpen(false);

@@ -1,5 +1,25 @@
 import styled from "styled-components";
 
+export const FormItem = styled.div`
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: center;
+  padding: 10px 15px;
+  /* border-bottom: 1px solid #dcdcdc; */
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+export const FormLabel = styled.label`
+  width: 150px;
+  margin-right: 10px;
+  text-align: left;
+  padding-right: 10px;
+  margin-bottom: 0;
+`;
+
 export const SignupPageStyled = styled.div`
   .signup-page-container {
     display: flex;
@@ -55,12 +75,10 @@ export const SignupPageStyled = styled.div`
     input[type="email"],
     input[type="number"],
     select {
-      width: calc(100% - 10px);
+      width: 100%;
       padding: 8px;
       margin-top: 0;
-      border: 1px solid #ddd;
       border-radius: 3px;
-      box-sizing: border-box;
     }
 
     .input-with-button-container {
@@ -91,15 +109,15 @@ export const SignupPageStyled = styled.div`
     }
 
     button[type="submit"] {
-      margin-top: 20px;
       padding: 10px 15px;
       background-color: #d2e4f8; /* Different color for submit button */
       color: black;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      width: 100%; /* Make submit button full width */
+      width: 50%;
       font-weight: bold;
+      margin: 20px 150px;
     }
 
     .gender > div {
@@ -115,6 +133,7 @@ export const SignupPageStyled = styled.div`
 
     /* Style for the error messages */
     .error-message {
+      white-space: nowrap;
       color: red;
       font-size: 0.9em;
       margin-top: 3px;
@@ -126,32 +145,50 @@ export const SignupPageStyled = styled.div`
     }
   }
 
-  .ant-input-affix-wrapper.ant-input-password {
-    border: none !important; /* Remove default border */
-    border-radius: 0px;
+  @media (max-width: 768px) {
+    .signup-page-container {
+      width: 95%;
+      padding: 15px;
+    }
+
+    ${FormItem} {
+      grid-template-columns: 1fr;
+      padding: 8px;
+    }
+
+    ${FormLabel} {
+      width: auto;
+      padding-right: 0;
+      margin-bottom: 5px;
+    }
+
+    .input-with-button-container {
+      flex-direction: column;
+
+      input,
+      button {
+        width: 100%;
+        margin: 5px 0;
+      }
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      margin: 20px 0;
+    }
   }
 
-  .css-dev-only-do-not-override-1261szd.ant-input-affix-wrapper {
-    padding: 0 !important;
+  @media (max-width: 480px) {
+    .signup-page-container {
+      padding: 10px;
+    }
+
+    h1 {
+      font-size: 1.5em;
+    }
+
+    h3 {
+      font-size: 1em;
+    }
   }
-`;
-
-export const FormItem = styled.div`
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  align-items: center;
-  padding: 10px 15px;
-  /* border-bottom: 1px solid #dcdcdc; */
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-export const FormLabel = styled.label`
-  width: 150px;
-  margin-right: 10px;
-  text-align: left;
-  padding-right: 10px;
-  margin-bottom: 0;
 `;
