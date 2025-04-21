@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { ChatBoxStyled, theme } from "./styled";
-import { Button, Input, ConfigProvider, Dropdown } from "antd";
+import { Button, Input, ConfigProvider, Dropdown, Badge } from "antd";
 import { useState, useEffect } from "react";
 import socket from "@/util/socket";
 import { join } from "path";
@@ -345,13 +345,22 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
                     <strong>{msg.aopen}</strong>
                   </p>
                 ) : Number(msg.userid) === Number(userid) ? (
+                  //현재 유저가 입력한 내용 위치
                   <div className="user-content" key={index}>
                     <div className="other-content">{msg.message}</div>
                     <div className="other-name">{msg.userNickname}</div>
                   </div>
                 ) : (
+                  //상대방 위치
                   <div className="chat-content" key={index}>
-                    <div className="other-name">{msg.userNickname}</div>
+                    <Dropdown
+                      menu={{ items }}
+                      placement="bottom"
+                      trigger={["click"]}
+                      arrow
+                    >
+                      <div className="other-name">{msg.userNickname}</div>
+                    </Dropdown>
                     <div className="other-content">{msg.message}</div>
                   </div>
                 )

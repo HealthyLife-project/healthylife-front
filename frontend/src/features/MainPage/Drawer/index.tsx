@@ -45,9 +45,9 @@ const DrawerContainer = () => {
 
   //useEffect
   useEffect(() => {
+    //
     api.get(`/chat/pet/${id}`).then((res) => {
       let pet_data = res.data;
-
       //console.log("res pet", pet_data);
 
       setPetlist(pet_data);
@@ -77,7 +77,7 @@ const DrawerContainer = () => {
             key: `pet-${index}`,
             label: pet.title,
             onClick: () => {
-              console.log("Pet chat clicked:", pet);
+              //console.log("Pet chat clicked:", pet);
               joinChatRoom({
                 urlstr: "pet",
                 record: pet.roomid,
