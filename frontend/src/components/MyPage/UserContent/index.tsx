@@ -4,10 +4,6 @@ import api from "@/util/chek";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import Image from "next/image";
-
-//image -> 이후 back에서 가져오기
-import userimage from "../../../assets/images/usericon.png";
 
 //Component
 import ContentInfo from "../ContentInfo";
@@ -55,25 +51,12 @@ const UserContent = () => {
     });
   }, [id]);
 
-  //해당 유저에 해당하는 해시태그
-  // axios({
-  //   method: "get",
-  //   url: `http://localhost:5001/hashtag/hash/7`,
-  // }).then((res) => {
-  //   //console.log(res.data)
-  //   //setHashTag(res.data);
-  // });
-
   if (!tokenList?.id) {
-    return <div>로딩 중입니다...</div>;
+    return <div></div>;
   }
 
   return (
     <UserContentStyle className={clsx("main-wrap")}>
-      {/* <div className="user-img">
-        <Image className="imgstyle" src={userimage} alt="user-img"></Image>
-      </div> */}
-
       <ContentInfo
         name={name}
         nickname={nickname}

@@ -9,16 +9,11 @@ import HashTagSection from "@/features/MainPage/TodayTopic/HashTagSection";
 
 //list
 import { title_lst } from "./datalist";
-import api from "@/util/chek";
 
 //today topic, news main 컴포넌트
 const TopicMain = () => {
+  //변수 선언
   const router = useRouter();
-  //console.log("title_lst", title_lst);
-
-  // api.get("/hashtag/most").then((res) => {
-  //   console.log("res", res.data);
-  // });
 
   return (
     <>

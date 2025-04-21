@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { ChatBoxStyled, theme } from "./styled";
-import { Button, Input, ConfigProvider, Dropdown } from "antd";
+import { Button, Input, ConfigProvider, Dropdown, Badge } from "antd";
 import { useState, useEffect } from "react";
 import socket from "@/util/socket";
 import { join } from "path";
@@ -31,13 +31,14 @@ type ChatBoxLocal = {
   category: string;
   title: string;
   isOpen: boolean;
+  boolean: boolean;
 };
 
 //채팅방 > 메인 컴포넌트
 const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //변수 선언
   const tokenList = useSelector((state: RootState) => state.token.tokenList); //store 확인용 변수
-  //console.log("tolen", tokenList);
+  const [isFetchingMessages, setIsFetchingMessages] = useState(false); //무한 스크롤 시 스크롤 위치 변하지 않게 유지하기 위한 변수
 
   //useState
   const [username, setUsername] = useState(""); //유저 이름
@@ -45,7 +46,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [userNickname, setNickname] = useState(""); //유저 닉네임
   const [message, setMessage] = useState(""); //보낸 메시지
   const [messages, setMessages] = useState<
-    { userNickname: string; message: string; aopen?: string }[]
+    { userNickname: string; message: string; aopen?: string; userid: number }[]
   >([]); //메시지 전체
   const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
   const [room, setRoom] = useState(title); //방 이름
@@ -54,7 +55,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [isChatListOpen, setIsChatListOpen] = useState(false);
   const [chatList, setChatList] = useState<ChatBoxLocal[]>([]);
   const [pagecnt, setPageCnt] = useState(1);
-  //const [roomid, setRoomid] = useState();
 
   //useEffect
   useEffect(() => {
@@ -65,7 +65,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     //console.log("입장여부 확인", socket.connected);
 
     socket.on("receiveMessage", (data) => {
-      console.log("받은메세지", data);
+      //console.log("받은메세지", data);
       setMessages((prev) => [...prev, data]);
     });
 
@@ -77,7 +77,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       socket.off("receiveMessage");
       socket.off("userList");
     };
-  }, []);
+  }, [userNickname]);
 
   useEffect(() => {
     const chatBox = localStorage.getItem("ChatBox");
@@ -94,22 +94,28 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   //채팅입력 시 밑에서 부터 스크롤
   useEffect(() => {
     const container = document.querySelector(".content-srcoll");
-    if (container) {
+
+    if (container && !isFetchingMessages) {
       container.scrollTop = container.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isFetchingMessages]);
 
   //방 입장하기
   const joinRoom = (chatData: ChatBoxLocal) => {
     if (userNickname.trim() && room.trim()) {
       const category = chatData.category;
       const roomid = chatData.roomid;
-      socket.emit("joinRoom", { userNickname, room, category, roomid, userid });
+      const boolean = chatData.boolean;
+      socket.emit("joinRoom", {
+        userNickname,
+        room,
+        category,
+        roomid,
+        userid,
+        boolean,
+      });
 
       setJoined(true); // 채팅방 생성
-      // console.log("room id", chatData.roomid);
-      // const roomid_num:number = chatData.roomid
-      // setRoomid(roomid_num?);
 
       //입장 시 이전 내용
       api
@@ -118,12 +124,12 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           userid: Number(tokenList?.id),
         })
         .then((res: any) => {
-          console.log("joinroom", res.data);
+          //console.log("joinroom", res.data);
           //setMessages(res.data);
         });
 
       //채팅방 입력 시 이전 내용 불러오기
-      console.log("user", chatData.roomid, userid, pagecnt);
+      //console.log("user", chatData.roomid, userid, pagecnt);
       api
         .post(`/chat/${chatData.category}/getMessage`, {
           roomid: chatData.roomid,
@@ -132,7 +138,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           limit: 10,
         })
         .then((res) => {
-          console.log("res", res.data);
+          //console.log("res", res.data);
         });
     }
   };
@@ -145,7 +151,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
       // 스크롤이 가장 위에 도달한 경우
       if (container.scrollTop === 0) {
-        console.log("맨 위에 도달함, 이전 채팅 불러오기");
+        //console.log("맨 위에 도달함, 이전 채팅 불러오기");
         fetchPreviousMessages(); // 이전 메시지 불러오기 함수 호출
       }
     };
@@ -159,9 +165,16 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
   const fetchPreviousMessages = () => {
     if (!chatlocal || !userid) return;
-
+    setIsFetchingMessages(true);
     setPageCnt(pagecnt + 1);
 
+    const container = document.querySelector(".content-srcoll"); //스크롤 컨테이너
+    if (!container) return;
+
+    const previousScrollHeight = container.scrollHeight;
+    const previousScrollTop = container.scrollTop;
+
+    //메시지 조회 후 가져오기 (무한 스크롤)
     api
       .post(`/chat/${chatlocal.category}/getMessage`, {
         roomid: chatlocal.roomid,
@@ -174,19 +187,26 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         if (newMessages && newMessages.length > 0) {
           setMessages((prev) => [...newMessages, ...prev]); // 이전 메시지들을 위에 붙이기
           setPageCnt(pagecnt); // 페이지 수 증가
+
+          setTimeout(() => {
+            const newScrollHeight = container.scrollHeight;
+            container.scrollTop =
+              newScrollHeight - previousScrollHeight + previousScrollTop;
+          }, 0);
         }
       })
       .catch((error) => {
         console.error("이전 메시지 불러오기 실패", error);
+      })
+      .finally(() => {
+        setIsFetchingMessages(false); // 무한 스크롤 종료
       });
   };
 
   //메시지 보내기
   const sendMessage = () => {
-    console.log("chat  :", room, userNickname, message);
+    //console.log("chat  :", room, userNickname, message);
     if (message.trim()) {
-      socket.emit("sendMessage", { room, userNickname, message });
-      //console.log("loca", chatlocal);
       const today = new Date();
 
       const formatDate = (date: Date) => {
@@ -201,6 +221,16 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         return `${yyyy}.${mm}.${dd} ${hh}:${min}:${sec}`;
       };
 
+      const roomid = `${chatlocal?.roomid}-${chatlocal?.category}`;
+      socket.emit("sendMessage", {
+        roomid,
+        userNickname,
+        message,
+        userid,
+        time: formatDate(today),
+      });
+      //console.log("loca", chatlocal);
+
       let arr = {
         text: message,
         userid: userid,
@@ -209,12 +239,13 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         roomid: chatlocal?.roomid,
       };
 
-      console.log("chat data", arr);
+      //console.log("chat data", arr);
 
       //db 저장 요청
       api
         .post(`/chat/${chatlocal?.category}/saveMessage`, arr)
         .then((res) => {
+          //console.log("REs", res.data);
           //console.log("백엔드 저장 완료", res.data);
         })
         .catch((error: string) => {
@@ -251,7 +282,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         },
       })
       .then((res) => {
-        console.log("요청 성공");
+        //console.log("요청 성공");
 
         MySwal.fire({
           title: "체팅방을 나가실 건가요?",
@@ -282,7 +313,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     <>
       <ChatBoxStyled className={clsx("main-wrap")}>
         <div className="title">
-          <span onClick={showDrawer}>
+          <span onClick={showDrawer} className="arrow-back">
             <img src={arrowback.src} alt="arrow-back" />
           </span>
 
@@ -309,13 +340,28 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           <div className="content-srcoll">
             <div className="content">
               {messages.map((msg, index) =>
-                msg.aopen ? (
+                msg.aopen ? ( // 새로 입장한 경우
                   <p key={index}>
                     <strong>{msg.aopen}</strong>
                   </p>
+                ) : Number(msg.userid) === Number(userid) ? (
+                  //현재 유저가 입력한 내용 위치
+                  <div className="user-content" key={index}>
+                    <div className="other-content">{msg.message}</div>
+                    <div className="other-name">{msg.userNickname}</div>
+                  </div>
                 ) : (
+                  //상대방 위치
                   <div className="chat-content" key={index}>
-                    <strong>{msg.userNickname}: </strong> {msg.message}
+                    <Dropdown
+                      menu={{ items }}
+                      placement="bottom"
+                      trigger={["click"]}
+                      arrow
+                    >
+                      <div className="other-name">{msg.userNickname}</div>
+                    </Dropdown>
+                    <div className="other-content">{msg.message}</div>
                   </div>
                 )
               )}

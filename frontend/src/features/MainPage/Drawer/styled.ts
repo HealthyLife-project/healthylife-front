@@ -8,8 +8,11 @@ export const DrawerStyled = styled.div`
     flex-direction: column;
     gap: 10px;
 
-    .mypage-router {
-      cursor: pointer;
+    .mypage-router-menu {
+      .menu {
+        width: 100%;
+        border: none;
+      }
     }
 
     .main-bottom {
@@ -31,3 +34,14 @@ export const DrawerStyled = styled.div`
     }
   }
 `;
+
+export const theme = {
+  token: {
+    // Seed Token
+    // Alias Token
+
+    components: {
+      Menu: {},
+    },
+  },
+};
