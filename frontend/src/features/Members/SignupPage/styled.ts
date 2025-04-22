@@ -108,6 +108,12 @@ export const SignupPageStyled = styled.div`
       }
     }
 
+    .submit-button-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
     button[type="submit"] {
       padding: 10px 15px;
       background-color: #d2e4f8; /* Different color for submit button */
@@ -117,7 +123,7 @@ export const SignupPageStyled = styled.div`
       cursor: pointer;
       width: 50%;
       font-weight: bold;
-      margin: 20px 150px;
+      max-width: 400px;
     }
 
     .gender > div {
@@ -147,7 +153,7 @@ export const SignupPageStyled = styled.div`
 
   @media (max-width: 768px) {
     .signup-page-container {
-      width: 95%;
+      width: 90%;
       padding: 15px;
     }
 
@@ -172,9 +178,14 @@ export const SignupPageStyled = styled.div`
       }
     }
 
+    .submit-button-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
     button[type="submit"] {
       width: 100%;
-      margin: 20px 0;
+      margin: 10px 0;
     }
   }
 

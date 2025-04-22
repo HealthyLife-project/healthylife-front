@@ -3,16 +3,19 @@ import { RecoverPasswordPageStyled } from "./styled";
 import { Input, notification } from "antd";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+const RecoverPasswordSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("유효한 이메일 주소를 입력해 주세요.")
+    .required("이메일 주소를 입력해 주세요."),
+});
 
 export default function RecoverPasswordPage() {
-  const [passwordRecoveryEmailError, setPasswordRecoveryEmailError] =
-    useState<any>(null); // Adjust the type as needed
-  const [email, setEmail] = useState("");
   const router = useRouter();
 
   const sendPasswordRecoveryEmail = async (email: string) => {
-    setPasswordRecoveryEmailError(null);
-
     // 비밀번호 재설정 요청 이메일로
     try {
       const response = await api.post("/user/findUserEmail", {
@@ -30,40 +33,69 @@ export default function RecoverPasswordPage() {
       }
     } catch (error: any) {
       console.error("Error sending password recovery email:", error);
-      setPasswordRecoveryEmailError(error);
     }
   };
 
-  const submitHandler = (e: any) => {
-    e.preventDefault();
-    sendPasswordRecoveryEmail(email);
-  };
-
   return (
-    <>
-      <RecoverPasswordPageStyled>
-        <h1>비밀번호 찾기</h1>
-        <p>비밀번호 재설정을 위해 아래에 이메일 주소를 입력해 주세요.</p>
-        <form onSubmit={submitHandler}>
-          <div className="recover-password-container">
+    <RecoverPasswordPageStyled>
+      <h1>비밀번호 찾기</h1>
+      <p>비밀번호 재설정을 위해 아래에 이메일 주소를 입력해 주세요.</p>
+      <Formik
+        initialValues={{ email: "" }}
+        validationSchema={RecoverPasswordSchema}
+        validateOnChange={true}
+        validateOnBlur={true}
+        onSubmit={(values, { setSubmitting }) => {
+          sendPasswordRecoveryEmail(values.email);
+          setSubmitting(false);
+        }}
+      >
+        {({
+          isSubmitting,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          setFieldTouched,
+          validateField,
+          values,
+        }) => (
+          <Form className="recover-password-container">
             <div className="input-container">
               <Input
-                type="text"
+                type="email"
+                name="email"
                 placeholder="이메일 주소를 입력해 주십시오."
-                className="email-input"
-                value={email}
+                className={`email-input ${
+                  touched.email && errors.email ? "input-error" : ""
+                }`}
+                value={values.email}
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  handleChange(e); // updates Formik value
+                  setFieldTouched("email", true, false); // mark as touched
+                  validateField("email"); // force validation
                 }}
+                onBlur={handleBlur}
+                aria-label="Email Address"
               />
+              {touched.email && errors.email && (
+                <div className="error-message">{errors.email}</div>
+              )}
             </div>
+
             <div className="button-container">
-              <button type="submit">비밀번호 재설정 이메일 보내기</button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                aria-label="Submit Password Recovery Request"
+              >
+                비밀번호 재설정 이메일 보내기
+              </button>
             </div>
             <a href="/login">비밀번호를 기억하시나요? 로그인</a>
-          </div>
-        </form>
-      </RecoverPasswordPageStyled>
-    </>
+          </Form>
+        )}
+      </Formik>
+    </RecoverPasswordPageStyled>
   );
 }

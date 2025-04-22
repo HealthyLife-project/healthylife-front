@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { useState } from "react";
 import api from "@/util/chek";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { AxiosError } from "axios";
 
 export default function FindIDPage() {
   interface FormData {
@@ -23,25 +24,26 @@ export default function FindIDPage() {
       .matches(phoneRegExp, "휴대전화 번호 형식을 확인해주세요."),
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [foundID, setFoundID] = useState<{
     result: boolean;
     message: string;
     userid: string;
   } | null>(null);
 
-  const [phoneNumber, setPhoneNumber] = useState("");
-
   const findIDRequest = async (
     data: FormData,
     setSubmitting: (isSubmitting: boolean) => void
   ) => {
+    setLoading(true);
     try {
       const formatPhoneNumber = data.phone.replace(/[- ]/g, "");
       const response = await api.post("/user/findID", {
         phone: formatPhoneNumber,
       });
       setFoundID(response.data);
-    } catch (error: any) {
+    } catch (error: AxiosError | any) {
       console.error("Error finding ID:", error);
       setFoundID({
         result: false,
@@ -50,6 +52,7 @@ export default function FindIDPage() {
       });
     } finally {
       setSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -70,7 +73,11 @@ export default function FindIDPage() {
           <Formik<FormData>
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={onSubmit}
+            onSubmit={(data, { setSubmitting, resetForm }) => {
+              setSubmitting(true);
+              findIDRequest(data, setSubmitting);
+              resetForm();
+            }}
             validateOnChange={true}
           >
             {({
@@ -84,16 +91,14 @@ export default function FindIDPage() {
                 <Form>
                   <div className="form-container">
                     <Field
-                      type="text"
+                      type="tel"
                       id="phone"
                       name="phone"
                       placeholder="휴대전화 번호를 입력해주세요"
-                      value={phoneNumber}
                       as={Input}
                       onChange={(e: any) => {
                         handleChange(e);
                         validateField("phone");
-                        setPhoneNumber(e.target.value);
                         setFieldTouched("phone", true, false);
                       }}
                       onBlur={handleBlur}
@@ -112,6 +117,7 @@ export default function FindIDPage() {
 
                     <Button
                       htmlType="submit"
+                      loading={loading}
                       disabled={isSubmitting}
                       className="submit-button"
                     >

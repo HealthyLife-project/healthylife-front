@@ -315,7 +315,6 @@ const SignupPage: React.FC = () => {
                           handleChange(e);
                           validateField("password");
                           setFieldTouched("password", true, false);
-                          // handlePasswordMatchCheck();
                         }}
                         value={values.password}
                       />
@@ -341,7 +340,6 @@ const SignupPage: React.FC = () => {
                           handleChange(e);
                           validateField("confirmPassword");
                           setFieldTouched("confirmPassword", true, false);
-                          // handlePasswordMatchCheck();
                         }}
                         value={values.confirmPassword}
                       />
@@ -561,10 +559,11 @@ const SignupPage: React.FC = () => {
                     component="div"
                     render={(msg) => <div className="error-message">{msg}</div>}
                   />
-
-                  <Button htmlType="submit" disabled={isSubmitting}>
-                    회원가입
-                  </Button>
+                  <div className="submit-button-wrapper">
+                    <Button htmlType="submit" disabled={isSubmitting}>
+                      회원가입
+                    </Button>
+                  </div>
                 </Form>
               );
             }}

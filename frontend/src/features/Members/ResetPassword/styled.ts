@@ -5,60 +5,68 @@ export const ResetPasswordPageStyled = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Make sure it takes up the full viewport height */
-  padding: 20px; /* Add some padding around the content */
+  min-height: 100vh;
+  padding: 20px;
 
   form {
-    background-color: #fff; /* White card background */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 30px;
     width: 100%;
-    max-width: 400px; /* Limit the width of the form */
+    max-width: 400px;
   }
 
   .reset-password-container {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Spacing between elements */
+    gap: 20px;
     width: 100%;
   }
 
   h1 {
     font-size: 24px;
     margin-bottom: 10px;
-    color: #333; /* Dark text color */
+    color: #333;
     text-align: center;
   }
 
   p {
-    color: #666; /* Slightly lighter text for the description */
+    color: #666;
     text-align: center;
     margin-bottom: 20px;
   }
 
   .input-container {
-    display: flex;
-    justify-content: center;
     margin-bottom: 15px;
-    width: 100%;
-    /* width: 400px; */
   }
 
-  .new-password-input {
-    width: 300px;
-    padding: 10px;
-    border: 1px solid #ccc; /* Light gray border */
-    border-radius: 4px;
-    font-size: 16px;
-  }
-
+  .new-password-input,
   .confirm-password-input {
-    width: 300px;
+    width: 100%;
     padding: 10px;
-    border: 1px solid #ccc; /* Light gray border */
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+  }
+
+  .input-error {
+    border: 1px solid #ff4d4f;
+  }
+
+  .error-message {
+    color: #ff4d4f;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    text-align: left;
+  }
+
+  .success-message {
+    color: green;
+    font-size: 0.9em;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    text-align: left;
   }
 
   .button-container {
@@ -67,8 +75,8 @@ export const ResetPasswordPageStyled = styled.div`
   }
 
   button[type="submit"] {
-    background-color: #d2e4f8; /* Dark blue button background */
-    color: black; /* White button text */
+    background-color: #d2e4f8;
+    color: black;
     padding: 12px 20px;
     border: none;
     border-radius: 4px;
@@ -78,19 +86,11 @@ export const ResetPasswordPageStyled = styled.div`
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #d2e4f8; /* Slightly darker blue on hover */
-    }
-    .error-message {
-      font-size: 0.9em;
-      margin-top: 3px;
-      display: block;
-      text-align: left;
-      margin-bottom: 3px;
-      margin-right: 20px;
+      background-color: #a6c8f7;
     }
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 768px) {
     form {
       padding: 20px;
     }
@@ -105,7 +105,6 @@ export const ResetPasswordPageStyled = styled.div`
 
     .new-password-input,
     .confirm-password-input {
-      width: 100%;
       font-size: 14px;
     }
 

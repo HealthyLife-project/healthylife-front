@@ -77,17 +77,19 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
     }));
 
     setSelectedHashtags((prevHashtags) => {
-      const isCurrentlyToggled = !toggledStates[itemID];
+      const isHashtagSelected = prevHashtags.some(
+        (hashtagObj) => hashtagObj.hash === itemName
+      );
 
-      if (isCurrentlyToggled) {
+      if (isHashtagSelected) {
+        return prevHashtags.filter(
+          (hashtagObj) => hashtagObj.hash !== itemName
+        );
+      } else {
         return [
           ...prevHashtags,
           { hash: itemName, categoryid: itemCategoryId },
-        ]; // 이전 배열에 현재 아이템 해시값을 추가한 새 배열 반환
-      } else {
-        return prevHashtags.filter(
-          (hashtagObj) => hashtagObj.hash !== itemName
-        ); // 이전 배열에서 현재 아이템 해시값과 다른 값들만 필터링하여 새 배열 반환
+        ];
       }
     });
   };
@@ -102,11 +104,14 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
       return;
     }
 
+    const hashtagsAndCategories = selectedHashtags.map(
+      ({ hash, categoryid }) => ({
+        hashtag: hash,
+        category: categoryid,
+      })
+    );
+
     try {
-      const hashtagsAndCategories = selectedHashtags.map((item) => ({
-        hashtag: item.hash,
-        category: item.categoryid,
-      }));
       const response = await api.post("/hashtag/selectedTags", {
         userid: userid,
         hashtagsAndCategories: hashtagsAndCategories,
@@ -115,10 +120,10 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
       notification.success({
         message: ":)",
         description: "해시태그 등록에 성공하였습니다.",
-        duration: 3, // duration in seconds
+        duration: 3,
       });
-      onCloseModal();
 
+      onCloseModal();
       router.push("/");
     } catch (error) {
       console.error("해시태그 오류", error);
@@ -134,30 +139,34 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
     <>
       <div>
         <HashtagFormStyled>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-            {Object.values(groupedTags)
-              .flat()
-              .map((hashtag) => (
-                <StyledHashtagButton
-                  className="hashtags"
-                  key={hashtag.id}
-                  onClick={() =>
-                    handleToggle(hashtag.id, hashtag.hash, hashtag.categoryid)
-                  }
-                  $toggled={!!toggledStates[hashtag.id]}
-                >
-                  {hashtag.hash}
-                </StyledHashtagButton>
-              ))}
+          <div className="hashtags-container">
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+              {Object.values(groupedTags)
+                .flat()
+                .map((hashtag) => (
+                  <StyledHashtagButton
+                    className="hashtags"
+                    key={hashtag.id}
+                    onClick={() =>
+                      handleToggle(hashtag.id, hashtag.hash, hashtag.categoryid)
+                    }
+                    $toggled={!!toggledStates[hashtag.id]}
+                  >
+                    {hashtag.hash}
+                  </StyledHashtagButton>
+                ))}
+            </div>
           </div>
-          <div style={{ marginTop: "20px" }}>
-            <Button
-              className="registerHashtags"
-              htmlType="submit"
-              onClick={handleSubmit}
-            >
-              해시태그 등록
-            </Button>
+          <div className="submit-container">
+            <div style={{ marginTop: "20px" }}>
+              <Button
+                className="registerHashtags"
+                htmlType="submit"
+                onClick={handleSubmit}
+              >
+                해시태그 등록
+              </Button>
+            </div>
           </div>
         </HashtagFormStyled>
       </div>
