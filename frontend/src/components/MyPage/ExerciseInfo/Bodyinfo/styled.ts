@@ -13,7 +13,7 @@ export const BodyInfoStyle = styled.div`
     h1 {
       text-align: center;
       margin-bottom: 10px;
-      font-size: 24px;
+      font-size: 26px;
       color: #333;
     }
 
@@ -50,7 +50,7 @@ export const BodyInfoStyle = styled.div`
           .inbody-input {
             padding: 10px;
             font-size: 13px;
-            width: 350px;
+            width: 70%;
             border: none;
             border-bottom: 1px solid #444;
             border-radius: 0px;

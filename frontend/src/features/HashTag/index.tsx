@@ -9,25 +9,78 @@ import { Button } from "antd";
 const HashTag = (props: { id: number }) => {
   //변수 선언
   const { id } = props;
-  const [hashlist, setHashList] = useState([""]); //전체 해시태그
-  const [userhash, setUserHash] = useState([""]); //유저가 선택한 해시태그
-  //useEffect
+  const [hashlist, setHashList] = useState<
+    { id: number; hash: string; categoryid: number }[]
+  >([]); //전체 해시태그
+  const [userhash, setUserHash] = useState<
+    { id: number; hashtagId: number; category: string }[]
+  >([]); //유저가 회원가입 시 선택한 해시태그
+  const [updatelist, setUpdateList] = useState<{
+    id: number;
+    arr: { hashtag: number; category: number }[];
+  }>({ id: id, arr: [] }); //업데이트할 배열
 
+  //useEffect
   useEffect(() => {
     //해시태그 전체 가져 오기
     api.get(`/hashtag/allhash`).then((res) => {
-      let hash = res.data
-        .filter((item: { hash: string }) => item.hash)
-        .map((item: { hash: string }) => item.hash);
-
-      setHashList(hash);
+      console.log("all res", res.data);
+      setHashList(res.data);
     });
 
     //유저 id에 해당하는 해시태그 가져오기
-    // api.get(`/hashtag/user/${id}`).then((res) => {
-    //   console.log("res", res.data);
-    // });
-  }, []);
+    api.get(`/hashtag/user/${id}`).then((res) => {
+      console.log("user res", res.data);
+      setUserHash(res.data);
+
+      // 기존 유저 해시태그를 updatelist에 설정
+      setUpdateList((prevState) => ({
+        ...prevState,
+        id: Number(id),
+        arr: res.data.map((uh: { hashtagId: any; category: any }) => ({
+          hashtag: uh.hashtagId,
+          category: Number(uh.category),
+        })),
+      }));
+    });
+  }, [id]); // id가 변경될 때마다 실행
+
+  // 해시태그 클릭 시 처리
+  const handleHashClick = (item: {
+    id: number;
+    hash: string;
+    categoryid: number;
+  }) => {
+    const isAlreadySelected = updatelist.arr.some(
+      (arrItem) =>
+        arrItem.hashtag === item.id && arrItem.category === item.categoryid
+    );
+
+    if (isAlreadySelected) {
+      // 이미 선택된 해시태그는 제거
+      setUpdateList((prevState) => ({
+        ...prevState,
+        id: Number(id),
+        arr: prevState.arr.filter(
+          (arrItem) =>
+            !(
+              arrItem.hashtag === item.id &&
+              arrItem.category === item.categoryid
+            )
+        ),
+      }));
+    } else {
+      // 선택되지 않은 해시태그는 추가
+      setUpdateList((prevState) => ({
+        ...prevState,
+        id: Number(id),
+        arr: [
+          ...prevState.arr,
+          { hashtag: item.id, category: item.categoryid },
+        ],
+      }));
+    }
+  };
 
   //해시태그 수정 폼
   const hashFormik = useFormik({
@@ -35,7 +88,15 @@ const HashTag = (props: { id: number }) => {
     enableReinitialize: true, //state 값 update
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
-      console.log("values", values);
+      console.log("updatelist", updatelist);
+      api
+        .post("/hashtag/update", updatelist)
+        .then((res) => {
+          console.log("hash update res", res.data);
+        })
+        .catch((error: string) => {
+          console.log("error", error);
+        });
     },
   });
 
@@ -46,13 +107,24 @@ const HashTag = (props: { id: number }) => {
         <h1>HASHTAG</h1>
         <form className="hash-form" onSubmit={hashFormik.handleSubmit}>
           <div className="hash-section">
-            {hashlist.map((item: string, index: number) => {
-              return (
-                <div className="hash-content" key={index}>
-                  {item}
-                </div>
-              );
-            })}
+            {hashlist.map(
+              (item: { id: number; hash: string; categoryid: number }) => {
+                const isSelected = updatelist.arr.some(
+                  (arrItem) =>
+                    arrItem.hashtag === item.id &&
+                    arrItem.category === item.categoryid
+                );
+                return (
+                  <div
+                    className={clsx("hash-content", { selected: isSelected })}
+                    key={item.id}
+                    onClick={() => handleHashClick(item)} // 해시태그 클릭 시 처리
+                  >
+                    {item.hash}
+                  </div>
+                );
+              }
+            )}
           </div>
 
           <Button className="hash-btn" htmlType="submit">

@@ -25,14 +25,12 @@ const LCategory = () => {
 
   //person click
   const person = () => {
-    //console.log("person");
     setClick("person");
     router.push("/person");
   };
 
   //pet click
   const pet = () => {
-    //console.log("pet");
     setClick("pet");
     router.push("/pet");
   };

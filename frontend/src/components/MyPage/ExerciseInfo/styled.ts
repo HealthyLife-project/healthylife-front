@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const ExerciseInfoStyle = styled.div`
   &.main-wrap {
-    margin-top: 20px;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -12,7 +11,10 @@ export const ExerciseInfoStyle = styled.div`
       width: 100%;
 
       .title {
+        text-align: center;
         margin-bottom: 10px;
+        font-size: 26px;
+        color: #333;
       }
 
       .main-map {
@@ -26,7 +28,45 @@ export const ExerciseInfoStyle = styled.div`
     }
 
     .inbody {
-      margin-top: 30px;
+      h1 {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 26px;
+        color: #333;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    &.main-wrap {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      .main-top {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+
+        .title {
+          margin-bottom: 10px;
+        }
+
+        .main-map {
+          width: 100%;
+          height: 300px;
+        }
+        .main-info {
+          margin-top: 80px;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .inbody {
+        margin-top: 30px;
+      }
     }
   }
 `;
