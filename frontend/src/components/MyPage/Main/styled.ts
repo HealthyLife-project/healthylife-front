@@ -37,7 +37,7 @@ export const MyMain = styled.div`
 
     .tab-content {
       width: 100%;
-      margin-top: 20px;
+      //margin-top: 20px;
     }
   }
 `;

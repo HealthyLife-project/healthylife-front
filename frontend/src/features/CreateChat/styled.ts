@@ -7,7 +7,7 @@ export const CreateChatStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f9fafb;
+    //background-color: #f9fafb;
   }
 
   .chat-box {
@@ -18,7 +18,6 @@ export const CreateChatStyle = styled.div`
     flex-direction: column;
     justify-content: center;
     background: #ffffff;
-    //box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     text-align: center;
   }
 
@@ -42,30 +41,36 @@ export const CreateChatStyle = styled.div`
     margin-bottom: 4px;
   }
 
-  .chat-input {
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 16px;
-    height: 44px;
-    font-size: 15px;
-    padding: 0 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  .chat-button {
-    width: 100%;
-    height: 44px;
-    font-size: 15px;
-    font-weight: 500;
-    background-color: #6ca6cd;
-    border-color: #6ca6cd;
-    border-radius: 8px;
-    transition: background-color 0.3s;
+    .chat-input {
+      width: 80%;
+      margin-top: 20px;
+      margin-bottom: 16px;
+      height: 44px;
+      font-size: 15px;
+      padding: 0 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
 
-    &:hover {
-      background-color: #5c98c3;
-      border-color: #5c98c3;
+    .chat-button {
+      width: 130px;
+      height: 44px;
+      font-size: 15px;
+      font-weight: 500;
+      background-color: #6ca6cd;
+      border-color: #6ca6cd;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #5c98c3;
+        border-color: #5c98c3;
+      }
     }
   }
 `;

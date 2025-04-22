@@ -98,6 +98,11 @@ export const ChatBoxStyled = styled.div`
           min-height: 100%;
           height: auto;
 
+          .user-come {
+            text-align: center;
+            margin: 5px 0px;
+          }
+
           .chat-content {
             display: flex;
             flex-direction: row;

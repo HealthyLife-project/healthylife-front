@@ -49,11 +49,10 @@ export const HashTagStyle = styled.div`
       color: #262626;
       border: 1px solid #dbdbdb;
       transition: all 0.2s ease-in-out;
+    }
 
-      &:hover {
-        background-color: #d2e4f8;
-        cursor: pointer;
-      }
+    .hash-content.selected {
+      background-color: #add8e6;
     }
   }
 `;

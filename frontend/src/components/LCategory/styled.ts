@@ -14,6 +14,7 @@ export const LCategoryStyled = styled.div`
     .person,
     .pet {
       position: relative;
+      font-size: 17px;
     }
     .person::after,
     .pet::after {

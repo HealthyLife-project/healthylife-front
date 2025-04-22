@@ -7,11 +7,8 @@ export const TodayTopicStyled = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
-    //justify-content: space-between;
-    //padding: 0px 20px;
     align-items: center;
     margin: 0px auto;
-    //background-color: #d2e4f8;
 
     .topic-section {
       display: flex;
@@ -19,10 +16,7 @@ export const TodayTopicStyled = styled.div`
       gap: 20px;
 
       .today-img {
-        width: 35%;
-      }
-      .today-hash {
-        width: 65%;
+        width: 32%;
       }
     }
   }
