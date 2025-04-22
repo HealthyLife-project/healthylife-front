@@ -352,10 +352,7 @@ const SignupPage: React.FC = () => {
                     {touched.confirmPassword &&
                       !errors.confirmPassword &&
                       passwordMatchError && (
-                        <div
-                          className="success-message"
-                          style={{ color: "green" }}
-                        >
+                        <div className="success-message">
                           {passwordMatchError}
                         </div>
                       )}

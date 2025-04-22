@@ -5,7 +5,6 @@ export const FormItem = styled.div`
   grid-template-columns: 150px 1fr;
   align-items: center;
   padding: 10px 15px;
-  /* border-bottom: 1px solid #dcdcdc; */
 
   &:last-child {
     border-bottom: none;
@@ -116,7 +115,7 @@ export const SignupPageStyled = styled.div`
 
     button[type="submit"] {
       padding: 10px 15px;
-      background-color: #d2e4f8; /* Different color for submit button */
+      background-color: #d2e4f8;
       color: black;
       border: none;
       border-radius: 5px;
@@ -127,7 +126,6 @@ export const SignupPageStyled = styled.div`
     }
 
     .gender > div {
-      /* Style the container for radio buttons */
       display: flex;
       align-items: center;
     }
@@ -137,10 +135,20 @@ export const SignupPageStyled = styled.div`
       margin-right: 10px;
     }
 
-    /* Style for the error messages */
     .error-message {
       white-space: nowrap;
       color: red;
+      font-size: 0.9em;
+      margin-top: 3px;
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin-bottom: 3px;
+      margin-right: 50px;
+    }
+    .success-message {
+      white-space: nowrap;
+      color: green;
       font-size: 0.9em;
       margin-top: 3px;
       display: block;
