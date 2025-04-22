@@ -11,6 +11,7 @@ export const SubMainStyled = styled.div`
     margin: 0px auto;
     gap: 10px;
     align-items: flex-start;
+    margin-bottom: 20px;
 
     .main-content {
       display: flex;
@@ -68,6 +69,29 @@ export const SubMainStyled = styled.div`
       .main-left {
         margin-top: 0px;
         height: 300px;
+      }
+
+      .main-right {
+        flex-direction: column;
+        gap: 10px;
+
+        .search {
+          display: flex;
+          width: 100%;
+          justify-content: end;
+
+          .search-antd {
+            width: 220px;
+          }
+        }
+
+        .createRoom {
+          display: flex;
+          justify-content: end;
+          .create-btn {
+            width: 120px;
+          }
+        }
       }
     }
   }

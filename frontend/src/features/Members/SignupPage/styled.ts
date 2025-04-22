@@ -27,7 +27,7 @@ export const SignupPageStyled = styled.div`
     width: 600px;
     margin: 20px auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    //border: 1px solid #ccc;
     border-radius: 5px;
     max-width: 1280px;
 

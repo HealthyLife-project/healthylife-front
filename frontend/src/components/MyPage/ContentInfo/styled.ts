@@ -19,6 +19,7 @@ export const ContentInfoStyle = styled.div`
       .info-group {
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 8px;
         margin-bottom: 15px;
 
@@ -35,7 +36,7 @@ export const ContentInfoStyle = styled.div`
         }
         .info-input {
           display: flex;
-          width: 100%;
+          width: 90%;
           font-size: 16px;
           min-height: 50px;
           padding: 15px 13px;
@@ -43,6 +44,11 @@ export const ContentInfoStyle = styled.div`
           border-radius: 5px;
           border: 1px solid #e1e2e3;
           background: none;
+        }
+        .error-message {
+          color: red;
+          font-size: 12px;
+          margin-top: 4px;
         }
       }
     }
@@ -59,7 +65,55 @@ export const ContentInfoStyle = styled.div`
       cursor: pointer;
     }
   }
+  @media (max-width: 768px) {
+    &.main-wrap {
+      display: flex;
+      flex-direction: column;
+      max-width: 1280px;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      margin-top: 15px;
 
+      .user-info {
+        width: 350px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .info-group {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 15px;
+
+          .info-title {
+            color: #333;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 20px;
+            letter-spacing: -0.28px;
+          }
+
+          .tooltip {
+            padding-left: 5px;
+          }
+          .info-input {
+            display: flex;
+            width: 100%;
+            font-size: 13px;
+            min-height: 50px;
+            padding: 15px 13px;
+            align-items: flex-start;
+            border-radius: 5px;
+            border: 1px solid #e1e2e3;
+            background: none;
+          }
+        }
+      }
+    }
+  }
   @media (max-width: 486px) {
     &.main-wrap {
       width: 100%;
@@ -67,6 +121,8 @@ export const ContentInfoStyle = styled.div`
       .modify-form {
         display: flex;
         width: 100%;
+
+        align-items: center;
         flex-direction: column;
 
         .user-info {
@@ -94,8 +150,8 @@ export const ContentInfoStyle = styled.div`
 
             .info-input {
               display: flex;
-              width: 80%;
-              font-size: 16px;
+              width: 100%;
+              font-size: 13px;
               height: 100%;
               padding: 11px 13px;
               align-items: flex-start;

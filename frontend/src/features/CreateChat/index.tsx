@@ -26,8 +26,6 @@ const CreateChat = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); //모달 생성 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
   const [isModalComponentOpen, setIsModalComponentOpen] = useState(false); //모달 컴포넌트 open 여부
-  const [notifi, contextHolder] = notification.useNotification();
-
   //hook
   const checkLogin = useCheckLoginAlert();
 

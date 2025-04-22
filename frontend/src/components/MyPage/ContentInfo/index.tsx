@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import router from "next/router";
 import { QuestionCircleFilled } from "@ant-design/icons";
+import * as Yup from "yup";
 
 //마이페이지 > 개인정보 > 내용 컴포넌트
 const ContentInfo = (props: {
@@ -43,8 +44,6 @@ const ContentInfo = (props: {
   //useState
   const [id, setId] = useState();
 
-  const [notifi, contextHolder] = notification.useNotification();
-
   //라디오 버튼
   const options: CheckboxGroupProps<string>["options"] = [
     { label: "남성", value: "male" },
@@ -72,6 +71,21 @@ const ContentInfo = (props: {
       phone: phone || "",
       gender: gender || "",
     },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .min(2, "이름은 두 글자 이상 작성되어야 합니다.")
+        .required("이름을 입력해 주세요."),
+      email: Yup.string()
+        .email("유효한 이메일 형식을 입력해 주세요.")
+        .required("이메일을 입력해 주세요."),
+      age: Yup.number()
+        .typeError("숫자만 입력해 주세요.")
+        .max(149, "나이는 150세 미만이어야 합니다.")
+        .required("나이를 입력해 주세요."),
+      phone: Yup.string()
+        .matches(/^010\d{8}$/, "-를 뺀 숫자만 입력해 주세요")
+        .required("전화번호를 입력해 주세요."),
+    }),
     enableReinitialize: true, //state 값 update
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
@@ -124,7 +138,6 @@ const ContentInfo = (props: {
   return (
     <ContentInfoStyle className={clsx("main-wrap")}>
       <form className="modify-form" onSubmit={modifyFormik.handleSubmit}>
-        {contextHolder}
         <div className="user-info">
           <div className="info-group">
             <div>
@@ -144,86 +157,90 @@ const ContentInfo = (props: {
               onChange={modifyFormik.handleChange}
               value={modifyFormik.values.name}
             />
+            {modifyFormik.errors.name && (
+              <div className="error-message">{modifyFormik.errors.name}</div>
+            )}
           </div>
           <div className="info-group">
             <span className="info-title">닉네임</span>
-            <span>
-              <Input
-                className="info-input"
-                name="nickname"
-                onChange={modifyFormik.handleChange}
-                value={modifyFormik.values.nickname}
-              />
-            </span>
+            <Input
+              className="info-input"
+              name="nickname"
+              onChange={modifyFormik.handleChange}
+              value={modifyFormik.values.nickname}
+            />
           </div>
           <div className="info-group">
             <span className="info-title">이메일</span>
-            <span>
-              <Input
-                className="info-input"
-                name="email"
-                onChange={modifyFormik.handleChange}
-                value={modifyFormik.values.email}
-              />
-            </span>
+            <Input
+              className="info-input"
+              name="email"
+              onChange={modifyFormik.handleChange}
+              value={modifyFormik.values.email}
+            />
+            {modifyFormik.errors.email && (
+              <div className="error-message">{modifyFormik.errors.email}</div>
+            )}
           </div>
           <div className="info-group">
             <span className="info-title">나이</span>
-            <span>
-              <Input
-                className="info-input"
-                name="age"
-                onChange={modifyFormik.handleChange}
-                value={modifyFormik.values.age}
-              />
-            </span>
+            <Input
+              className="info-input"
+              name="age"
+              onChange={modifyFormik.handleChange}
+              value={modifyFormik.values.age}
+            />
+            {modifyFormik.errors.age && (
+              <div className="error-message">{modifyFormik.errors.age}</div>
+            )}
           </div>
           <div className="info-group">
             <span className="info-title">성별</span>
-            <span>
-              <Radio.Group
-                block
-                options={options}
-                value={modifyFormik.values.gender}
-                onChange={(e) =>
-                  modifyFormik.setFieldValue("gender", e.target.value)
-                }
-                optionType="button"
-              />
-            </span>
+            <Radio.Group
+              block
+              options={options}
+              value={modifyFormik.values.gender}
+              onChange={(e) =>
+                modifyFormik.setFieldValue("gender", e.target.value)
+              }
+              optionType="button"
+            />
           </div>
           <div className="info-group">
             <span className="info-title">전화번호</span>
-            <span>
-              <Input
-                className="info-input"
-                name="phone"
-                onChange={modifyFormik.handleChange}
-                value={modifyFormik.values.phone}
-              />
-            </span>
+            <Input
+              className="info-input"
+              name="phone"
+              onChange={modifyFormik.handleChange}
+              value={modifyFormik.values.phone}
+            />
+            {modifyFormik.errors.phone && (
+              <div className="error-message">{modifyFormik.errors.phone}</div>
+            )}
           </div>
           <div className="info-group">
             <span className="info-title">주소</span>
-            <span>
-              <Input
-                className="info-input"
-                name="address"
-                onChange={modifyFormik.handleChange}
-                value={modifyFormik.values.address}
-                onClick={() => {
-                  window.daum?.Postcode &&
-                    new window.daum.Postcode({
-                      oncomplete: function (data: any) {
-                        modifyFormik.setFieldValue("address", data.address);
-                      },
-                    }).open();
-                }}
-              />
-            </span>
+            <Input
+              className="info-input"
+              name="address"
+              onChange={modifyFormik.handleChange}
+              value={modifyFormik.values.address}
+              onClick={() => {
+                window.daum?.Postcode &&
+                  new window.daum.Postcode({
+                    oncomplete: function (data: any) {
+                      modifyFormik.setFieldValue("address", data.address);
+                    },
+                  }).open();
+              }}
+            />
           </div>
         </div>
-        <Button className="info-save" htmlType="submit">
+        <Button
+          className="info-save"
+          htmlType="submit"
+          disabled={!(modifyFormik.isValid && modifyFormik.dirty)}
+        >
           저장
         </Button>
       </form>

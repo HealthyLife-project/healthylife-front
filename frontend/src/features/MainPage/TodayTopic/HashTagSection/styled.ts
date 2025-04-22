@@ -12,7 +12,7 @@ export const HashTagSectionStyled = styled.div`
       width: max-content;
       gap: 30px;
       margin: 20px 0px;
-      animation: scroll-left 10s linear infinite;
+      animation: scroll-left 8s linear infinite;
       //transform: translateX(100%);
     }
 
@@ -32,7 +32,7 @@ export const HashTagSectionStyled = styled.div`
 
     @keyframes scroll-left {
       0% {
-        transform: translateX(100%);
+        transform: translateX(100vw);
       }
       100% {
         transform: translateX(-100%);

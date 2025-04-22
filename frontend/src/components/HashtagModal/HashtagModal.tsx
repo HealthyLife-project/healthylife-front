@@ -4,6 +4,8 @@ import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import HashtagForm from "@/features/Members/Hashtags/HashtagForm";
+import { HashTagModalStyled } from "./styled";
+import clsx from "clsx";
 
 const HashtagsModal = () => {
   const store = useSelector((state: RootState) => state.token.tokenList);
@@ -49,22 +51,22 @@ const HashtagsModal = () => {
   };
 
   return (
-    <>
-      <div>
-        <Modal
-          title="해시태그를 선택해 주세요"
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={null}
-        >
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
-          {isModalOpen && (
-            <HashtagForm userid={idNum} onCloseModal={closeModal} />
-          )}
-        </Modal>
-      </div>
-    </>
+    <HashTagModalStyled className={clsx("main-wrap")}>
+      <Modal
+        title="해시태그를 선택해 주세요"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={null}
+        maskClosable={false}
+        className="modal-style"
+      >
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {isModalOpen && (
+          <HashtagForm userid={idNum} onCloseModal={closeModal} />
+        )}
+      </Modal>
+    </HashTagModalStyled>
   );
 };
 

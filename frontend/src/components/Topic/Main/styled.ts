@@ -10,6 +10,13 @@ export const TodayTopicStyled = styled.div`
     align-items: center;
     margin: 0px auto;
 
+    .title {
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
     .topic-section {
       display: flex;
       width: 100%;

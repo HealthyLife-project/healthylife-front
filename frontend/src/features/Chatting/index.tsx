@@ -82,7 +82,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
       router.push("/mypage");
       return;
     }
-    console.log("dsf", selectedRecord);
+    //console.log("dsf", selectedRecord);
 
     if (selectedRecord) {
       joinChatRoom({
@@ -123,7 +123,7 @@ const Chatting = (props: { urlstr: string; search: ConvertedChatData[] }) => {
         columns={columns}
         dataSource={search.length > 0 ? search : data}
         onRow={(record, rowIndex) => {
-          console.log(record);
+          //console.log(record);
           return {
             onClick: () => {
               //console.log("클릭된 행:", record);

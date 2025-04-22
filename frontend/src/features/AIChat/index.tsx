@@ -16,11 +16,12 @@ const AiChat = () => {
   const [res, setRes] = useState("");
 
   const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
-    console.log(info?.source, value);
-    setPrompt(value);
+    //console.log(info?.source, value);
+    //setPrompt(value);
+    geneChange(value + "");
   };
 
-  const geneChange = async () => {
+  const geneChange = async (prompt: string) => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_ORIGIN_URL}/ai/generate`,
@@ -45,9 +46,8 @@ const AiChat = () => {
   return (
     <AiChatStyle className={clsx("main-wrap")}>
       <h1 className="title">AI에게 물어보세요!</h1>
-
       <div className="answer">{res}</div>
-      <Search onSearch={geneChange} />
+      <Search onSearch={onSearch} />
     </AiChatStyle>
   );
 };

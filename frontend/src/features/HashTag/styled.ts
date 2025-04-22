@@ -27,7 +27,6 @@ export const HashTagStyle = styled.div`
     width: 100%;
     justify-content: center;
     align-items: center;
-
     gap: 30px;
 
     .hash-section {
@@ -49,6 +48,7 @@ export const HashTagStyle = styled.div`
       color: #262626;
       border: 1px solid #dbdbdb;
       transition: all 0.2s ease-in-out;
+      cursor: pointer;
     }
 
     .hash-content.selected {

@@ -99,7 +99,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     if (container && !isFetchingMessages) {
       container.scrollTop = container.scrollHeight;
     }
-  }, [messages, isFetchingMessages]);
+  }, [messages]);
 
   //방 입장하기
   const joinRoom = (chatData: ChatBoxLocal) => {
@@ -107,30 +107,20 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       const category = chatData.category;
       const roomid = chatData.roomid;
       const boolean = chatData.boolean;
+      const title = chatData.title;
       socket.emit("joinRoom", {
         userNickname,
         room,
         category,
         roomid,
+        title,
         userid,
         boolean,
       });
 
       setJoined(true); // 채팅방 생성
 
-      //입장 시 이전 내용
-      api
-        .post(`/chat/${chatData.category}/insert`, {
-          roomid: Number(chatData.roomid),
-          userid: Number(tokenList?.id),
-        })
-        .then((res: any) => {
-          console.log("joinroom", res.data);
-          //setMessages(res.data);
-        });
-
       //채팅방 입력 시 이전 내용 불러오기
-      //console.log("user", chatData.roomid, userid, pagecnt);
       api
         .post(`/chat/${chatData.category}/getMessage`, {
           roomid: chatData.roomid,
@@ -167,33 +157,55 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const fetchPreviousMessages = () => {
     if (!chatlocal || !userid) return;
     setIsFetchingMessages(true);
-    setPageCnt(pagecnt + 1);
 
     const container = document.querySelector(".content-srcoll"); //스크롤 컨테이너
     if (!container) return;
 
     const previousScrollHeight = container.scrollHeight;
     const previousScrollTop = container.scrollTop;
-
+    const nextpage = pagecnt + 1;
     //메시지 조회 후 가져오기 (무한 스크롤)
     api
       .post(`/chat/${chatlocal.category}/getMessage`, {
         roomid: chatlocal.roomid,
         userid: userid,
-        page: pagecnt,
+        page: nextpage,
         limit: 10,
       })
       .then((res) => {
-        const newMessages = res.data;
-        if (newMessages && newMessages.length > 0) {
-          setMessages((prev) => [...newMessages, ...prev]); // 이전 메시지들을 위에 붙이기
-          setPageCnt(pagecnt); // 페이지 수 증가
+        const newMessages = res.data.page;
+        const total = res.data.total;
 
-          setTimeout(() => {
-            const newScrollHeight = container.scrollHeight;
-            container.scrollTop =
-              newScrollHeight - previousScrollHeight + previousScrollTop;
-          }, 0);
+        if (newMessages) {
+          const messageData = newMessages.map(
+            (item: {
+              aopen: any;
+              text: any;
+              time: any;
+              userNickname: any;
+              userid: any;
+            }) => {
+              return {
+                aopen: item.aopen,
+                message: item.text,
+                time: item.time,
+                userNickname: item.userNickname,
+                userid: item.userid,
+              };
+            }
+          );
+          if (!(nextpage > total)) {
+            setMessages((prev) => [...messageData, ...prev]);
+            // 이전 메시지들을 위에 붙이기
+            // 페이지 수 증가
+            console.log(res.data, "페이지");
+            setPageCnt(nextpage);
+            setTimeout(() => {
+              const newScrollHeight = container.scrollHeight;
+              container.scrollTop =
+                newScrollHeight - previousScrollHeight + previousScrollTop;
+            }, 0);
+          }
         }
       })
       .catch((error) => {
@@ -230,6 +242,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         userid,
         time: formatDate(today),
       });
+
       //console.log("loca", chatlocal);
 
       let arr = {
@@ -252,6 +265,14 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         .catch((error: string) => {
           //console.log("백엔드 저장 실패", error);
         });
+
+      //더이상 값이 없을 경우 더이상 위로 못 올라가게하기
+      setTimeout(() => {
+        const container = document.querySelector(".content-srcoll");
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      }, 0);
 
       setMessage("");
     }

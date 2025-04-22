@@ -178,7 +178,7 @@ const SignupPage: React.FC = () => {
         duration: 3,
       });
 
-      router.push("/");
+      router.push("/login");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("회원가입 실패:", error.response?.data || error.message);

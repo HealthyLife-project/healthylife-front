@@ -3,6 +3,7 @@ import { Button, notification } from "antd";
 import api from "@/util/chek";
 import { useRouter } from "next/router";
 import { HashtagFormStyled, StyledHashtagButton } from "./styled";
+import clsx from "clsx";
 
 // 백엔드 응답 데이터의 각 항목 구조 정의
 interface Hashtags {
@@ -136,41 +137,33 @@ const HashtagForm: React.FC<HashtagFormProps> = ({ userid, onCloseModal }) => {
   };
 
   return (
-    <>
-      <div>
-        <HashtagFormStyled>
-          <div className="hashtags-container">
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {Object.values(groupedTags)
-                .flat()
-                .map((hashtag) => (
-                  <StyledHashtagButton
-                    className="hashtags"
-                    key={hashtag.id}
-                    onClick={() =>
-                      handleToggle(hashtag.id, hashtag.hash, hashtag.categoryid)
-                    }
-                    $toggled={!!toggledStates[hashtag.id]}
-                  >
-                    {hashtag.hash}
-                  </StyledHashtagButton>
-                ))}
-            </div>
-          </div>
-          <div className="submit-container">
-            <div style={{ marginTop: "20px" }}>
-              <Button
-                className="registerHashtags"
-                htmlType="submit"
-                onClick={handleSubmit}
-              >
-                해시태그 등록
-              </Button>
-            </div>
-          </div>
-        </HashtagFormStyled>
+    <HashtagFormStyled className={clsx("main-wrap")}>
+      <div className="hashtags-container">
+        {Object.values(groupedTags)
+          .flat()
+          .map((hashtag) => (
+            <StyledHashtagButton
+              className="hashtags"
+              key={hashtag.id}
+              onClick={() =>
+                handleToggle(hashtag.id, hashtag.hash, hashtag.categoryid)
+              }
+              $toggled={!!toggledStates[hashtag.id]}
+            >
+              {hashtag.hash}
+            </StyledHashtagButton>
+          ))}
       </div>
-    </>
+      <div className="submit-container">
+        <Button
+          className="registerHashtags"
+          htmlType="submit"
+          onClick={handleSubmit}
+        >
+          해시태그 등록
+        </Button>
+      </div>
+    </HashtagFormStyled>
   );
 };
 
