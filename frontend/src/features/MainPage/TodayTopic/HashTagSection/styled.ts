@@ -13,6 +13,7 @@ export const HashTagSectionStyled = styled.div`
       gap: 30px;
       margin: 20px 0px;
       animation: scroll-left 10s linear infinite;
+      //transform: translateX(100%);
     }
 
     .hashtag-element {

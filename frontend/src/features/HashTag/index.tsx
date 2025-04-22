@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import api from "@/util/chek";
 import { useFormik } from "formik";
 import { Button } from "antd";
-import { error } from "console";
 
 const HashTag = (props: { id: number }) => {
   //변수 선언

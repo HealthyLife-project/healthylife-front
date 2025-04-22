@@ -3,7 +3,13 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 
 //swiper
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  Autoplay,
+} from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -43,10 +49,11 @@ const MainBanner = () => {
       <div>
         <Swiper
           className="swiper"
+          modules={[Autoplay]}
           spaceBetween={50}
           slidesPerView={1}
-          //onSlideChange={() => console.log("slide change")}
-          //onSwiper={(swiper) => console.log(swiper)}
+          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          loop={true}
         >
           <SwiperSlide>
             <img

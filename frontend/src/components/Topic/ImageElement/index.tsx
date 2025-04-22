@@ -30,8 +30,7 @@ const TopicElement = (props: { hash: string }) => {
   useEffect(() => {
     //ai 실행
     //console.log("hash", hash[0]);
-
-    airun();
+    //airun();
   }, [hash]);
 
   return (
