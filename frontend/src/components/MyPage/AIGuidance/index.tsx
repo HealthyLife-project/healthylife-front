@@ -45,7 +45,7 @@ const AIGuidance = () => {
         setWeight(res.data.weight);
       })
       .catch((error: string) => {
-        console.log("inbody current info error", error);
+        //console.log("inbody current info error", error);
       });
     api.get(`/user/${id}`).then((res) => {
       //console.log("res", res.data);

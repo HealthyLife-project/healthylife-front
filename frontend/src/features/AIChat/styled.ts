@@ -4,6 +4,12 @@ export const AiChatStyle = styled.div`
   &.main-wrap {
     width: 100%;
 
+    .title {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 26px;
+      color: #333;
+    }
     .answer {
       width: 100%;
       height: 350px;

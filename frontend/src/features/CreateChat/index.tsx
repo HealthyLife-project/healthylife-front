@@ -3,13 +3,14 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
 import { Formik, useFormik } from "formik";
-import { Input, Button } from "antd";
+import { Input, Button, notification } from "antd";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import api from "@/util/chek";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import useCheckLoginAlert from "@/hook/useCheckLoginAlert ";
+import { openNotificationWithIcon } from "@/util/notification";
 
 //Coponent
 
@@ -25,6 +26,8 @@ const CreateChat = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); //모달 생성 여부
   const [chatTitle, setChatTitle] = useState(""); //채팅방 이름
   const [isModalComponentOpen, setIsModalComponentOpen] = useState(false); //모달 컴포넌트 open 여부
+  const [notifi, contextHolder] = notification.useNotification();
+
   //hook
   const checkLogin = useCheckLoginAlert();
 
@@ -62,7 +65,8 @@ const CreateChat = () => {
         })
         .then((res) => {
           //console.log("res", res.data.roomData.id);
-          alert("채팅방 생성 성공!");
+          //alert("채팅방 생성 성공!");
+          openNotificationWithIcon("success", "채팅방 생성 성공!");
 
           setChatTitle(values.title);
           setIsModalOpen(true);
@@ -91,8 +95,6 @@ const CreateChat = () => {
     },
   });
 
-  //console.log("createFormik", createFormik.values);
-
   return (
     <>
       <Header />
@@ -104,7 +106,7 @@ const CreateChat = () => {
             한번 생성된 채팅방은 모든 유저가 나가기 전까지 삭제되지 않습니다
           </div>
           <div>방 제목을 신중하게 작성해 주세요!</div>
-          <form onSubmit={createFormik.handleSubmit}>
+          <form className="form" onSubmit={createFormik.handleSubmit}>
             <Input
               name="title"
               placeholder="채팅방 이름을 입력하세요"

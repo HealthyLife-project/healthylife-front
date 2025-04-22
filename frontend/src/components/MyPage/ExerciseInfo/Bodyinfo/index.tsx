@@ -40,7 +40,7 @@ const Bodyinfo = () => {
     onChange(info) {
       const { status, originFileObj, name } = info.file;
       if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
+        //console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
         //파일 업로드 성공한 경우
@@ -117,7 +117,7 @@ const Bodyinfo = () => {
           openNotificationWithIcon("success", "성공적으로 등록하였습니다.");
         })
         .catch((error: string) => {
-          console.log("전송 실패 에러: ", error);
+          //console.log("전송 실패 에러: ", error);
         });
     },
   });
