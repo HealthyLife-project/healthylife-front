@@ -1,6 +1,14 @@
 import clsx from "clsx";
 import { ChatBoxStyled, theme } from "./styled";
-import { Button, Input, ConfigProvider, Dropdown, Badge, Modal } from "antd";
+import {
+  Button,
+  Input,
+  ConfigProvider,
+  Dropdown,
+  Badge,
+  Modal,
+  notification,
+} from "antd";
 import { useState, useEffect } from "react";
 import socket from "@/util/socket";
 import { join } from "path";
@@ -9,6 +17,7 @@ import { RootState } from "@/redux/store";
 import api from "@/util/chek";
 import type { MenuProps } from "antd";
 import router from "next/router";
+import { openNotificationWithIcon } from "@/util/notification";
 
 //image
 import arrowback from "@/assets/images/arrowback.png";
@@ -46,7 +55,13 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [userNickname, setNickname] = useState(""); //유저 닉네임
   const [message, setMessage] = useState(""); //보낸 메시지
   const [messages, setMessages] = useState<
-    { userNickname: string; message: string; aopen?: string; userid: number }[]
+    {
+      userNickname: string;
+      message: string;
+      aopen?: string;
+      userid: number;
+      time: any;
+    }[]
   >([]); //메시지 전체
   const [users, setUsers] = useState<string[]>([]); //입장한 유저 목록
   const [room, setRoom] = useState(title); //방 이름
@@ -65,17 +80,19 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
   //신고 확인 버튼
   const handleOk = () => {
-    console.log("신고 내용:", reportText, reportTarget);
+    //console.log("신고 내용:", reportText, reportTarget);
     const reportContent = {
       report: reportText,
       reporterId: userid,
       userId: reportTarget,
     };
     api.post("/report/push", reportContent).then((res) => {
-      console.log("report", res.data);
+      //console.log("report", res.data);
       api.get("/report/get").then((rese) => {
         console.log("reportData", rese.data);
       });
+
+      openNotificationWithIcon("success", "신고하였습니다.");
     });
     setIsModalOpen(false);
     setReportText("");
@@ -444,6 +461,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
                 ) : Number(msg.userid) === Number(userid) ? (
                   //현재 유저가 입력한 내용 위치
                   <div className="user-content" key={index}>
+                    <div className="other-time">{msg.time.slice(5, 16)}</div>
                     <div className="other-content">{msg.message}</div>
                     <div className="other-name">{msg.userNickname}</div>
                   </div>
@@ -466,6 +484,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
                       </div>
                     </Dropdown>
                     <div className="other-content">{msg.message}</div>
+                    <div className="other-time"> {msg.time.slice(5, 16)}</div>
                   </div>
                 )
               )}

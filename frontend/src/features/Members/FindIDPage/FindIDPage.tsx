@@ -1,6 +1,7 @@
 import { FindIDPageStyled } from "./styled";
 import { Input, Button, Divider } from "antd";
 import * as Yup from "yup";
+import { useRouter } from "next/router";
 
 import { useState } from "react";
 import api from "@/util/chek";
@@ -8,6 +9,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { AxiosError } from "axios";
 
 export default function FindIDPage() {
+  const router = useRouter();
+
   interface FormData {
     phone: string;
   }
@@ -67,6 +70,14 @@ export default function FindIDPage() {
   return (
     <>
       <FindIDPageStyled>
+        <div
+          className="main-logo"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          HEALTHY LIFE
+        </div>
         <div className="findID-container">
           <h1>아이디 찾기</h1>
           <p>아이디를 찾기 위해 휴대전화 번호를 입력해주세요.</p>
@@ -104,7 +115,6 @@ export default function FindIDPage() {
                       onBlur={handleBlur}
                     />
 
-                    {/*  */}
                     <ErrorMessage
                       name="phone"
                       component="div"
@@ -112,8 +122,6 @@ export default function FindIDPage() {
                         <div className="error-message">{msg}</div>
                       )}
                     />
-
-                    {/*  */}
 
                     <Button
                       htmlType="submit"

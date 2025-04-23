@@ -38,6 +38,14 @@ export default function RecoverPasswordPage() {
 
   return (
     <RecoverPasswordPageStyled>
+      <div
+        className="main-logo"
+        onClick={() => {
+          router.push("/");
+        }}
+      >
+        HEALTHY LIFE
+      </div>
       <h1>비밀번호 찾기</h1>
       <p>비밀번호 재설정을 위해 아래에 이메일 주소를 입력해 주세요.</p>
       <Formik

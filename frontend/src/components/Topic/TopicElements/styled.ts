@@ -2,7 +2,7 @@ import styled from "styled-components";
 export const TopicElementStyled = styled.div`
   &.main-wrap {
     width: 100%;
-    max-height: 250px;
+    height: 100%;
     overflow-y: auto;
     padding: 16px;
     //background-color: #f9f9f9;

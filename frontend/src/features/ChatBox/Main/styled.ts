@@ -107,7 +107,11 @@ export const ChatBoxStyled = styled.div`
             display: flex;
             flex-direction: row;
             width: 100%;
-
+            align-items: center;
+            .other-time {
+              font-size: 9px;
+              align-items: end;
+            }
             .other-name {
               padding: 10px 5px;
               padding-right: 10px;
@@ -125,7 +129,12 @@ export const ChatBoxStyled = styled.div`
             width: 100%;
             text-align: right;
             justify-content: flex-end;
+            align-items: center;
 
+            .other-time {
+              font-size: 9px;
+              align-items: end;
+            }
             .other-name {
               padding: 10px 5px;
               padding-right: 10px;
@@ -134,7 +143,7 @@ export const ChatBoxStyled = styled.div`
               padding: 10px 15px;
               background-color: white;
               border-radius: 15px;
-              margin-left: auto;
+              margin-left: 10px;
             }
           }
         }

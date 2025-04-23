@@ -8,11 +8,19 @@ export const RecoverPasswordPageStyled = styled.div`
   min-height: 100vh;
   padding: 20px;
 
+  .main-logo {
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    //margin-top: 80px;
+    margin-bottom: 50px;
+  }
+
   form {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 30px;
+    //background-color: #fff;
+    //border-radius: 8px;
+    //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    //padding: 30px;
     width: 100%;
     max-width: 400px;
   }

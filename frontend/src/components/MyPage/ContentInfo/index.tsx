@@ -161,6 +161,7 @@ const ContentInfo = (props: {
               name="nickname"
               onChange={modifyFormik.handleChange}
               value={modifyFormik.values.nickname}
+              disabled
             />
           </div>
           <div className="info-group">
