@@ -4,31 +4,19 @@ import clsx from "clsx";
 import api from "@/util/chek";
 
 interface TopicElementProps {
-  props: string[];
+  props: string;
 }
+
+const cleanTitle = (str: string) => {
+  const noTags = str.replace(/<[^>]*>/g, "");
+  const txt = document.createElement("textarea");
+  txt.innerHTML = noTags;
+  return txt.value;
+};
 
 const TopicElement = ({ props }: TopicElementProps) => {
   const [healthNews, setHealthNews] = useState<any[]>([]);
   const [petHealthNews, setPetHealthNews] = useState<any[]>([]);
-
-  // useEffect로 뉴스 요청
-  useEffect(() => {
-    const fetchAllNews = async () => {
-      try {
-        // 첫 번째 카테고리 뉴스 요청 (운동 건강)
-        const healthData = await News(props[0]);
-        setHealthNews(healthData);
-
-        // 두 번째 카테고리 뉴스 요청 (반려동물 건강)
-        const petHealthData = await News(props[1]);
-        setPetHealthNews(petHealthData);
-      } catch (err) {
-        console.error("뉴스 가져오기 실패", err);
-      }
-    };
-
-    fetchAllNews();
-  }, [props]); // props가 변경될 때마다 API 호출을 다시 실행
 
   // 뉴스 가져오기 함수
   const News = async (category: string) => {
@@ -44,6 +32,30 @@ const TopicElement = ({ props }: TopicElementProps) => {
     }
   };
 
+  // useEffect로 뉴스 요청 및 5초 간격으로 재요청
+  useEffect(() => {
+    const fetchAllNews = async () => {
+      try {
+        // 첫 번째 카테고리 뉴스 요청 (운동 건강)
+        const healthData = await News(props[0]);
+        setHealthNews(healthData);
+
+        // 두 번째 카테고리 뉴스 요청 (반려동물 건강)
+      } catch (err) {
+        console.error("뉴스 가져오기 실패", err);
+      }
+    };
+
+    // 첫 번째 데이터 로딩
+    fetchAllNews();
+
+    // 5초 간격으로 뉴스 새로 요청
+    const interval = setInterval(fetchAllNews, 5000);
+
+    // 컴포넌트 unmount 시 interval을 정리
+    return () => clearInterval(interval);
+  }, []); // props가 변경될 때마다 이 useEffect가 실행됨
+
   return (
     <TopicElementStyled className={clsx("main-wrap")}>
       {healthNews.length > 0 ? (
@@ -51,14 +63,14 @@ const TopicElement = ({ props }: TopicElementProps) => {
           {healthNews.map((item, index) => (
             <div key={index} className="title">
               <a href={item.link} target="_blank" rel="noopener noreferrer">
-                {item.title}
+                {cleanTitle(item.title)}
               </a>
               {/* <p>{item.description}</p> */}
             </div>
           ))}
         </div>
       ) : (
-        <p>운동 건강 뉴스를 불러오는 중...</p>
+        <p>뉴스를 불러오는 중...</p>
       )}
     </TopicElementStyled>
   );

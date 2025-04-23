@@ -38,49 +38,49 @@ const TopicMain = () => {
 
   return (
     <>
-      {title_lst.map((element: { title: string }, index: number) => (
-        <TodayTopicStyled className={clsx("main-wrap")} key={index}>
-          {index === 0 ? (
-            <>
-              <div className="title">
-                <TopicTitle title={element.title} />
-                <Tooltip
-                  placement="right"
-                  title={text("Today")}
-                  className="tooltip"
-                  color="#108ee9"
-                >
-                  <QuestionCircleFilled />
-                </Tooltip>
-              </div>
-              <div className="topic-section">
-                <div className="today-img">
-                  <ImageElement hash={hash[0]} />
+      {title_lst.map(
+        (element: { title: string; str?: string[] }, index: number) => (
+          <TodayTopicStyled className={clsx("main-wrap")} key={index}>
+            {index === 0 ? (
+              <>
+                <div className="title">
+                  <TopicTitle title={element.title} />
+                  <Tooltip
+                    placement="right"
+                    title={text("Today")}
+                    className="tooltip"
+                    color="#108ee9"
+                  >
+                    <QuestionCircleFilled />
+                  </Tooltip>
                 </div>
-                <div className="today-img">
-                  <ImageElement hash={hash[1]} />
+                <div className="topic-section">
+                  <div className="today-img">
+                    <ImageElement hash={hash[0]} />
+                  </div>
+                  <div className="today-img">
+                    <ImageElement hash={hash[1]} />
+                  </div>
+                  <div className="today-img">
+                    <ImageElement hash={hash[2]} />
+                  </div>
                 </div>
-                <div className="today-img">
-                  <ImageElement hash={hash[2]} />
+              </>
+            ) : (
+              <>
+                <div className="title">
+                  <TopicTitle title={element.title} />
                 </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="title">
-                <TopicTitle title={element.title} />
-              </div>
-              <div className="topic-section">
-                <TopicElement props={["사람의 건강", "반려동물의 건강"]} />
-                <TopicElement
-                  props={["운동하기 좋은 날", "반려동물과 운동하기 좋은 종목"]}
-                />
-                <TopicElement props={["피트니스", "반려동물과 함께 산책"]} />
-              </div>
-            </>
-          )}
-        </TodayTopicStyled>
-      ))}
+                <div className="topic-section">
+                  <TopicElement props={element.str ? element.str[0] : ""} />
+                  <TopicElement props={element.str ? element.str[1] : ""} />
+                  <TopicElement props={element.str ? element.str[2] : ""} />
+                </div>
+              </>
+            )}
+          </TodayTopicStyled>
+        )
+      )}
     </>
   );
 };
