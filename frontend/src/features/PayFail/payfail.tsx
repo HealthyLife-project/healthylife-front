@@ -1,6 +1,12 @@
-import router from "next/router";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
-export function FailPage() {
-  router.push("/");
+export default function FailPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/");
+  }, [router]);
+
   return <div></div>;
 }
