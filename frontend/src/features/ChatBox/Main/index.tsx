@@ -148,7 +148,19 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
       setJoined(true); // 채팅방 생성
 
+      //입장 시 이전 내용
+      // api
+      //   .post(`/chat/${chatData.category}/insert`, {
+      //     roomid: Number(chatData.roomid),
+      //     userid: Number(tokenList?.id),
+      //   })
+      //   .then((res: any) => {
+      //     console.log("joinroom", res.data);
+      //     //setMessages(res.data);
+      //   });
+
       //채팅방 입력 시 이전 내용 불러오기
+      //console.log("user", chatData.roomid, userid, pagecnt);
       api
         .post(`/chat/${chatData.category}/getMessage`, {
           roomid: chatData.roomid,
@@ -157,7 +169,32 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           limit: 10,
         })
         .then((res) => {
-          console.log("getmessage res", res.data);
+          const newMessages = res.data.page;
+          const total = res.data.total;
+
+          if (newMessages) {
+            const messageData = newMessages.map(
+              (item: {
+                aopen: any;
+                text: any;
+                time: any;
+                userNickname: any;
+                userid: any;
+              }) => {
+                return {
+                  aopen: item.aopen,
+                  message: item.text,
+                  time: item.time,
+                  userNickname: item.userNickname,
+                  userid: item.userid,
+                };
+              }
+            );
+
+            setMessages((prev) => [...messageData, ...prev]);
+            // 이전 메시지들을 위에 붙이기
+            // 페이지 수 증가
+          }
         });
     }
   };
@@ -294,13 +331,12 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           //console.log("백엔드 저장 실패", error);
         });
 
-      //더이상 값이 없을 경우 더이상 위로 못 올라가게하기
       setTimeout(() => {
         const container = document.querySelector(".content-srcoll");
         if (container) {
           container.scrollTop = container.scrollHeight;
         }
-      }, 0);
+      }, 150);
 
       setMessage("");
     }
@@ -433,7 +469,6 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           </div>
         </div>
       </ChatBoxStyled>
-
       <Modal
         title="신고하기"
         open={isModalOpen}

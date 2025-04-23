@@ -46,13 +46,12 @@ const TopicElement = ({ props }: TopicElementProps) => {
 
   return (
     <TopicElementStyled className={clsx("main-wrap")}>
-      <h3>운동 건강 뉴스</h3>
       {healthNews.length > 0 ? (
-        <div>
+        <div className="news-elements">
           {healthNews.map((item, index) => (
-            <div key={index}>
+            <div key={index} className="title">
               <a href={item.link} target="_blank" rel="noopener noreferrer">
-                <h4>{item.title}</h4>
+                {item.title}
               </a>
               {/* <p>{item.description}</p> */}
             </div>
@@ -61,22 +60,6 @@ const TopicElement = ({ props }: TopicElementProps) => {
       ) : (
         <p>운동 건강 뉴스를 불러오는 중...</p>
       )}
-
-      {/* <h3>반려동물 건강 뉴스</h3>
-      {petHealthNews.length > 0 ? (
-        <div>
-          {petHealthNews.map((item, index) => (
-            <div key={index}>
-              <a href={item.link} target="_blank" rel="noopener noreferrer">
-                <h4>{item.title}</h4>
-              </a>
-              <p>{item.description}</p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p>반려동물 건강 뉴스를 불러오는 중...</p>
-      )} */}
     </TopicElementStyled>
   );
 };
