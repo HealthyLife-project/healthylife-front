@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { ChatBoxStyled, theme } from "./styled";
-import { Button, Input, ConfigProvider, Dropdown, Badge } from "antd";
+import { Button, Input, ConfigProvider, Dropdown, Badge, Modal } from "antd";
 import { useState, useEffect } from "react";
 import socket from "@/util/socket";
 import { join } from "path";
@@ -55,6 +55,34 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [isChatListOpen, setIsChatListOpen] = useState(false);
   const [chatList, setChatList] = useState<ChatBoxLocal[]>([]);
   const [pagecnt, setPageCnt] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reportText, setReportText] = useState("");
+
+  //신고하기 모달
+  const reportModal = () => {
+    setIsModalOpen(true);
+  };
+
+  //신고 확인 버튼
+  const handleOk = () => {
+    console.log("신고 내용:", reportText);
+    api.post("/report/push").then((res) => {
+      console.log("report", res.data);
+    });
+    setIsModalOpen(false);
+    setReportText("");
+  };
+
+  //신고 모달 취소 버튼
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setReportText("");
+  };
+
+  //신고 모달 내용 변경
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReportText(e.target.value);
+  };
 
   //useEffect
   useEffect(() => {
@@ -331,14 +359,17 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
     },
   ];
 
+  const chatitems: MenuProps["items"] = [
+    {
+      key: 1,
+      label: <div onClick={reportModal}>신고하기</div>,
+    },
+  ];
+
   return (
     <>
       <ChatBoxStyled className={clsx("main-wrap")}>
         <div className="title">
-          <span onClick={showDrawer} className="arrow-back">
-            <img src={arrowback.src} alt="arrow-back" />
-          </span>
-
           <span>{title}</span>
           <div className="menu">
             <Dropdown menu={{ items }} placement="bottom" arrow>
@@ -376,7 +407,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
                   //상대방 위치
                   <div className="chat-content" key={index}>
                     <Dropdown
-                      menu={{ items }}
+                      menu={{ items: chatitems }}
                       placement="bottom"
                       trigger={["click"]}
                       arrow
@@ -402,13 +433,21 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
           </div>
         </div>
       </ChatBoxStyled>
-      {isChatListOpen && (
-        <ChatDrawer
-          onClose={closeDrawer}
-          category={chatlocal?.category || "카테고리"}
-          title={title}
+
+      <Modal
+        title="신고하기"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="전송"
+        cancelText="취소"
+      >
+        <Input
+          placeholder="신고 내용을 입력하세요"
+          value={reportText}
+          onChange={handleChange}
         />
-      )}
+      </Modal>
     </>
   );
 };

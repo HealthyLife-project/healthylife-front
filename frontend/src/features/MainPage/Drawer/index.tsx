@@ -181,7 +181,7 @@ const DrawerContainer = () => {
           로그아웃
         </Button>
         <div className="dark-mode">
-          <Segmented
+          {/* <Segmented
             shape="round"
             options={[
               { value: "light", icon: <SunOutlined /> },
@@ -190,7 +190,7 @@ const DrawerContainer = () => {
             onChange={(e) => {
               onChange(e);
             }}
-          />
+          /> */}
         </div>
       </div>
     </DrawerStyled>

@@ -17,7 +17,7 @@ import { QuestionCircleFilled } from "@ant-design/icons";
 
 const text = (title: string) => {
   if (title === "Today") {
-    return "사용자들이 많이 사용한 해시태그에 대한 이미지에요!";
+    return "사용자들이 많이 사용한 해시태그에 대한 AI이미지에요!";
   }
 };
 
