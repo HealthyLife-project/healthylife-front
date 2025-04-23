@@ -111,7 +111,7 @@ const ContentInfo = (props: {
     const MySwal = withReactContent(Swal);
 
     MySwal.fire({
-      title: "정말로 탈퇴할실 건가요?",
+      title: "정말로 탈퇴할 실 건가요?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -142,13 +142,6 @@ const ContentInfo = (props: {
           <div className="info-group">
             <div>
               <span className="info-title">이름</span>
-              <Tooltip
-                placement="right"
-                title={text("name")}
-                className="tooltip"
-              >
-                <QuestionCircleFilled />
-              </Tooltip>
             </div>
 
             <Input

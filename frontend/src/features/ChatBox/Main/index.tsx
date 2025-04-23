@@ -57,7 +57,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
   const [pagecnt, setPageCnt] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reportText, setReportText] = useState("");
-
+  const [reportTarget, setReportTarget] = useState<Number>();
   //신고하기 모달
   const reportModal = () => {
     setIsModalOpen(true);
@@ -65,9 +65,17 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
 
   //신고 확인 버튼
   const handleOk = () => {
-    console.log("신고 내용:", reportText);
-    api.post("/report/push").then((res) => {
+    console.log("신고 내용:", reportText, reportTarget);
+    const reportContent = {
+      report: reportText,
+      reporterId: userid,
+      userId: reportTarget,
+    };
+    api.post("/report/push", reportContent).then((res) => {
       console.log("report", res.data);
+      api.get("/report/get").then((rese) => {
+        console.log("reportData", rese.data);
+      });
     });
     setIsModalOpen(false);
     setReportText("");
@@ -448,7 +456,14 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
                       trigger={["click"]}
                       arrow
                     >
-                      <div className="other-name">{msg.userNickname}</div>
+                      <div
+                        className="other-name"
+                        onClick={() => {
+                          setReportTarget(msg.userid);
+                        }}
+                      >
+                        {msg.userNickname}
+                      </div>
                     </Dropdown>
                     <div className="other-content">{msg.message}</div>
                   </div>

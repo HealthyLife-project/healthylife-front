@@ -17,13 +17,14 @@ const AIGuidance = () => {
   //useState
   const [aicontent, setAiContent] = useState("");
   const [id, setId] = useState(tokenList?.id);
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
-  const [muscleMass, setMuscleMess] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
 
-  async function airun() {
+  async function airun(
+    height: string,
+    muscleMass: string,
+    weight: string,
+    age: string,
+    gender: string
+  ) {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `몸무게가 ${weight}kg이고 키가 ${height}인 야외활동을 좋아하는 나이가 ${age}세인 ${gender}의 운동 루틴을 추천해줘. 
@@ -39,22 +40,22 @@ const AIGuidance = () => {
     api
       .get(`/inbody/currentinfo/${id}`)
       .then((res) => {
-        //console.log("res", res.data);
-        setHeight(res.data.height);
-        setMuscleMess(res.data.muscleMass);
-        setWeight(res.data.weight);
+        console.log("res", res.data);
+        api.get(`/user/${id}`).then((resd) => {
+          airun(
+            res.data.height,
+            res.data.muscleMass,
+            res.data.weight,
+            resd.data.age,
+            resd.data.gender
+          );
+        });
       })
       .catch((error: string) => {
         //console.log("inbody current info error", error);
       });
-    api.get(`/user/${id}`).then((res) => {
-      //console.log("res", res.data);
-      setAge(res.data.age);
-      setGender(res.data.gender);
-    });
 
     //ai 실행
-    airun();
   }, []);
 
   return (
