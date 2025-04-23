@@ -4,14 +4,12 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export default function SocialLogin() {
-  //변수 선언
   const router = useRouter();
   const dispatch = useDispatch();
   const { userid, token, signup } = router.query;
 
-  //console.log("query", router.query);
   useEffect(() => {
-    // userid와 token이 string일 경우에만 처리
+    // userid와 token이 string일 경우만 처리
     if (typeof userid === "string" && typeof token === "string") {
       dispatch(
         setTokenList({
@@ -25,17 +23,13 @@ export default function SocialLogin() {
       );
     }
 
-    // signup 값에 따라 리디렉션 처리
     if (signup === "false") {
+      // 처음 소셜 로그인 한 경우
       router.push("/mypage?signup=false");
     } else if (signup === "true") {
       router.push("/");
     }
-  }, [dispatch, router, signup, userid, token]); // 의존성 배열 추가
+  }, [signup, userid, token, dispatch, router]);
 
-  return (
-    <>
-      <div></div>
-    </>
-  );
+  return <div></div>;
 }
