@@ -11,7 +11,7 @@ const SubMap = () => {
 
   return (
     <SubMapStyled className={clsx("main-wrap")}>
-      <KAKAOMap position={""} />
+      <KAKAOMap position={"main"} />
     </SubMapStyled>
   );
 };
