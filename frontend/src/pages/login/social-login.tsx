@@ -10,26 +10,32 @@ export default function SocialLogin() {
   const { userid, token, signup } = router.query;
 
   //console.log("query", router.query);
-
-  dispatch(
-    setTokenList({
-      token: {
-        userid: userid,
-      },
-    })
-  );
-
   useEffect(() => {
+    // userid와 token이 string일 경우에만 처리
+    if (typeof userid === "string" && typeof token === "string") {
+      dispatch(
+        setTokenList({
+          token: {
+            userid: userid,
+            name: "",
+            id: "",
+            premium: 0,
+          },
+        })
+      );
+    }
+
+    // signup 값에 따라 리디렉션 처리
     if (signup === "false") {
-      //처음 소셜 로그인 한 경우
       router.push("/mypage?signup=false");
     } else if (signup === "true") {
       router.push("/");
     }
-  }, [signup, userid, token]);
+  }, [dispatch, router, signup, userid, token]); // 의존성 배열 추가
+
   return (
     <>
-      <div>hello social login</div>
+      <div></div>
     </>
   );
 }

@@ -12,7 +12,7 @@ export const MainStyled = styled.div`
     padding: 0px 20px;
     align-items: center;
     margin: 0px auto;
-    background-color: ${(props) => props.theme.backgroundColor};
+    background-color: white;
 
     margin-bottom: 50px;
   }
