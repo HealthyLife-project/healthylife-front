@@ -70,5 +70,6 @@ export const MyMain = styled.div`
   }
 
   @media (max-width: 480px) {
+    width: 100%;
   }
 `;
