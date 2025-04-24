@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import api from "@/util/chek";
 import { useFormik } from "formik";
 import { Button } from "antd";
+import { openNotificationWithIcon } from "@/util/notification";
 
 const HashTag = (props: { id: number }) => {
   //변수 선언
@@ -88,11 +89,12 @@ const HashTag = (props: { id: number }) => {
     enableReinitialize: true, //state 값 update
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
-      console.log("updatelist", updatelist);
+      //console.log("updatelist", updatelist);
       api
         .post("/hashtag/update", updatelist)
         .then((res) => {
-          console.log("hash update res", res.data);
+          //console.log("hash update res", res.data);
+          openNotificationWithIcon("success", "성공적으로 수정하였습니다.");
         })
         .catch((error: string) => {
           console.log("error", error);
