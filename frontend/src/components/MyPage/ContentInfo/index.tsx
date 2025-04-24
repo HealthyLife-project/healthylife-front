@@ -170,16 +170,15 @@ const ContentInfo = (props: {
           <div className="info-group">
             <span className="info-title">닉네임</span>
             <div className="nickname-info">
-              <div>
-                <Input
-                  className="info-input"
-                  name="nickname"
-                  onChange={modifyFormik.handleChange}
-                  value={modifyFormik.values.nickname}
-                />
-              </div>
+              <Input
+                className="info-input"
+                name="nickname"
+                onChange={modifyFormik.handleChange}
+                value={modifyFormik.values.nickname}
+              />
               <div>
                 <Button
+                  className="check-btn"
                   onClick={() =>
                     checkNicknameAvailability(modifyFormik.values.nickname)
                   }
@@ -188,7 +187,15 @@ const ContentInfo = (props: {
                 </Button>
               </div>
             </div>
-            <div>{nicknameAvailability?.message}</div>
+            <div
+              className={
+                nicknameAvailability?.result === false
+                  ? "error-message"
+                  : "error-true"
+              }
+            >
+              {nicknameAvailability?.message}
+            </div>
           </div>
           <div className="info-group">
             <span className="info-title">이메일</span>

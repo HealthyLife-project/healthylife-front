@@ -27,7 +27,11 @@ export const ContentInfoStyle = styled.div`
           width: 100%;
           display: flex;
           flex-direction: row;
-          justify-content: space-between;
+          gap: 5px;
+
+          .check-btn {
+            height: 100%;
+          }
         }
 
         .info-title {
@@ -51,6 +55,9 @@ export const ContentInfoStyle = styled.div`
           border-radius: 5px;
           border: 1px solid #e1e2e3;
           background: none;
+        }
+        .error-true {
+          display: none;
         }
         .error-message {
           color: red;
