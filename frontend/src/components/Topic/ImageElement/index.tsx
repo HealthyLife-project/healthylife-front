@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { GoogleGenAI } from "@google/genai";
 import api from "@/util/chek";
 import defaultImg from "@/assets/images/healthy-life.jpg";
+import { Skeleton } from "antd";
 //Coponent
 
 //today topic 요소 컴포넌트
@@ -47,7 +48,11 @@ const TopicElement = (props: { hash: string }) => {
 
   return (
     <ImageElementStyled className={clsx("main-wrap")}>
-      <img src={imgsrc} className="imgstyle" alt="ai-img" />
+      {imgsrc ? (
+        <img src={imgsrc} className="imgstyle" alt="ai-img" />
+      ) : (
+        <Skeleton.Node active className="imgstyle" />
+      )}
     </ImageElementStyled>
   );
 };

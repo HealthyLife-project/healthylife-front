@@ -23,8 +23,9 @@ const Main = () => {
       <MainStyled className={clsx("main-wrap")}>
         <LCategory />
         <MainBanner />
-        <HashTagSection />
+
         <TopicMain />
+        <HashTagSection />
       </MainStyled>
       {isAuthenticated ? <HashtagsModal /> : <span></span>}
       <Footer />

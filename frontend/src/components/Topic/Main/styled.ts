@@ -9,6 +9,7 @@ export const TodayTopicStyled = styled.div`
     flex-direction: column;
     align-items: center;
     margin: 0px auto;
+    margin-top: 15px;
 
     .title {
       display: flex;
@@ -28,7 +29,7 @@ export const TodayTopicStyled = styled.div`
     }
   }
 
-  @media (max-width: 486px) {
+  @media (max-width: 768px) {
     &.main-wrap {
       max-width: 1280px;
       width: 100%;

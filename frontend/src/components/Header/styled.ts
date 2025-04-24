@@ -42,7 +42,7 @@ export const HeaderStyled = styled.div`
     }
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     &.main-wrap {
       .main-logo {
         font-size: 30px;

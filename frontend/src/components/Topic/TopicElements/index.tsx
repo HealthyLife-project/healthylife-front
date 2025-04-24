@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { TopicElementStyled } from "./styled";
+import { TopicElementStyled, theme } from "./styled";
 import clsx from "clsx";
 import api from "@/util/chek";
-
+import { Skeleton } from "antd";
 interface TopicElementProps {
   props: string;
 }
@@ -20,14 +20,14 @@ const TopicElement = ({ props }: TopicElementProps) => {
 
   // 뉴스 가져오기 함수
   const News = async (category: string) => {
-    //console.log("category", category);
+    console.log("category", category);
     try {
       const res = await api.get(`news/health/${category}`);
-      //console.log(res.data); // 서버에서 받은 데이터 구조 확인
+      console.log(res.data); // 서버에서 받은 데이터 구조 확인
       // 만약 res.data가 배열이 아니면 빈 배열을 반환하도록 처리
       return Array.isArray(res.data) ? res.data : [];
     } catch (err) {
-      //console.error("뉴스 요청 실패", err);
+      console.error("뉴스 요청 실패", err);
       return []; // 에러가 발생하면 빈 배열을 반환
     }
   };
@@ -37,7 +37,7 @@ const TopicElement = ({ props }: TopicElementProps) => {
     const fetchAllNews = async () => {
       try {
         // 첫 번째 카테고리 뉴스 요청 (운동 건강)
-        const healthData = await News(props[0]);
+        const healthData = await News(props);
         setHealthNews(healthData);
 
         // 두 번째 카테고리 뉴스 요청 (반려동물 건강)
@@ -47,13 +47,14 @@ const TopicElement = ({ props }: TopicElementProps) => {
     };
 
     // 첫 번째 데이터 로딩
+
     fetchAllNews();
 
-    // 5초 간격으로 뉴스 새로 요청
-    const interval = setInterval(fetchAllNews, 5000);
+    // 2.5초 간격으로 뉴스 새로 요청
+    const timeout = setTimeout(fetchAllNews, 2500);
 
-    // 컴포넌트 unmount 시 interval을 정리
-    return () => clearInterval(interval);
+    // 컴포넌트가 언마운트되면 타이머 제거
+    return () => clearTimeout(timeout);
   }, []); // props가 변경될 때마다 이 useEffect가 실행됨
 
   return (
@@ -70,7 +71,7 @@ const TopicElement = ({ props }: TopicElementProps) => {
           ))}
         </div>
       ) : (
-        <p>뉴스를 불러오는 중...</p>
+        <Skeleton active paragraph={{ rows: 7 }} />
       )}
     </TopicElementStyled>
   );

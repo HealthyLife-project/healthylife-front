@@ -1,3 +1,4 @@
+import { Skeleton } from "antd";
 import styled from "styled-components";
 export const TopicElementStyled = styled.div`
   &.main-wrap {
@@ -51,3 +52,12 @@ export const TopicElementStyled = styled.div`
     }
   }
 `;
+export const theme = {
+  token: {
+    // global token
+  },
+  components: {
+    // component token
+    Skeleton: { blockRadius: 4 },
+  },
+};

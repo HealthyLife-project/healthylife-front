@@ -11,7 +11,7 @@ import {
   Autoplay,
 } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import { Skeleton } from "antd";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -39,7 +39,7 @@ const MainBanner = () => {
   useEffect(() => {
     //관리자 페이지에서 이미지 요청
     api.get("/ad/getAd").then((res) => {
-      //console.log("banenr res", res.data[1].imgsrc);
+      console.log("banenr res", res.data);
       setBannerImg(res.data);
     });
   }, []);
@@ -56,13 +56,19 @@ const MainBanner = () => {
           loop={true}
         >
           <SwiperSlide>
-            <img
-              className="imgstyle"
-              src={
-                process.env.NEXT_PUBLIC_ORIGIN_URL + "/" + bannerimg[0]?.imgsrc
-              }
-              alt="bannner-1"
-            />
+            {bannerimg[0]?.imgsrc ? (
+              <img
+                className="imgstyle"
+                src={
+                  process.env.NEXT_PUBLIC_ORIGIN_URL +
+                  "/" +
+                  bannerimg[0]?.imgsrc
+                }
+                alt="bannner-1"
+              />
+            ) : (
+              <Skeleton.Node active className="imgstyle" />
+            )}
           </SwiperSlide>
           <SwiperSlide>
             <img
