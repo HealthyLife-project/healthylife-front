@@ -50,15 +50,29 @@ const ContentInfo = (props: {
     { label: "여성", value: "female" },
   ];
 
-  const text = (title: string) => {
-    if (title === "name") {
-      return "2글자 이상 입력해 주세요";
-    }
-  };
-
   useEffect(() => {
     setId(tokenList?.id);
   }, []);
+
+  // 닉네임 중복확인
+  const [nicknameAvailability, setNicknameAvailability] = useState<{
+    result: boolean;
+    message: string;
+  } | null>(null);
+
+  // 닉네임 중복확인 백엔드 요청
+  const checkNicknameAvailability = async (nickname: string) => {
+    try {
+      const response = await api.get(`/user/findnickname/${nickname}`);
+      setNicknameAvailability(response.data);
+    } catch (error) {
+      console.error("Error checking nickname:", error);
+      setNicknameAvailability({
+        result: false,
+        message: "Error checking nickname",
+      });
+    }
+  };
 
   //수정 폼
   const modifyFormik = useFormik({
@@ -89,7 +103,7 @@ const ContentInfo = (props: {
     enableReinitialize: true, //state 값 update
     onSubmit: (values) => {
       //폼 안에 버튼을 눌렀을 때 생기는 것
-      console.log("values", values);
+      //console.log("values", values);
       api
         .post(`user/mypage/modify/${id}`, values)
         .then((res) => {
@@ -143,7 +157,6 @@ const ContentInfo = (props: {
             <div>
               <span className="info-title">이름</span>
             </div>
-
             <Input
               name="name"
               className="info-input"
@@ -156,13 +169,26 @@ const ContentInfo = (props: {
           </div>
           <div className="info-group">
             <span className="info-title">닉네임</span>
-            <Input
-              className="info-input"
-              name="nickname"
-              onChange={modifyFormik.handleChange}
-              value={modifyFormik.values.nickname}
-              disabled
-            />
+            <div className="nickname-info">
+              <div>
+                <Input
+                  className="info-input"
+                  name="nickname"
+                  onChange={modifyFormik.handleChange}
+                  value={modifyFormik.values.nickname}
+                />
+              </div>
+              <div>
+                <Button
+                  onClick={() =>
+                    checkNicknameAvailability(modifyFormik.values.nickname)
+                  }
+                >
+                  중복확인
+                </Button>
+              </div>
+            </div>
+            <div>{nicknameAvailability?.message}</div>
           </div>
           <div className="info-group">
             <span className="info-title">이메일</span>

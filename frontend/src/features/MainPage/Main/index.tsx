@@ -23,7 +23,6 @@ const Main = () => {
       <MainStyled className={clsx("main-wrap")}>
         <LCategory />
         <MainBanner />
-
         <TopicMain />
         <HashTagSection />
       </MainStyled>

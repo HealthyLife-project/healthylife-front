@@ -20,7 +20,8 @@ const ExerciseInfo = () => {
 
   //프리미엄 회원 확인
   useEffect(() => {
-    premium(tokenList);
+    //console.log("SDfsfd", tokenList?.premium);
+    premium(tokenList?.premium);
   }, [tokenList]);
 
   return (

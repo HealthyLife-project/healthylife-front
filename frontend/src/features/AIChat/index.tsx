@@ -10,15 +10,13 @@ import type { GetProps } from "antd";
 type SearchProps = GetProps<typeof Input.Search>;
 
 const { Search } = Input;
-
 const AiChat = () => {
   const [prompt, setPrompt] = useState("");
   const [res, setRes] = useState("");
 
   const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
-    //console.log(info?.source, value);
-    //setPrompt(value);
-    geneChange(value + "");
+    geneChange(value);
+    setPrompt("");
   };
 
   const geneChange = async (prompt: string) => {
@@ -32,10 +30,7 @@ const AiChat = () => {
         }
       );
 
-      // 응답이 JSON인지 먼저 확인
       const text = await res.text();
-
-      // 응답을 텍스트로 받아서 확인
       setRes(text);
     } catch (error) {
       console.error("에러 발생:", error);
@@ -47,7 +42,13 @@ const AiChat = () => {
     <AiChatStyle className={clsx("main-wrap")}>
       <h1 className="title">AI에게 물어보세요!</h1>
       <div className="answer">{res}</div>
-      <Search onSearch={onSearch} />
+
+      <Search
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        onSearch={onSearch}
+        enterButton
+      />
     </AiChatStyle>
   );
 };

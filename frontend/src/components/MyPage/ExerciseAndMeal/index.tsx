@@ -19,7 +19,7 @@ const ExerciseAndMeal = () => {
 
   //프리미엄 회원 확인
   useEffect(() => {
-    premium(tokenList);
+    premium(tokenList?.premium);
   }, [tokenList]);
 
   return (

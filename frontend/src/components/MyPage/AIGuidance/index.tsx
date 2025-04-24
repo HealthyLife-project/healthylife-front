@@ -31,7 +31,7 @@ const AIGuidance = () => {
       참고로 100자 이내로 작성해줘. 
       만약에 ${weight},${height},${age},${gender} 중 하나라도 입력이 안되어 있으면 해당하는 요소 값이 없다고 띄어줘`,
     });
-    //console.log(response.text);
+
     const text = response.text;
     setAiContent(text ?? "");
   }

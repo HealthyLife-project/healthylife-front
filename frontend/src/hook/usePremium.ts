@@ -7,9 +7,9 @@ import withReactContent from "sweetalert2-react-content";
 const usePremium = () => {
   const router = useRouter();
   const MySwal = withReactContent(Swal);
-
-  return (tokenList: any) => {
-    if (tokenList.premiun === 0) {
+  //console.log("dsf", tokenList);
+  return (premium: boolean | number | undefined) => {
+    if (premium === 0 || premium === false) {
       MySwal.fire({
         icon: "error",
         title: "프리미엄 회원만 사용이 가능합니다.",

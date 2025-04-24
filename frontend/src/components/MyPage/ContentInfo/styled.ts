@@ -23,6 +23,13 @@ export const ContentInfoStyle = styled.div`
         gap: 8px;
         margin-bottom: 15px;
 
+        .nickname-info {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
         .info-title {
           color: #333;
           font-size: 14px;
@@ -36,7 +43,7 @@ export const ContentInfoStyle = styled.div`
         }
         .info-input {
           display: flex;
-          width: 90%;
+          width: 100%;
           font-size: 16px;
           min-height: 50px;
           padding: 15px 13px;

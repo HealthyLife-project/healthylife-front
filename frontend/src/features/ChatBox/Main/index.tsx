@@ -325,6 +325,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
       };
 
       const roomid = `${chatlocal?.roomid}-${chatlocal?.category}`;
+
       socket.emit("sendMessage", {
         roomid,
         userNickname,

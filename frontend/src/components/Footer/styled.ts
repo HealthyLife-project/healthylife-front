@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 export const FooterStyled = styled.div`
   &.main-wrap {
+    position: relative;
+    bottom: 0;
     display: flex;
     justify-content: center;
     text-align: center;
