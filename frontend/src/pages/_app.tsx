@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import api from "@/util/chek";
 
+import Head from "next/head";
 //redux
 import { Provider, useSelector } from "react-redux";
 import store from "@/redux/store";
@@ -103,6 +104,9 @@ const ChatBoxWrapper = () => {
 export default function App({ Component, pageProps, router }: AppProps) {
   return (
     <Provider store={store}>
+      <Head>
+        <title>Healthy-Life</title>
+      </Head>
       <AppWithTheme
         Component={Component}
         pageProps={pageProps}

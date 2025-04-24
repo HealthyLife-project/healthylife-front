@@ -51,7 +51,7 @@ const TopicElement = ({ props }: TopicElementProps) => {
     fetchAllNews();
 
     // 2.5초 간격으로 뉴스 새로 요청
-    const timeout = setTimeout(fetchAllNews, 2500);
+    const timeout = setTimeout(fetchAllNews, 5000);
 
     // 컴포넌트가 언마운트되면 타이머 제거
     return () => clearTimeout(timeout);
