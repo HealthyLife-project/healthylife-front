@@ -17,6 +17,7 @@ export const AiChatStyle = styled.div`
       border-radius: 15px;
       border: 1px solid gray;
       margin-bottom: 20px;
+      overflow: scroll;
     }
   }
 `;

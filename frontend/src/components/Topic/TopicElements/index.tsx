@@ -20,14 +20,14 @@ const TopicElement = ({ props }: TopicElementProps) => {
 
   // 뉴스 가져오기 함수
   const News = async (category: string) => {
-    console.log("category", category);
+    //console.log("category", category);
     try {
       const res = await api.get(`news/health/${category}`);
-      console.log(res.data); // 서버에서 받은 데이터 구조 확인
+      //console.log(res.data); // 서버에서 받은 데이터 구조 확인
       // 만약 res.data가 배열이 아니면 빈 배열을 반환하도록 처리
       return Array.isArray(res.data) ? res.data : [];
     } catch (err) {
-      console.error("뉴스 요청 실패", err);
+      //console.error("뉴스 요청 실패", err);
       return []; // 에러가 발생하면 빈 배열을 반환
     }
   };

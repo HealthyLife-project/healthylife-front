@@ -12,7 +12,7 @@ export const HashTagSectionStyled = styled.div`
       width: max-content;
       gap: 30px;
       margin: 20px 0px;
-      animation: scroll-left 8s linear infinite;
+      animation: scroll-left 15s linear infinite;
       //transform: translateX(100%);
     }
 
