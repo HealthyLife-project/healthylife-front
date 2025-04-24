@@ -24,7 +24,7 @@ export default function CheckoutPage(props: {
 
   const [amount, setAmount] = useState<AmountType>({
     currency: "KRW",
-    value: 100,
+    value: 5500,
   });
 
   const [ready, setReady] = useState<boolean>(false);
