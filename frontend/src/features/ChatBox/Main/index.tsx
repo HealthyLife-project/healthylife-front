@@ -397,7 +397,7 @@ const ChatBox = ({ title, onClose }: ChatBoxProps) => {
         //console.log("요청 성공");
 
         MySwal.fire({
-          title: "체팅방을 나가실 건가요?",
+          title: "채팅방을 나가실 건가요?",
           footer: "채팅방을 나가시면 이전 내용은 확인 할 수 없습니다.",
           icon: "warning",
           showCancelButton: true,
