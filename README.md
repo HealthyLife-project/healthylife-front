@@ -45,9 +45,5 @@
 | 토스결제  | 이정민 |
 
 
-## 👨‍👩‍👧‍👦 Test ID
-* id : testuser
-* password : 
-
 ## 👨‍👩‍👧‍👦 Developers
 *  **이정민** ([ihoek](https://github.com/ihoek))
