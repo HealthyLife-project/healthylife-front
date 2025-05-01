@@ -42,21 +42,46 @@
 - 회원가입에 작성한 이메일에 비밀번호 재설정 이메일을 전송 후 비밀번호 재설정을 할 수 있도록 하였다
 
 ### 마이페이지
+![마이페이지-Clipchamp로-제작_1](https://github.com/user-attachments/assets/13a33da7-a05f-443b-ac8f-0913639c8e0e)
+
+- 개인정보 : 개인정보 수정
+- 운동정보 : 입력한 주소를 기반으로 카카오 주소 API를 사용하여 근처 2km이내 헬스장 위치를 띄어줌
+             입력한 인바디 내용을 기반으로 chart를 표시해줌
+- 운동&식단 : Google Gemini를 사용하여 운동방식을 추천받고, Gemini를 사용하여 궁금한 것을 물어 볼 수 있음
+- 프리미엄 : 토스 결제 API를 사용하여 결제할 수 있음
+
 
 ### 이미지 텍스트 추출
+![이미지-텍스트-추출](https://github.com/user-attachments/assets/77136a48-df85-4448-8425-5f7e0f739b3e)
+
+
 
 ### 결제 페이지
+![토스-결제-Clipchamp로-제작](https://github.com/user-attachments/assets/caaab6cc-7f4f-4186-8d2d-6ff46dd7b57b)
 
 
 ### 해시태그 페이지
+![해시태그-등록](https://github.com/user-attachments/assets/817afe1d-8c28-4a45-822b-61dc1d7a3b60)
 
+- 회원가입 후 최초 로그인 시 사용자 맞춤 해시태그를 입력할 수 있음
+
+![해시태그-수정](https://github.com/user-attachments/assets/d2c70384-163e-4832-9972-4a6520d6a3b0)
+
+- 해시태그 수정 페이지에서 해시태그를 수정할 수 있음 
 
 ### 웹 소켓
+![웹-소켓-Clipchamp로-제작](https://github.com/user-attachments/assets/f11238f2-c7c7-482a-9789-b007fcd2e26a)
+
+- 웹 소켓을 활용하여 채팅방 기능을 구현
+- 페이지가 아닌 컴포넌트를 활용하여 다른 페이지에 이동하더라도 채팅방 컴포넌트는 사라지지 않음 
 
 ### 웹 소켓 - 역 무한 스크롤
+![역-무한-스크롤](https://github.com/user-attachments/assets/37953314-fac2-4315-9cc7-559994991142)
+
+
 
 ### 신고하기
-
+![신고하기](https://github.com/user-attachments/assets/96ae9cca-7ea8-4904-ae6a-4cda6eb92cb4)
 
 
 ### 메인화면
